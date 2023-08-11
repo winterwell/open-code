@@ -56,4 +56,5 @@ gradlew*
 __pycache__/
 *.py[cod]
 *$py.class
-.venv/
+.venv/goodloop.chat/data
+goodloop.chat/data
