@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="bin.test" path="test"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="dependencies/jetty-http.jar" sourcepath="dependencies/jetty-http-sources.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-io.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-security.jar"/>
+	<classpathentry exported="true" kind="lib" path="dependencies/jetty-server.jar" sourcepath="dependencies/jetty-server-sources.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-servlet.jar" sourcepath="dependencies/jetty-servlet-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="dependencies/jetty-util-ajax.jar" sourcepath="dependencies/jetty-util-ajax-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="dependencies/jetty-util.jar" sourcepath="dependencies/jetty-util-sources.jar"/>
+	<classpathentry kind="lib" path="dependencies/mime-util.jar"/>
+	<classpathentry kind="lib" path="dependencies/httpclient.jar"/>
+	<classpathentry kind="lib" path="dependencies/httpcore.jar"/>
+	<classpathentry kind="lib" path="dependencies/commons-codec.jar"/>
+	<classpathentry kind="lib" path="dependencies/commons-logging.jar"/>
+	<classpathentry kind="lib" path="dependencies/gimap.jar"/>
+	<classpathentry kind="lib" path="dependencies/jakarta.activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="dependencies/jakarta.mail.jar" sourcepath="dependencies/jakarta.mail-sources.jar"/>
+	<classpathentry kind="lib" path="dependencies/log4j.jar"/>
+	<classpathentry kind="lib" path="dependencies/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="dependencies/tagsoup.jar"/>
+	<classpathentry exported="true" kind="lib" path="dependencies/commons-lang3.jar"/>
+	<classpathentry kind="lib" path="dependencies/commons-io.jar"/>
+	<classpathentry exported="true" kind="lib" path="dependencies/jetty-servlet-api.jar"/>
+	<classpathentry kind="lib" path="dependencies/slf4j-api.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/flexi-gson"/>
+	<classpathentry kind="lib" path="dependencies/dnsjava.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
