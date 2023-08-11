@@ -1,0 +1,59 @@
+# Ignore
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+bin.test
+bin/
+lg.txt
+*.log
+node_modules
+winterwell.datalog/web/build
+testFiles
+pom.bob.xml
+pom.xml
+winterwell.bob/config/version.properties
+version.properties
+temp-iso
+test-output
+
+# Allow
+!winterwell.bob/bob-all.jar
+bob-all.jar
+winterwell.datalog/dependencies
+*/dependencies
+*/boblog
+!junit-4.12.jar
+winterwell.bob/test-out
+winterwell.bob/test/test.classpath.after
+winterwell.datalog/datalog.log*
+winterwell.utils/test/winterwell
+winterwell.datalog/logs
+*.zip
+*RSA*xml
+goodloop.google/tokens
+goodloop.google/logs
+
+# GeoIP downloaded CSVs
+winterwell.datalog/geoip/*
+
+# Gradle and IDEA things
+.gradle/
+gradle/
+.idea/
+build/
+gradlew*
+
+# Python 
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
