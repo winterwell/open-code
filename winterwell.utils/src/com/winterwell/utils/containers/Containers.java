@@ -1663,8 +1663,14 @@ public final class Containers  {
 	}
 
 
+	/**
+	 * 
+	 * @param a can be null (which always returns false)
+	 * @param b
+	 * @return
+	 */
 	public static boolean same(Collection a, Object... b) {
-		return differences(a, Arrays.asList(b)).isEmpty();
+		return a!=null && differences(a, Arrays.asList(b)).isEmpty();
 	}
 	
 	

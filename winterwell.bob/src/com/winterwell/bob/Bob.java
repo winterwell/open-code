@@ -42,7 +42,7 @@ import com.winterwell.web.FakeBrowser;
  * <h2>Usage</h2> 
  * Example:
  * <code>
- * java -classpath bob-all.jar MyBuildScript 
+ * java -classpath bob-all.jar MyBuildScript [--option for MyBuildScript]
  * </code>
  * <p>
  * The Bob class is for command line usage. For programmatic
@@ -187,6 +187,12 @@ public class Bob {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// version?
+		if (args.length == 1 && "--version".equals(args[0])) {
+			Log.d(LOGTAG, "Bob version: "+BobConfig.VERSION_NUMBER);
+			System.exit(0);
+		}
+		
 		Bob bob = null;
 		try {
 			System.out.println("Bob the Builder   version: "+BobConfig.VERSION_NUMBER+StrUtils.LINEEND);
@@ -238,14 +244,7 @@ public class Bob {
 			}
 			
 			if (_settings.help || argsLeft.size() == 0 || Containers.contains("--help", args)) {
-				System.err.println(StrUtils.LINEEND + "Bob the Builder   version: "+BobConfig.VERSION_NUMBER
-						+ StrUtils.LINEEND + "---------------"
-						+ StrUtils.LINEEND
-						+ "Default usage (looks for a BuildX.java file in the builder directory):"+ StrUtils.LINEEND
-						+ "	java -jar bob-all.jar"+ StrUtils.LINEEND
-						+ StrUtils.LINEEND
-						+ StrUtils.LINEEND + cb.getOptionsMessage("[TargetBuildTasks...] Bob will look for matching .java files by absolute path or a search in the local `builder` sub-directory."));
-				System.exit(1);
+				showHelpAndExit(cb);
 			}		
 			Log.d(LOGTAG, "Bob version: "+BobConfig.VERSION_NUMBER+" building "+argsLeft+"...");
 	
@@ -260,12 +259,18 @@ public class Bob {
 			}
 			
 			// Build each target					
-			for (String clazzName : argsLeft) {
+			for(int i=0; i<argsLeft.size(); i++) {
+				String clazzName = argsLeft.get(i);
+				List options = null;
+				// -options?
+				if (i+1<argsLeft.size() && argsLeft.get(i+1).startsWith("-")) {
+					options = argsLeft.subList(i+1, argsLeft.size());					
+				}
 				try {
 					Class clazz = bsf.getClass(clazzName);
 					Log.i(LOGTAG, "Build script loaded: "+clazz);
-					
-					bob.build(clazz);
+					// build = run
+					bob.build(clazz, options);
 					bob.built.add(clazz);
 				} catch (ClassNotFoundException e) {
 					classNotFoundMessage(e);
@@ -276,6 +281,8 @@ public class Bob {
 				} catch (Exception e) {
 					bob.maybeCarryOn(e);
 				}
+				// options => only one task
+				if (options != null) break;
 			}
 			
 			// all done
@@ -305,6 +312,20 @@ public class Bob {
 			// send a bleurgh code out
 			System.exit(1);
 		}
+	}
+
+	private static void showHelpAndExit(ConfigBuilder cb) {
+		System.err.println(StrUtils.LINEEND + "Bob the Builder   version: "+BobConfig.VERSION_NUMBER
+				+ StrUtils.LINEEND + "---------------"
+				+ StrUtils.LINEEND
+				+ "Default usage (looks for a BuildX.java file in the builder directory):"+ StrUtils.LINEEND
+				+ "	java -jar bob-all.jar"+ StrUtils.LINEEND
+				+ StrUtils.LINEEND
+				+ StrUtils.LINEEND 
+				+ cb.getOptionsMessage(
+						"[TargetBuildTasks...] options can be passed to a single BuildTask if the first option begins with -- or -. The rest of the arguments will then be passed in as options.\n"
+						+ "Bob will look for matching .java files by absolute path or a search in the local `builder` sub-directory."));
+		System.exit(1);
 	}
 
 	private static void doForget(String forget) throws IOException {
@@ -401,9 +422,24 @@ public class Bob {
 		return bobCount.get();
 	}
 
-	void build(Class clazz) throws Exception {
-		Runnable script = (Runnable) clazz.newInstance();
+	/**
+	 * build = run. Do The Thing!
+	 * @param clazz
+	 * @param options
+	 * @throws Exception
+	 */
+	void build(Class clazz, List<String> options) throws Exception {
+		Runnable script = (Runnable) clazz.getDeclaredConstructor().newInstance();
 		lastScript = script;
+		// options?
+		if (options!=null && ! options.isEmpty()) {
+			if (script instanceof BuildTask) {		
+				BuildTask bt = (BuildTask) script;
+				bt.setOptions(options);
+			} else {
+				Log.e(LOGTAG, "Ignoring options for "+script+": "+options);
+			}
+		}
 		// Run it
 		script.run();
 		// Done

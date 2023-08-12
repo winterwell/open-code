@@ -88,7 +88,7 @@ public class ForkJVMTask extends BuildTask {
 		}
 		options.add("-label "+config.label);
 		options.add("-depth "+(config.depth+1));
-		if (config.maxDepth > 0) {
+		if (config.maxDepth!=null && config.maxDepth > 0) {
 			options.add("-maxDepth "+config.maxDepth);
 		}
 		String soptions = StrUtils.join(options, " ")+" ";

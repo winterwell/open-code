@@ -24,7 +24,7 @@ public class BobConfig {
 
 	public static final Key<Boolean> VERBOSE = new Key<Boolean>("verbose");
 
-	public final static String VERSION_NUMBER = "1.5.1"; // June 2023
+	public final static String VERSION_NUMBER = "1.6.0"; // August 2023
 	
 	@Option(tokens="-cp,-classpath", description="Classpath used for dynamically compiling build scripts. Uses the file1:file2 format of Java")
 	// NB: This is not the classpath used for CompileTasks which are part of a build script run.
@@ -55,8 +55,9 @@ public class BobConfig {
 	@Option(description="Clean anything before the given time (this is also used by clean for child Bobs).")
 	public Time cleanBefore;
 
-	@Option(description="Usually unset. Limit how deep the recursion can go. E.g. `-clean -maxDepth 1` will do immeadiate dependencies but no deeper (useful for running a local maven download only).")
-	public int maxDepth;
+	@Option(description="Usually unset. Limit how deep the recursion can go. E.g. "
+			+ "`-clean -maxDepth 1` will do immeadiate dependencies but no deeper (useful for running a local maven download only).")
+	public Integer maxDepth;
 	
 	@Option(description="Usually unset. Remove tasks from bobhistory.csv which match this regex pattern, to avoid skipping that task, then exit (note: bobhistory.csv is shared between projects on the computer).")
 	public String forget;
@@ -73,7 +74,7 @@ public class BobConfig {
 	@Option(tokens = "-v,-verbose")
 	public boolean verbose;
 	
-	@Option(description="Set by Bob when making recursive child Bob. 0 for top-level")
+	@Option(description="Internal use: Set by Bob itself when making recursive child Bob. 0 for top-level")
 	public int depth;
 
 	// NB: non an option 'cos its (currently) a system-wide setting 

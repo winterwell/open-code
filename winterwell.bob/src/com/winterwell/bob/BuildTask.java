@@ -316,7 +316,7 @@ public abstract class BuildTask implements Closeable, IHasDesc, Runnable, IBuild
 		// too deep?
 		BobConfig config = getConfig();
 		int activeTasks = config.depth + getDepth();
-		if (config.maxDepth > 0 && activeTasks > config.maxDepth ) {
+		if (config.maxDepth!=null && activeTasks > config.maxDepth ) {
 			skipFlag = true;
 			Log.d(LOGTAG, "Skip from maxDepth: "+config.maxDepth+" "+this+" depth: "+activeTasks);
 			return;
@@ -531,6 +531,11 @@ public abstract class BuildTask implements Closeable, IHasDesc, Runnable, IBuild
 	private transient int depth;
 
 	/**
+	 * Usually null. Allows for command line options to be passed in
+	 */
+	protected List<String> options;
+
+	/**
 	 * @return 0 for top-level
 	 */
 	protected int getDepth() {		
@@ -593,6 +598,11 @@ public abstract class BuildTask implements Closeable, IHasDesc, Runnable, IBuild
 	 */
 	public Map getReport() {
 		return report;
+	}
+
+
+	public void setOptions(List<String> options) {
+		this.options = options;
 	}
 
 }

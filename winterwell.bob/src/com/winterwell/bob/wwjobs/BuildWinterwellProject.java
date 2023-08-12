@@ -3,6 +3,7 @@ package com.winterwell.bob.wwjobs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.winterwell.bob.tasks.GitBobProjectTask;
 import com.winterwell.bob.tasks.GitTask;
 import com.winterwell.bob.tasks.JUnitTask;
 import com.winterwell.bob.tasks.JarTask;
+import com.winterwell.bob.tasks.JavaDocTask;
 import com.winterwell.bob.tasks.MakeVersionPropertiesTask;
 import com.winterwell.bob.tasks.MavenDependencyTask;
 import com.winterwell.bob.tasks.SCPTask;
@@ -360,6 +362,12 @@ public class BuildWinterwellProject extends BuildTask {
 
 	@Override
 	public void doTask() throws Exception {
+		// just javadoc?
+		if (options!=null && options.contains("--javadoc")) {
+			doJavaDoc();
+			Log.d(LOGTAG, "javadoc only");
+			return;
+		}
 		// mark it clearly in the log
 		Log.d(LOGTAG, "");
 		Log.d(LOGTAG, "Build:   ***   "+projectName+"   ***");
@@ -416,7 +424,28 @@ public class BuildWinterwellProject extends BuildTask {
 		doUpdateClasspath(mdts);		
 	}
 
-	File getBuildJarsDir() {
+	protected void doJavaDoc() throws Exception {
+		File javadocDir = new File(projectDir, "javadoc");
+		javadocDir.mkdirs();
+		File srcDir = getJavaSrcDir();
+		assert srcDir.isDirectory() : srcDir.getAbsolutePath();
+		File jarDir = getBuildJarsDir();
+		List<File> cp = Arrays.asList(jarDir.listFiles());
+		String topPackage;
+		if (options.size() < 2) {
+			if (mainClass == null) {
+				throw new IllegalArgumentException("--javadoc needs the name of a top-level package (or a main class). E.g. `--javadoc com.example.mypackage`. If unsure try `--javadoc com`");
+			}			
+			topPackage = mainClass.substring(0, mainClass.lastIndexOf('.'));
+			Log.d(LOGTAG, "get javadoc package from mainClass "+mainClass+" = "+topPackage);
+		} else {
+			topPackage = options.get(1);
+		}
+		JavaDocTask jdt = new JavaDocTask(topPackage, srcDir, javadocDir, cp);
+		jdt.doTask();
+	}
+
+	public File getBuildJarsDir() {
 		return new File(projectDir, "build-lib");
 	}
 

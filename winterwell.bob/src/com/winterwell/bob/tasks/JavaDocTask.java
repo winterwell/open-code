@@ -5,12 +5,13 @@ import java.util.List;
 
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.ReflectionUtils;
+import com.winterwell.utils.log.Log;
 
 /**
  * Run JavaDoc. Calls the command line. TODO fix for Windows
  * 
  * @author Daniel
- * 
+ * @testedby JavaDocTaskTest
  */
 public class JavaDocTask extends ProcessTask {
 
@@ -65,6 +66,7 @@ public class JavaDocTask extends ProcessTask {
 		outputDir.mkdirs();
 		addArg("-d " + outputDir.getAbsolutePath());
 		super.doTask();
+		Log.d(LOGTAG, "javadoc created in: "+outputDir);
 	}
 
 }
