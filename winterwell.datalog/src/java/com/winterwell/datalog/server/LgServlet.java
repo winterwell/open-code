@@ -431,7 +431,8 @@ public class LgServlet {
 
 
 	static ua_parser.Parser parser;
-	
+
+	static final Checkbox NOUA = new Checkbox("noua");
 
 	/**
 	 * Add ua (user agent), user, ip.
@@ -456,8 +457,11 @@ public class LgServlet {
 		if (FakeBrowser.HONEST_USER_AGENT.equals(ua)) {
 			return params; // dont add tracking params for our own server calls
 		}
-		params.putIfAbsent("ua", ua);
-		
+		if (state.get(NOUA)) {
+			// flag to not retain user agent, for data paranoia
+		} else {
+			params.putIfAbsent("ua", ua);
+		}
 		// Do not track IP if cookie is off
 		if (trckId != null) {
 			// Replace $user with tracking-id, and $		
@@ -477,6 +481,7 @@ public class LgServlet {
 		// OS
 		String os = bt.getOS();
 		params.putIfAbsent("os", os);
+		// device?? mobile / TV / computer / tablet ?? <-- work out from mbl + browser + OS
 		
 		doLog2_addStdTrackerParams2_domain(state, params);		
 				
