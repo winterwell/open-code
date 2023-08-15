@@ -63,6 +63,7 @@ import com.winterwell.web.data.IHasXId;
 import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.IntField;
+import com.winterwell.web.fields.ListField;
 import com.winterwell.web.fields.SField;
 import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.NoAuthException;
@@ -1591,7 +1592,11 @@ public abstract class CrudServlet<T> implements IServlet {
 		CSVWriter w = new CSVWriter(sout, new CSVSpec());
 		
 		Json2Csv j2c = new Json2Csv(w);		
+		List<String> headers = state.get(new ListField<String>("headers"));
+		if (headers==null) headers = Arrays.asList("id", "name", "created", "status");
+		j2c.setHeaders(headers);
 		// TODO!
+//		j2c.run(hits2);		
 		
 		// send
 		String csv = sout.toString();
