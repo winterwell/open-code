@@ -248,12 +248,12 @@ public class SqlUtils {
 				con = getConnection();
 				autoClose = true;
 			}
+			Log.i("sql", sql);
 			stmnt = con.createStatement();
 			int rs = stmnt.executeUpdate(sql);
 			if ( ! con.getAutoCommit()) {
 				con.commit();
-			}
-			Log.i("sql", sql);
+			}			
 			return rs;
 		} catch (Exception e) {
 			Log.report("db", Utils.getRootCause(e), Level.WARNING);
@@ -1257,6 +1257,18 @@ public class SqlUtils {
 			maps.add(map);
 		}		
 		return maps;
+	}
+
+	/**
+	 * Convenience method. Break a script on ---- comment/block markers, and execute each block
+	 * @param initSQL
+	 * @param swallowExceptions
+	 */
+	public static void executeScript(String initSQL, boolean swallowExceptions) {
+		String[] blocks = initSQL.split("----.+$");
+		for (String string : blocks) {
+			executeCommand(string, null, swallowExceptions);
+		}
 	}
 
 

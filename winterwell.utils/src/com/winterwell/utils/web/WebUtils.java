@@ -762,7 +762,7 @@ public class WebUtils {
 
 	/**
 	 * The domain, excluding sub-domain
-	 * @param url
+	 * @param url (or a domain already)
 	 * @return E.g. "soda.sh" from "http://blah.soda.sh/foo", or null on fail
 	 * (which should only happen if url is a relative or bogus url).
 	 * @see #getHost(String)
