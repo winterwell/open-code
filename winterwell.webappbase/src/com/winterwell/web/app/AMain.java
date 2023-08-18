@@ -62,7 +62,7 @@ import com.winterwell.youagain.client.YouAgainClient;
  * @param <ConfigType>
  */
 public abstract class AMain<ConfigType extends ISiteConfig> {
-	
+
 	public static final String copyright = "(C) Good-Loop Ltd";
 	
 	protected JettyLauncher jl;
@@ -107,6 +107,16 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 	 * @deprecated avoid static if possible
 	 */
 	public static AMain main;
+
+	/**
+	 * a convenient place for a global debug flag
+	 */
+	public static boolean debug;
+	
+	public static void setDebug(boolean debug) {
+		AMain.debug = debug;
+	}
+	
 
 	/**
 	 * @deprecated This will guess the appName from the folder -- better to sepcify it. 
@@ -215,7 +225,7 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 	}
 
 	/**
-	 * Override to do other main stuff.
+	 * Called after init() and before doMainLoop(). Override to do other main stuff.
 	 * This method must return. To implement an infinite loop -- use doMainLoop();
 	 * To avoid staying alive after this: call `stop()`
 	 */

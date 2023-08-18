@@ -206,6 +206,9 @@ public class WebEx extends RuntimeException {
 		public E401(String url, String msg) {
 			super(401, url, msg);
 		}
+		public E401() {
+			this(null, "Unauthorised - please login");
+		}
 		private static final long serialVersionUID = 1L;
 	}
 	

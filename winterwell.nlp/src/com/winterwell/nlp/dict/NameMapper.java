@@ -16,6 +16,7 @@ import com.winterwell.utils.log.Log;
 
 /**
  * Flexible key-name handling for e.g. reading csv files
+ * See also FlexibleKeyMap which uses this.
  * @author daniel
  * @testedby {@link NameMapperTest}
  */

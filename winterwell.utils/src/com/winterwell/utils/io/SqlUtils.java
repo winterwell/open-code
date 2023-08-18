@@ -1265,7 +1265,7 @@ public class SqlUtils {
 	 * @param swallowExceptions
 	 */
 	public static void executeScript(String initSQL, boolean swallowExceptions) {
-		String[] blocks = initSQL.split("----.+$");
+		String[] blocks = initSQL.split("----.*\\n");
 		for (String string : blocks) {
 			executeCommand(string, null, swallowExceptions);
 		}
