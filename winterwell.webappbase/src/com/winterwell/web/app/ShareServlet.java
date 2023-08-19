@@ -38,7 +38,9 @@ public class ShareServlet implements IServlet {
 		state.setPage(page);
 		// the real page
 		String link = state.getRedirect();		
-		if (link==null || !redirectUrlPattern.matcher(link).matches()) link = homepage;
+		if (link==null || !redirectUrlPattern.matcher(link).matches()) {
+			link = homepage;
+		}
 		// build page info
 		String title = state.get("title"); // Maximum length 60-70 characters
 		
@@ -55,21 +57,25 @@ public class ShareServlet implements IServlet {
 //		<meta name="description" content="Page description. No longer than 155 characters." />
 		page.appendToHeader("<meta property=\"og:title\" content=\""+WebUtils2.attributeEncode(title)+"\" />\n" + 
 				"<meta property=\"og:type\" content=\"website\" />\n" + 
-				"<meta property=\"og:url\" content=\""+WebUtils2.attributeEncode(link)+"\" />\n" + 
-				"<meta property=\"og:image\" content='"+WebUtils2.attributeEncode(image)+"' />"
-				+"<meta property=\"og:site_name\" content=\"SoGive\" />"
+				"<meta property=\"og:url\" content=\""+WebUtils2.attributeEncode(link)+"\" />\n");
+		if (image!=null) {
+			page.appendToHeader(
+					"<meta property=\"og:image\" content='"+WebUtils2.attributeEncode(image)+"' />");
+		}
+		page.appendToHeader(	
+				"<meta property=\"og:site_name\" content=\"SoGive\" />"
 				+"<meta property='og:description' content='"+WebUtils2.attributeEncode(desc)+"' />"
 				);
 //		<meta property="article:tag" content="Article Tag" />
 //		   <meta property="article:published_time" content="2014-08-12T00:01:56+00:00" />
 //		    <meta property="article:author" content="CNN Karla Cripps" />
 
-		page.appendToHeader("<meta name='twitter:card' value='"+WebUtils2.attributeEncode(card)+"'>");
-		page.appendToHeader("<meta name='twitter:site' content='"+WebUtils2.attributeEncode(tweep)+"'>");
+		if (card!=null) page.appendToHeader("<meta name='twitter:card' value='"+WebUtils2.attributeEncode(card)+"'>");
+		if (tweep!=null) page.appendToHeader("<meta name='twitter:site' content='"+WebUtils2.attributeEncode(tweep)+"'>");
 		page.appendToHeader("<meta name='twitter:title' content='"+WebUtils2.attributeEncode(title)+"'>");
 		page.appendToHeader("<meta name='twitter:description' content='"+WebUtils2.attributeEncode(desc)+"'>");
-		page.appendToHeader("<meta name='twitter:image' content='"+WebUtils2.attributeEncode(image)+"'>");
-		page.appendToHeader("<meta name='twitter:creator' content='"+WebUtils2.attributeEncode(tweep)+"'>");
+		if (image != null) page.appendToHeader("<meta name='twitter:image' content='"+WebUtils2.attributeEncode(image)+"'>");
+		if (tweep!=null) page.appendToHeader("<meta name='twitter:creator' content='"+WebUtils2.attributeEncode(tweep)+"'>");
 //		<meta name="twitter:title" content="Page Title">
 //		<meta name="twitter:description" content="Page description less than 200 characters">
 //		<meta name="twitter:creator" content="@author_handle">
@@ -86,7 +92,13 @@ public class ShareServlet implements IServlet {
 			page.append("<script>window.location='"+link+"';</script>");			
 		}
 //		page.addStylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
-		page.append("<div class='container'><a href='"+link+"'><p>Redirecting to your page...</p><div class='card card-body'>"+"<h2>"+WebUtils.htmlEncode(title)+"</h2><p>"+WebUtils.htmlEncode(desc)+"</p><img src='"+WebUtils2.htmlEncodeWithUrlProtection(image)+"'></div></a></div>");
+		page.append("<div class='container'><a href='"+link+"'><p>Redirecting to your page...</p><div class='card card-body'>"
+				+"<h2>"+WebUtils.htmlEncode(title)+"</h2><p>"+WebUtils.htmlEncode(desc)
+				+"</p>");
+		if (image != null) {
+			page.append("<img src='"+WebUtils2.htmlEncodeWithUrlProtection(image)+"'>");
+		}
+		page.append("</div></a></div>");
 		
 		state.sendPage();
 		state.close();
