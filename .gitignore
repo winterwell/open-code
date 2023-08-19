@@ -58,3 +58,4 @@ __pycache__/
 *$py.class
 .venv/goodloop.chat/data
 goodloop.chat/data
+**/javadoc
