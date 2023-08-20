@@ -196,7 +196,7 @@ public final class IMAPClient implements Closeable {
 	}
 
 	private void connect() throws ConfigException {
-		Log.e(LOGTAG, "connect "+user+"...");
+		Log.i(LOGTAG, "connect "+user+"...");
 		assert !isConnected();
 		// add a timeout to this code
 		TimeOut timeOut = null;
@@ -222,7 +222,7 @@ public final class IMAPClient implements Closeable {
 			store = session.getStore(imap);
 			// Connect
 			store.connect(host, user, password);
-			Log.e(LOGTAG, "...connected "+user);
+			Log.i(LOGTAG, "...connected "+user);
 			// done
 		} catch (Exception e) {
 			Log.e("imap.error", e+" Session props: "+props);
