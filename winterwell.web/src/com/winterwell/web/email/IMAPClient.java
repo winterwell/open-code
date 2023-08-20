@@ -187,7 +187,7 @@ public final class IMAPClient implements Closeable {
 		if (folder == null || !folder.isOpen())
 			return;
 		try {
-			Log.e(LOGTAG, "close folder "+folder.getName());
+			Log.i(LOGTAG, "close folder "+folder.getName());
 			folder.close(false);
 			folder = null;
 		} catch (MessagingException e) {
