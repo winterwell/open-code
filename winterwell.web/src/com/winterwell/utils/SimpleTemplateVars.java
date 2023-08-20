@@ -35,6 +35,9 @@ public final class SimpleTemplateVars {
 
 	private Map<String, ?> vars;
 	private boolean useJS;
+	/**
+	 * ??
+	 */
 	private Map<String,IFn> fns = new HashMap();
 	/**
 	 * Simulate a small fragment of js
@@ -46,6 +49,11 @@ public final class SimpleTemplateVars {
 		if (useJS) useJSLite = false;
 		return this;
 	}
+	/**
+	 * Replace ${var} or ${encodeURI($var)}
+	 * @param useJSLite
+	 * @return
+	 */
 	public SimpleTemplateVars setUseJSLite(boolean useJSLite) {
 		this.useJSLite = useJSLite;
 		return this;
@@ -114,28 +122,13 @@ public final class SimpleTemplateVars {
 		if (useJS) {
 			return txt; // this is a simpler safer alternative to js 
 		}
-		Pattern pdb = Pattern.compile("\\$\\{([^\\}]*)\\}");
-		Pattern pfn = Pattern.compile("^([a-zA-Z0-9_]+)\\((.*?)\\)$");
-		String txtOut = StrUtils.replace(txt, pdb, (StringBuilder sb, Matcher m) -> {
-			String innards = m.group(1);
-			String processedInnards = process2_vars(innards);
-			Matcher pfnm = pfn.matcher(processedInnards);
-			if (pfnm.matches()) {
-				String fname = pfnm.group(1);
-				String farg = pfnm.group(2);
-				IFn fn = fns.get(fname);
-				if (fn!=null) {
-					processedInnards = StrUtils.str(fn.apply(farg));
-				}
-			}
-			if (processedInnards != null) sb.append(processedInnards);
-		});
-		return txtOut;
+		JSLite jsl = new JSLite(this).setFns(fns);
+		return jsl.process(txt);
 	}
 
 	static final Pattern p = Pattern.compile("\\$([a-zA-Z_][a-zA-Z0-9_]*)(\\.[a-zA-Z0-9_]+)?");
 	
-	private String process2_vars(String txt) {		
+	String process2_vars(String txt) {		
 		List unsets = new ArrayList();
 		String txtOut = StrUtils.replace(txt, p, (StringBuilder sb, Matcher m) -> {
 //				// Is it in a url?
