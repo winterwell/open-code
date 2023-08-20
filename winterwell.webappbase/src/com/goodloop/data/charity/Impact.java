@@ -140,6 +140,7 @@ public class Impact {
 	 * Input for proportional impacts (eg "impressions", "clicks", "installs")
 	 */
 	@ESKeyword
+	public
 	String input;
 	
 	/**
