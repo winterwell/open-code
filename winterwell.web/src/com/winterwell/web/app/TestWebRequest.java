@@ -67,5 +67,9 @@ public class TestWebRequest extends WebRequest {
 	public void put(String key, String value) {
 		put(new Key(key), value);		
 	}
+
+	public void setPostBody(String postBody) {
+		this.postBody = postBody;
+	}
 	
 }
