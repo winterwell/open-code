@@ -112,7 +112,8 @@ public class LgServlet {
 		// NB: dont IP/user track simple events, which are server-side
 		boolean stdTrackerParams = ! DataLogEvent.simple.equals(tag) && state.get(track, true);
 		// Read the "extra" event parameters
-		Map<String,Object> params = (Map) state.get(PARAMS);		
+		Object ps = state.get(PARAMS);
+		Map<String,Object> params = ps instanceof Map? (Map) ps : null; // NB: avoid a class-cast-exception caused by bad call -- an un-encoded url macro with its own p=, seen Aug 2023 		
 		if (params==null) {
 			// params from the url?
 			final Map<String, String> smap = state.getMap();
