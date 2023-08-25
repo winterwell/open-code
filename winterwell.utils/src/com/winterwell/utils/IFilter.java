@@ -1,10 +1,14 @@
 package com.winterwell.utils;
 
+import java.util.function.Function;
+
 import com.winterwell.utils.containers.Containers;
 
 /**
  * A filter, because they are useful and it saves having to define this kind of
  * interface in many places.
+ * 
+ * TODO Function<X,Boolean> does this now -- we should switch
  * 
  * @see Containers#filter(java.util.Collection, IFilter)
  * @see Containers#first(java.util.Collection, IFilter)
@@ -34,6 +38,8 @@ public interface IFilter<X> {
 
 
 	/**
+	 * TODO rename to `apply` to match Function
+	 * 
 	 * @param x
 	 * @return true if x passes the filter, false if it is rejected.
 	 *         <p>
