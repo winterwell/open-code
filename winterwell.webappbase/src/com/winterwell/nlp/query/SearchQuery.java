@@ -24,11 +24,8 @@ import com.winterwell.utils.web.IHasJson;
 import com.winterwell.utils.web.SimpleJson;
 
 /**
- * 
- * NB: copy-pasta then simplified from SoDash's SearchSpec
- * 
  * Interpret a search string, handling stuff like "quoted terms", OR,
- * near:London
+ * near:London. Objects are mostly immutable.
  * <p>
  * TODO should we add substring searching? E.g. *?
  * 
@@ -896,7 +893,7 @@ public class SearchQuery implements Serializable, IHasJson {
 	 * @param propValues This will be de-duped. Must NOT contain null or blank
 	 * @return a new SearchQuery
 	 */
-	public SearchQuery addPropOr(String propKey, Collection<String> propValues) {
+	public SearchQuery withPropOr(String propKey, Collection<String> propValues) {
 		if (propValues.isEmpty()) {
 			throw new IllegalArgumentException(propKey+":nothing");
 		}
@@ -939,13 +936,13 @@ public class SearchQuery implements Serializable, IHasJson {
 	}
 
 	/**
-	 * return a new SeqrchQuery with key:value
+	 * return a new SearchQuery with key:value
 	 * @param key
 	 * @param value
 	 * @return use this!
 	 */
-	public SearchQuery setProp(String key, String value) {
-		return addPropOr(key, Collections.singleton(value));
+	public SearchQuery withProp(String key, String value) {
+		return withPropOr(key, Collections.singleton(value));
 	}
 
 }

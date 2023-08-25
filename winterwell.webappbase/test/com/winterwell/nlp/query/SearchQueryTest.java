@@ -189,7 +189,7 @@ public class SearchQueryTest {
 		}
 		{
 			SearchQuery sq = new SearchQuery("foo");
-			SearchQuery sq2 = sq.addPropOr("mykey", Arrays.asList("v1","value two!"));
+			SearchQuery sq2 = sq.withPropOr("mykey", Arrays.asList("v1","value two!"));
 			String sq2s = sq2.getRaw();
 			assert sq2s.equals("foo (mykey:v1 OR mykey:\"value two!\")") : sq2s;
 			SearchQuery sq2b = new SearchQuery(sq2s);
