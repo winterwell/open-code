@@ -320,7 +320,12 @@ public class LgServlet {
 				}
 			}
 		}
-
+		
+		// do not store ip if tracking is off
+		if (!tracking) {
+			params.remove("ip");
+		}
+		
 		
 		// screen out our IPs?
 		if ( ! accept(dataspace, tag, params)) {
@@ -463,13 +468,12 @@ public class LgServlet {
 		} else {
 			params.putIfAbsent("ua", ua);
 		}
-		// Do not track IP if cookie is off
 		if (trckId != null) {
 			// Replace $user with tracking-id, and $		
 			params.putIfAbsent("user", trckId);			
-			// ip: $ip
-			params.putIfAbsent("ip", state.getRemoteAddr());
 		}
+		
+		params.putIfAbsent("ip", state.getRemoteAddr());
 			
 		BrowserType bt = getBrowserInfo(ua);
 		boolean mobile = bt.isMobile();		
