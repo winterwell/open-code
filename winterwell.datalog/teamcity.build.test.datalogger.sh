@@ -5,6 +5,7 @@ BUILD_TYPE="CI" \
 PROJECT_NAME="datalogger" \
 NAME_OF_SERVICE="lg" \
 BRANCH_NAME="master" \
+BOB_BUILD_PROJECT_NAME="BuildDataLog" \
 GIT_REPO_URL="github.com:good-loop/open-code" \
 PROJECT_ROOT_ON_SERVER="/home/winterwell/open-code/winterwell.datalog" \
 PROJECT_USES_BOB="yes" \
