@@ -113,4 +113,39 @@ public class BuildHacks {
 		if (_hostname==null) _hostname = WebUtils.fullHostname();
 		return _hostname;
 	}
+
+	public static String changeEndpointServerType(String endpoint, KServerType src) {
+		// remove if present
+		String _endpoint = endpoint.replaceFirst("local|test|stage", "");
+		// and set again
+		switch(src) {
+		case PRODUCTION:
+			break;
+		case STAGE:
+			_endpoint = _endpoint.replace("//", "//stage");
+			break;
+		case TEST:
+			_endpoint = _endpoint.replace("//", "//test");
+			break;
+		case LOCAL:
+			_endpoint = _endpoint.replace("//", "//local");
+			break;
+		}
+		// HACK Sogive is different
+		if (endpoint.contains("sogive")) {
+			 switch(src) {
+			 case PRODUCTION:
+				_endpoint = "https://app.sogive.org/charity";
+				break;
+			 case STAGE: // ??
+			 case TEST:
+				 _endpoint = "https://test.sogive.org/charity";
+				break;
+			case LOCAL:	// https not working for local - DW Jan 2022
+				_endpoint = "http://local.sogive.org/charity";
+				break;
+			}	 			 
+		}
+		return _endpoint;
+	}
 }

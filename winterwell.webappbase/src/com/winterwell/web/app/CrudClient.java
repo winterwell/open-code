@@ -2,6 +2,7 @@ package com.winterwell.web.app;
 
 import java.util.Map;
 
+import com.winterwell.bob.wwjobs.BuildHacks;
 import com.winterwell.data.AThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.XIdTypeAdapter;
@@ -69,32 +70,7 @@ public class CrudClient<T> {
 	 * @return
 	 */
 	public String setServerType(KServerType src) {
-		String _endpoint = endpoint.replaceFirst("local|test", "");
-		switch(src) {
-		case PRODUCTION:
-			break;
-		case TEST:
-			_endpoint = _endpoint.replace("//", "//test");
-			break;
-		case LOCAL:
-			_endpoint = _endpoint.replace("//", "//local");
-			break;
-		}
-		// HACK Sogive is different
-		if (endpoint.contains("sogive")) {
-			 switch(src) {
-			 case PRODUCTION:
-				_endpoint = "https://app.sogive.org/charity";
-				break;
-			 case TEST:
-				 _endpoint = "https://test.sogive.org/charity";
-				break;
-			case LOCAL:	// https not working for local - DW Jan 2022
-				_endpoint = "http://local.sogive.org/charity";
-				break;
-			}	 			 
-		}
-		this.endpoint = _endpoint;
+		this.endpoint = BuildHacks.changeEndpointServerType(endpoint, src);
 		return endpoint;
 	}
 	
