@@ -129,7 +129,8 @@ public class FileUtils {
 	public static final List<String> FONT_TYPES = Arrays.asList("ttf", "otf", "woff", "woff2");
 	
 	/** Common document file extensions - not complete! */
-	public static final List<String> DOCUMENT_TYPES = Arrays.asList("doc", "docx", "ppt", "pptx", "xls", "xlsx", "pdf");
+	public static final List<String> DOCUMENT_TYPES = Arrays.asList(
+			"doc", "docx", "ppt", "pptx", "xls", "xlsx", "pdf");
 
 	private static File wwdir;
 

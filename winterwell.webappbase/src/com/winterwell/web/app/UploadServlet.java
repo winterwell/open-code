@@ -39,6 +39,8 @@ import com.winterwell.youagain.client.YouAgainClient;
  *  - upload: The file!
  *  - convert: Optional. Change the image size?
  * 
+ * See MediaUploadServlet which handles GL's uploads
+ * 
  * @author daniel
  *
  */
