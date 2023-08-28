@@ -17,3 +17,7 @@ Key classes:
 - LgServlet - log data
 - ESStorage
 
+# Docs
+
+Auto-generated Java docs can be found at: https://java-doc.good-loop.com/datalog/
+
