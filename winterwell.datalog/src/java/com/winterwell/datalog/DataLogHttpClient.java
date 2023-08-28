@@ -145,7 +145,7 @@ public class DataLogHttpClient {
 	 * @param q
 	 * @param maxResults
 	 * @return Can this return null?? when does that happen??
-	 * @throws WebEX.E401 You have to habd setup auth (see {@link #initAuth(String)}) to get events data. 
+	 * @throws WebEX.E401 You have to have setup auth (see {@link #initAuth(String)}) to get events data. 
 	 */
 	public List<DataLogEvent> getEvents(SearchQuery q, int maxResults) throws WebEx.E401 {
 		return getEvents2(q, maxResults, null);
@@ -166,6 +166,9 @@ public class DataLogHttpClient {
 	}
 	
 	List<DataLogEvent> getEvents2(SearchQuery q, int maxResults, Map paging) throws WebEx.E401 {
+		if (auth==null || auth.isEmpty()) {
+			throw new WebEx.E401("getEvents requires auth. Call setAuth() first.");
+		}
 		// Call DataServlet		
 		Map<String, String> vars = new ArrayMap(
 				"dataspace", dataspace, 

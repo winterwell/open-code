@@ -170,9 +170,18 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 
 	private static final String DEVS = "3d0f3b9ddcacec30c4008c5e030e6c13a478cb4f 886fed01789257424228dc95fe3b5b319335ab6d e51e0366dbb789ed520ec6de35f106176865b05c 748e1641a368164906d4a0c0e3965345453dcc93 79069711144d44b4f370f4b55eb7351cb7917547 c3918f39022407dee6a0056ceca9b1aa80e8e4ce 17b9e1c64588c7fa6419b4d29dc1f4426279ba01 bdc6f8434ef1f9386b4f11352684390814ee550e bd6658dc079b66a2294520d850705b9aa350119d";
 
+	/**
+	 * HACK Is this a GL developer or GL-app account?
+	 * @param state
+	 * @return
+	 */
 	public static boolean isDev(WebRequest state) {
 		XId uxid = state.getUserId();
 		if (uxid == null) return false;
+		// machine-to-machine?
+		if ("good-loop.com".equals(uxid.getName()) && uxid.isService("app")) {
+			return true;
+		}
 		if ( ! uxid.getName().endsWith("@good-loop.com")) return false;
 		String n = StrUtils.substring(uxid.getName(), 0, - "@good-loop.com".length());
 		String sn = StrUtils.sha1(n);
