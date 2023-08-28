@@ -152,8 +152,9 @@ public class DataServlet implements IServlet {
 		
 		// num examples
 		int size = state.get(SIZE, paging==null? 10 : 1000);
-		// ONLY give examples for dev
-		if ( ! isLoggedIn(state) && ! WinterwellProjectFinder.isDev(state) && size > 0) {
+		boolean isGLUser = glUserChecker.check(state);
+		// ONLY give examples for dev 
+		if (size > 0 && ! isGLUser) {
 			size = 0;
 			state.addMessage(new AjaxMsg(KNoteType.info, "401", "Not logged in => no examples"));
 			if (paging != null) {
@@ -249,8 +250,7 @@ public class DataServlet implements IServlet {
 			// TODO use some user/session based value instead to spread load????
 		}
 		
-		// Flags that change the result so must be cached separately
-		boolean isGLUser = glUserChecker.check(state);
+		// Flags that change the result so must be cached separately		
 		boolean isDebug = state.debug && isLoggedIn(state);
 
 		// Use the cache?
