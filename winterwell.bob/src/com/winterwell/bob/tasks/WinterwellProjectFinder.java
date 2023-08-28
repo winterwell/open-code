@@ -59,9 +59,9 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 		if ("taskeroo".equals(_projectName)) {
 			_projectName = "mondaybot";
 		}
-		if ("mesaureengine".equals(_projectName)) {
+		if ("mesaurepublisher".equals(_projectName)) {
 			_projectName = "greendata";
-		}		
+		}
 		List<File> possDirs = new ArrayList();
 		// are we in the project dir?
 		if (FileUtils.getWorkingDirectory().getName().equals(_projectName)) {
@@ -140,6 +140,8 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 			
 		"adserver",
 			"git@github.com:/good-loop/adserver",
+		"apiserver", 
+			"git@github.com:/good-loop/code apiserver",
 		"calstat",
 			"git@github.com:/good-loop/calstat",
 		"elasticsearch-java-client",
