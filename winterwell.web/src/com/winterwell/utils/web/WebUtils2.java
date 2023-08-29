@@ -194,7 +194,7 @@ public class WebUtils2 extends WebUtils {
 	}
 	
 	/**
-	 * 
+	 * Remove some common gumpf - like utm parameters
 	 * @param url
 	 * @return can be null if url is null or ""
 	 */
