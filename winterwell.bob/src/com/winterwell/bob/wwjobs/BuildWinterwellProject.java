@@ -75,8 +75,10 @@ public class BuildWinterwellProject extends BuildTask {
 	public List<BuildTask> getDependencies() {
 		// what projects does Eclipse specify?
 		ArraySet deps = new ArraySet();
-		// what projects does Eclipse specify?
-		assert projectDir != null : this;
+		if (projectDir == null) {
+			throw new IllegalStateException("null projectDir");
+		}
+		// what projects does Eclipse specify?		
 		EclipseClasspath ec = new EclipseClasspath(projectDir);
 		List<String> projects = ec.getReferencedProjects();
 		for (String pname : projects) {			
@@ -333,7 +335,9 @@ public class BuildWinterwellProject extends BuildTask {
 	 * @param projectName
 	 */	
 	public BuildWinterwellProject(File projectDir, String projectName) {
-		assert projectDir != null : "no projectdir for " +projectName+" Update WinterwellProjectFinder?";
+		if (projectDir == null) {
+			throw new NullPointerException("no projectdir for " +projectName+" Update WinterwellProjectFinder?");
+		}
 		this.projectDir = projectDir;
 		assert projectDir.isDirectory() : projectDir+" "+this;
 		if (projectName==null) projectName = projectDir.getName();
