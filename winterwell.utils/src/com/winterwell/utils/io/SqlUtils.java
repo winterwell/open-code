@@ -1267,6 +1267,8 @@ public class SqlUtils {
 	public static void executeScript(String initSQL, boolean swallowExceptions) {
 		String[] blocks = initSQL.split("----.*\\n");
 		for (String string : blocks) {
+			// all comments?
+//			string = string.replaceAll("--.*?\\n", ""); // TODO
 			executeCommand(string, null, swallowExceptions);
 		}
 	}
