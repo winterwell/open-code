@@ -51,17 +51,14 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 	 * @return null on failure
 	 */
 	@Override
-	public File apply(String _projectName) {
+	public File apply(String _projectName) {		
 		// HACK portal is in adserver
 		if ("portal".equals(_projectName)) {
 			_projectName = "adserver";
 		}
 		if ("taskeroo".equals(_projectName)) {
 			_projectName = "mondaybot";
-		}
-		if ("mesaurepublisher".equals(_projectName)) {
-			_projectName = "greendata";
-		}
+		}		
 		List<File> possDirs = new ArrayList();
 		// are we in the project dir?
 		if (FileUtils.getWorkingDirectory().getName().equals(_projectName)) {
@@ -82,6 +79,16 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 		try {
 			File wdir = FileUtils.getWinterwellDir();
 			// prefer the warehouse
+			// ...hard-coded?
+			String g_s = WinterwellProjectFinder.KNOWN_PROJECTS.get(_projectName);
+			if (g_s!=null) {
+				String[] gs = g_s.split(" ");
+				if (gs.length>2) {
+					File dir = new File(wdir, "bobwarehouse/"+gs[1]+"/"+gs[2]);
+					possDirs.add(dir);		
+				}
+			}
+			// ...by project name?
 			possDirs.add(new File(wdir, "bobwarehouse/"+_projectName));
 			possDirs.add(new File(wdir, "bobwarehouse/open-code/"+_projectName));
 			// NB: winterwell-code is typically cloned as code, so let's check both options
@@ -150,6 +157,8 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 			"https://github.com/good-loop/jerbil",
 		"juice",		
 			"https://github.com/good-loop/juice",
+		"measurepublisher",
+			"git@github.com:/good-loop/code code greendata",
 		"play.good-loop.com",
 			"https://github.com/good-loop/play.good-loop.com.git",
 			
