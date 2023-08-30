@@ -44,15 +44,19 @@ import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.ArraySet;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVSpec;
 import com.winterwell.utils.io.CSVWriter;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.time.Dt;
 import com.winterwell.utils.time.Period;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.JsonPatch;
 import com.winterwell.utils.web.JsonPatchOp;
+import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
@@ -63,6 +67,7 @@ import com.winterwell.web.data.IHasXId;
 import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.IntField;
+import com.winterwell.web.fields.JsonField;
 import com.winterwell.web.fields.ListField;
 import com.winterwell.web.fields.SField;
 import com.winterwell.youagain.client.AuthToken;
@@ -623,12 +628,16 @@ public abstract class CrudServlet<T> implements IServlet {
 	
 	/**
 	 * e.g. "amount-desc"
+	 * 
+	 * HACK "all" is handled as Sort._SHARD_DOC
 	 */
 	public static final SField SORT = new SField("sort");
 	public static final String LIST_SLUG =  "_list";
 	public static final IntField SIZE = new IntField("size");
 	public static final IntField FROM = new IntField("from");
 	public static final String ALL = "all";
+
+	private static final SField AFTERNEXT = new SField("afterNext");
 
 	protected final JThing<T> doPublish(WebRequest state) throws Exception {
 		// For publish, let's force the update.
@@ -830,7 +839,7 @@ public abstract class CrudServlet<T> implements IServlet {
 		KStatus status = state.get(AppUtils.STATUS, KStatus.DRAFT);
 		String q = state.get(CommonFields.Q);
 		String prefix = state.get("prefix");
-		String sort = state.get(SORT, defaultSort);		
+		String sort = state.get(SORT, defaultSort);
 		int size = state.get(SIZE, 1000);
 		int from = 0;
 		try {
@@ -923,10 +932,15 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 		
 		List<Map> items = Containers.apply(hits2, h -> h.getJThing().map());
+		List sa = sr.getSearchAfter(); // null if sort is not set
+		String pit = sr.getPointInTime();
+		String next = null;
+		if (sa!=null) next = gson().toJson(new ArrayMap("searchAfter", sa, "pit", pit));
 		String json = gson().toJson(
-				new ArrayMap(
+				new ArrayMap( // NB: see CrudSearchResults, which can consume this json
 					"hits", items, 
-					"total", total
+					"total", total,
+					"next", next
 				));
 		JsonResponse output = new JsonResponse(state).setCargoJson(json);
 		// ...send
@@ -1263,10 +1277,23 @@ public abstract class CrudServlet<T> implements IServlet {
 		if (qb!=null) {
 			s.setQuery(qb);
 		}
-				
+
+		// paging?
+		String afterNext = stateOrNull==null?null : stateOrNull.get(AFTERNEXT);
+		String pit = null;
+		if (afterNext!=null) {
+			Map an = gson().fromJson(afterNext);
+			List sa = SimpleJson.getList(an,"searchAfter");
+			pit = (String) an.get("pit");
+			if (pit!=null) {
+				s.setPointInTime(pit, keep_alive);
+			}
+			s.setSearchAfter(sa);
+		}
+
 		// Sort e.g. sort=date-desc for most recent first
 		if (sort!=null) {			
-			doList3_addSort(sort, s);
+			doList3_addSort(sort, s, pit);
 		}
 		
 		s.setSize(size);
@@ -1281,12 +1308,26 @@ public abstract class CrudServlet<T> implements IServlet {
 		return sr;
 	}
 
+	static Dt keep_alive = new Dt(5, TUnit.MINUTE);
+
 	/**
 	 * see {@link #SORT}
 	 * @param sort
 	 * @param s
+	 * @param pit2 
 	 */
-	private void doList3_addSort(String sort, SearchRequest s) {
+	private void doList3_addSort(String sort, SearchRequest s, String pit) {
+		// HACK: all => sort so we can page over all results
+		if ("all".equals(sort)) {
+			s.addSort(Sort._SHARD_DOC);
+			// also needs a point-in-time
+			if (pit==null) {
+				Collection<String> indices = s.getIndices();
+				pit = _es.getPointInTime(indices.toArray(StrUtils.ARRAY), keep_alive);
+				s.setPointInTime(pit, keep_alive);
+			}
+			return;
+		}
 		// split on comma to support hierarchical sorting, e.g. priority then date
 		String[] sorts = sort.split(",");
 		for (String sortBit : sorts) {
