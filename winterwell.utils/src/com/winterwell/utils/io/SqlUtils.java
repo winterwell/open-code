@@ -192,6 +192,7 @@ public class SqlUtils {
 
 			return con;
 		} catch (Exception e) {
+			Log.e(LOGTAG, "getConnection failed for "+dboptions);
 			throw Utils.runtime(e);
 		}
 	}
