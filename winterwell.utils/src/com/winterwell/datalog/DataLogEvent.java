@@ -109,6 +109,7 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"pid", String.class, // a supplier-specific publisher ID (e.g. a numeric code which we may struggle to unravel)
 			"ad", String.class,
 			"agency", String.class,
+			"format", String.class, // video|display
 			"vert", String.class,
 			"vertiser", String.class, // advertiser
 			"bid", String.class, // Our Bid ID
@@ -198,6 +199,7 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"mbl", Boolean.class,
 			"ua", StringBuilder.class, // user agent
 			"browser", String.class,
+			"dvc", String.class, // device
 			"env", String.class, // environment -- possibly this should be StringBuilder for word handling?? but does bby then break??
 			"os", String.class,
 			// no-index (object)
@@ -617,6 +619,10 @@ public final class DataLogEvent implements Serializable, IHasJson
 			map.put(pv.getKey(), v);
 		}
 		return map;
+	}
+
+	public void putPropAll(Map<String, ?> propsToAdd) {
+		props.putAll(propsToAdd);		
 	}
 	
 }
