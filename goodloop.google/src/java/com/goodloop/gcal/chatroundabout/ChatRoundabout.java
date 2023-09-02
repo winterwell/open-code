@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.TimeZone;
 
 import com.goodloop.gcal.GCalClient;
 import com.google.api.services.calendar.model.Calendar;

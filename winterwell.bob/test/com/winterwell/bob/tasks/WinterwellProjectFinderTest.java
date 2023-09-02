@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import com.winterwell.utils.StrUtils;
 import com.winterwell.web.app.TestWebRequest;
-import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
 
 public class WinterwellProjectFinderTest {

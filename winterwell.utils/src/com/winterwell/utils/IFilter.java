@@ -1,7 +1,5 @@
 package com.winterwell.utils;
 
-import java.util.function.Function;
-
 import com.winterwell.utils.containers.Containers;
 
 /**

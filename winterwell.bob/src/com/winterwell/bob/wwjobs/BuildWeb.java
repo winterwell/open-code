@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.winterwell.bob.BuildTask;
 import com.winterwell.bob.tasks.MavenDependencyTask;
-import com.winterwell.web.app.KServerType;
 
 public class BuildWeb extends BuildWinterwellProject {
 

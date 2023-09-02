@@ -23,7 +23,6 @@ import com.winterwell.es.StdESRouter;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.SearchResponse;
-import com.winterwell.es.client.sort.Sort;
 import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;

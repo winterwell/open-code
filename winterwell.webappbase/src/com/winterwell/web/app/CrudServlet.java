@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.winterwell.bob.tasks.GitTask;
-import com.winterwell.bob.tasks.WinterwellProjectFinder;
 import com.winterwell.bob.wwjobs.BuildHacks;
 import com.winterwell.data.AThing;
 import com.winterwell.data.ISecurityByShares;
