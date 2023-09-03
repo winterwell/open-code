@@ -120,6 +120,17 @@ public class JSend<X> implements IHasJson {
 		return code;
 	}
 
+	/**
+	 * @return 	error or null
+	 */
+	public WebEx getException() {
+		if (code < 400) return null;
+		if (code >= 500) {
+			return new WebEx.E50X(code, null, message);
+		}
+		return new WebEx.E40X(code, message);
+	}
+	
 	public JSend setCode(Integer code) {
 		this.code = code;
 		

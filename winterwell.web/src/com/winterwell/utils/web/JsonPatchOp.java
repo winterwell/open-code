@@ -64,7 +64,9 @@ public class JsonPatchOp implements Serializable, IHasJson {
 	}
 	
 	/**
-	 * Make from incoming json
+	 * Make from incoming json.
+	 * 
+	 * For making in java - see the static add() remove() methods.
 	 * @param diffOp
 	 */
 	public JsonPatchOp(Map diffOp) {

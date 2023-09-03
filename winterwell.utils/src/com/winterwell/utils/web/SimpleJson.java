@@ -53,6 +53,9 @@ public class SimpleJson {
 	 */
 	public static <X> X get(Object jsonObj, Object... fields) {
 		if (jsonObj==null) return null;
+		if (jsonObj.getClass().isArray()) { // standardise array to List
+			jsonObj = Containers.asList(jsonObj);
+		}
 		assert jsonObj instanceof Map || jsonObj instanceof List : jsonObj;
 		for (int i = 0; i < fields.length; i++) {
 			// object property

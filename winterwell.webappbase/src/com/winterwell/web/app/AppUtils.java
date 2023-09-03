@@ -377,7 +377,7 @@ public class AppUtils {
 	
 	/**
 	 * 
-	 * @param path
+	 * @param path Usually targets draft, but could target published
 	 * @param item
 	 * @param diffs of Maps or JsonPatchOps
 	 * @param stateCanBeNull

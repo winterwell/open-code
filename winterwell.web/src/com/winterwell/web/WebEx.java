@@ -93,8 +93,8 @@ public class WebEx extends RuntimeException {
 	public static class E40X extends WebEx {
 		private static final long serialVersionUID = 1L;
 
-		public E40X(int code, String url) {
-			super(code, url);
+		public E40X(int code, String urlOrMsg) {
+			super(code, urlOrMsg);
 		}
 
 		public E40X(int code, String url, String msg) {
