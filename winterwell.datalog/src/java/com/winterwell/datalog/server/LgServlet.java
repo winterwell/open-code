@@ -85,7 +85,8 @@ public class LgServlet {
 	/**
 	 * Don't add these as parameters
 	 */
-	static final List<String> NOTP = Arrays.asList(TAG.getName(), COUNT.getName(), DATASPACE.getName(), "track", "ow");
+	static final List<String> NOTP = Arrays.asList(
+			TAG.getName(), COUNT.getName(), DATASPACE.getName(), "track", "ow");
 	/**
 	 * group-by ID for merging several events into one.
 	 */
@@ -505,6 +506,7 @@ public class LgServlet {
 
 		// remove some gumpf (UTM codes)
 		ref = WebUtils2.cleanUp(ref);
+		pub = WebUtils2.cleanUp(pub);
 		site = WebUtils2.cleanUp(site);
 		u = WebUtils2.cleanUp(u);
 				
@@ -528,7 +530,7 @@ public class LgServlet {
 			}
 		}
 		// fail? put the adtech site back :(
-		if ( ! params.containsKey(DOMAIN)) {
+		if ( ! params.containsKey(DOMAIN) && domain != null) {
 			Log.d(LOGTAG, "adtech site is the only domain info "+state);
 			params.put(DOMAIN, domain);
 		}

@@ -489,6 +489,9 @@ public class ESStorage implements IDataLogStorage {
 	
 	/**
 	 * WARNING: writes to the X_monthyear indices. If you've manually renamed an index it writes to - that could go wrong!
+	 * 
+	 * TODO refactor to be used by saveEvent as well
+	 * 
 	 * @param dataspace
 	 * @param events
 	 * @param bucketPeriod Can be null (will be taken from the events)

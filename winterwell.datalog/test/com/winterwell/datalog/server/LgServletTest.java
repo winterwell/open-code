@@ -108,6 +108,33 @@ public class LgServletTest {
 		assert ok.startsWith("{\"messages\":[],\"cargo\":{\"count\":1.0,\"dataspace\":\"gl\",\"evt\":[\"testevent\"],\"id\":\"gl_testevent_");
 	}
 
+
+	@Test
+	public void testLGWithOverwriteButNoId() {		
+		FakeBrowser fb = new FakeBrowser();
+		fb.setDebug(true);
+		String url = "http://127.0.0.1:"+port+"/pxl.png";
+		Map<String, String> vars = new ArrayMap(
+			"d", "test",
+			"macro","ttd",
+			"agency","EERg864a",
+			"vert","1wfnskuy",
+			"ow",1,
+			"env","Mobile",
+			"adid","jdPvg91t",
+			"t","pixel",
+			"vertiser","dulAzyfX",
+			"size","9544x9544",
+			"campaign","PAdu9KoG",
+			"pub","www.bbc.com"
+			);						
+		String ok = fb.getPage(url, vars);
+		System.out.println(ok);
+//		JSend jsend = JSend.parse(ok).check();
+//		System.out.println(jsend.getData());
+	}
+
+	
 	@Test
 	public void testParser() throws IOException {
 		Parser p = LgServlet.uaParser();
