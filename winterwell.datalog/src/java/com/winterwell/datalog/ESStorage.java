@@ -297,8 +297,9 @@ public class ESStorage implements IDataLogStorage {
 			id = event.getId();
 		} else {
 			// put a time marker on it -- the end in seconds is enough
-			long secs = event.getTime().getTime() / 1000;
+			long secs = event.getTime().getTime() / 1000;			
 			id = event.getId()+"_"+secs;
+			// NB: If you want to use a nonce -- set uniq=1 when calling LgServlet. There's also a hack for d=green
 		}
 		
 		// always have a time

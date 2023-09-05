@@ -120,6 +120,7 @@ public class LgServletTest {
 			"agency","EERg864a",
 			"vert","1wfnskuy",
 			"ow",1,
+			"uniq",1,
 			"env","Mobile",
 			"adid","jdPvg91t",
 			"t","pixel",
