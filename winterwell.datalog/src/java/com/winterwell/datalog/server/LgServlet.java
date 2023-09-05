@@ -139,9 +139,7 @@ public class LgServlet {
 		// - No, we can confuse foreign utm codes with our own (e.g. campaign)
 		// NB: these are also removed from the url later -- look for WebUtils2.cleanUp()
 //		String ref = state.getReferer();
-//		if (ref != null) {
-//			readGoogleAnalyticsTokens(ref, params);
-//		}
+//		if (ref != null) readGoogleAnalyticsTokens(ref, params);
 
 		// group by
 		String gby = state.get(GBY);

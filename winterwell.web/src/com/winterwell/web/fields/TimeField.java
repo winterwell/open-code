@@ -26,7 +26,7 @@ import com.winterwell.utils.time.TimeUtils;
  * TODO handle time zones configurably
  * 
  * @author daniel
- * @testedby  TimeFieldTest}
+ * @testedby  TimeFieldTest
  */
 public class TimeField extends AField<ICallable<Time>> {
 

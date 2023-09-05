@@ -90,6 +90,7 @@ public class DataLogRemoteStorage implements IDataLogStorage {
 		logEndpoint = settings.logEndpoint;
 		getDataEndpoint = settings.dataEndpoint;
 		debug = settings.debug;
+		saveActor.setDebug(debug);
 		return this;
 	}
 
@@ -193,7 +194,7 @@ public class DataLogRemoteStorage implements IDataLogStorage {
 		return "queued";
 	}
 
-	static final Actor<SaveDataLogEvent> saveActor = new DataLogRemoteStorageActor();
+	static final DataLogRemoteStorageActor saveActor = new DataLogRemoteStorageActor();
 
 	final static class SaveDataLogEvent {
 		private DataLogRemoteStorage dlrs;
@@ -223,13 +224,16 @@ public class DataLogRemoteStorage implements IDataLogStorage {
 				vars.put("gby"/* LgServlet.GBY.name */, se.event.groupById); // group it?			
 				vars.put(DataLogFields.t.name, tag); // type
 				vars.put("count", se.event.count);
-				vars.put("time", se.event.getTime());
+				// time accuracy: to the second (not millisecond??)
+				Time time = se.event.getTime();
+				String ts = time==null? null : time.toISOString(); // paranoia! time should always be set here
+				vars.put("time", ts);
 				// debug?
 				if (debug) {
 					vars.put("debug", debug);
 				}
 				// props
-				String p = WebUtils2.generateJSON(se.event.getProps());
+				String p = WebUtils2.stringify(se.event.getProps());
 				vars.put("p", p);
 				// ...unindexed
 				if (se.event.unindexed !=null) { 	
