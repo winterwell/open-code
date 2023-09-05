@@ -128,6 +128,7 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"co2base", Double.class, // base / creative / supply-path emissions 
 			"co2creative", Double.class,
 			"co2supplypath", Double.class,
+			"co2pm", Double.class,
 			"creativebytes", Long.class,
 			"proc", String.class, // see KProcessor
 			"alg", String.class, // FUTURE algorithm used"
