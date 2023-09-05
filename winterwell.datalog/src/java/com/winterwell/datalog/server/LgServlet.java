@@ -499,6 +499,7 @@ public class LgServlet {
 			params.remove(DOMAIN);
 		}
 		String ref = state.getReferer();
+		String pub = state.get("pub"); // GreenTag??
 		String site = state.get("site"); // DfP hack
 		String u = state.get("url"); // ??some of our Green Ad Tag macros are set to do this??
 
@@ -507,7 +508,7 @@ public class LgServlet {
 		site = WebUtils2.cleanUp(site);
 		u = WebUtils2.cleanUp(u);
 				
-		for(String _url : new String[] {domain, ref, site, u}) {
+		for(String _url : new String[] {domain, pub, ref, site, u}) {
 			if (Utils.isBlank(_url)) continue;
 			String udomain = WebUtils.getDomain(_url);
 			if (udomain==null) continue; // corner-case paranoia
@@ -528,7 +529,7 @@ public class LgServlet {
 		}
 		// fail? put the adtech site back :(
 		if ( ! params.containsKey(DOMAIN)) {
-			Log.d(LOGTAG, "adtech is only info "+state);
+			Log.d(LOGTAG, "adtech site is the only domain info "+state);
 			params.put(DOMAIN, domain);
 		}
 	}

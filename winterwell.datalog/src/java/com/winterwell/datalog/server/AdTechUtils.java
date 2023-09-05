@@ -19,6 +19,13 @@ public class AdTechUtils {
 
 	private static Set<String> adtechSites;
 	
+	/**
+	 * Is this an adtech domain? eg a DSP or SSP?
+	 * 
+	 * Looks for (local) data/adtech-sites.csv first, then datalog's version 
+	 * @param domain
+	 * @return
+	 */
 	public static boolean isTechSite(String domain) {
 		if (adtechSites == null) {
 			HashSet<String> _adtechSites = new HashSet();
