@@ -85,15 +85,17 @@ public class JSend<X> implements IHasJson {
 		return data.map();
 	}
 
-	public JSend<X> check() {
+	/**
+	 * 
+	 * @return this
+	 * @throws exception if there was an error
+	 */
+	public JSend<X> check() throws WebEx, FailureException {
 		if (status==KAjaxStatus.success) {
 			return this;
 		}
 		if (code==null) {
 			throw new FailureException(getMessage());
-		}
-		if (code == 404) {
-			throw new WebEx.E404(null, getMessage());
 		}
 		throw WebEx.fromErrorCode(code, null, getMessage());
 	}
@@ -118,17 +120,6 @@ public class JSend<X> implements IHasJson {
 
 	public Integer getCode() {
 		return code;
-	}
-
-	/**
-	 * @return 	error or null
-	 */
-	public WebEx getException() {
-		if (code < 400) return null;
-		if (code >= 500) {
-			return new WebEx.E50X(code, null, message);
-		}
-		return new WebEx.E40X(code, message);
 	}
 	
 	public JSend setCode(Integer code) {
