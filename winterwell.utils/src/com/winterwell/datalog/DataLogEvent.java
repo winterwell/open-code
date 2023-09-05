@@ -279,6 +279,8 @@ public final class DataLogEvent implements Serializable, IHasJson
 
 	/**
 	 * If true, this event can be saved ignoring any existing event.
+	 * 
+	 * NB: the ID will come from group-by-id OR md5(props)+time(seconds)
 	 */
 	public boolean overwrite;
 	
@@ -315,6 +317,7 @@ public final class DataLogEvent implements Serializable, IHasJson
 	 * 
 	 * @param dataspace e.g. "default" (which becomes datalog.default in ES)
 	 * @param groupById This will be used to make the ID. can be null. Allows for grouping several events into one.
+	 * If set, it sets the ID including the time-part. Otherwise the ID is props + seconds - see makeId()
 	 * @param count e.g. 1
 	 * @param eventType e.g. "minview"
 	 * @param properties e.g. {url, pub} This is used directly and can be modified! Can be null
@@ -372,19 +375,23 @@ public final class DataLogEvent implements Serializable, IHasJson
 	 * The storage layer should bucket identical IDs within the same time-bucket.
 	 * If you need more fine-grained saving - then add a nonce / timestamp.
 	 * 
-	 * @param groupById Can be null 
+	 * @param _groupById Can be null. Set this to control the id (including the time part)
+	 * NB: uniq (handled earlier in LgServlet) will set this to a nonce. 
 	 * @param dataLogEvent
 	 * @return ID -- if groupById is given, this is returned as-is (and time will not later be added).
 	 * If groupById is null, then this is based on eventType + props (and time _will_ later be added).
 	 */
-	private String makeId(String groupById) {
+	private String makeId(String _groupById) {
 		// If group-by-ID is given, use that
-		if (groupById!=null && ! groupById.isEmpty()) {
-			return groupById;	
+		// NB: uniq=1 (handled earlier in LgServlet) will set this to a nonce.
+		if (_groupById!=null && ! _groupById.isEmpty()) {
+			return _groupById;	
 		}
+		assert id == null : this;
+		String etype = getEventType()[0];				
 		// otherwise, make a blob of eventType + properties
 		if (props==null || props.isEmpty()) {
-			return getEventType()[0];
+			return dataspace+"_"+etype;
 		}
 		List<String> keys = new ArrayList(props.keySet());
 		Collections.sort(keys);
@@ -398,7 +405,7 @@ public final class DataLogEvent implements Serializable, IHasJson
 			sb.append('&');
 		}
 		String txt = sb.toString();						
-		return dataspace+"_"+getEventType()[0]+"_"+StrUtils.md5(txt);
+		return dataspace+"_"+etype+"_"+StrUtils.md5(txt);
 	}
 
 	/**

@@ -83,10 +83,11 @@ public class LgServlet {
 	static JsonField UNINDEXED = new JsonField("unindexed");
 	
 	/**
-	 * Don't add these as parameters
+	 * Don't add these as event parameters
 	 */
 	static final List<String> NOTP = Arrays.asList(
-			TAG.getName(), COUNT.getName(), DATASPACE.getName(), "track", "ow");
+			TAG.getName(), COUNT.getName(), DATASPACE.getName(), "track", "ow", 
+			"uniq", "CORS_set", "ya_auths");
 	/**
 	 * group-by ID for merging several events into one.
 	 */
@@ -94,7 +95,16 @@ public class LgServlet {
 	
 	static final BoolField track = new BoolField("track");
 	private static final Checkbox OVERWRITE = new Checkbox("ow");
+	/**
+	 * If true, the event should use a unique ID. 
+	 * This means repeated calls will create repeated entries!
+	 */
+	private static final Checkbox UNIQ = new Checkbox("uniq");
 	private static final String LOGTAG = "lg";
+	/**
+	 * @deprecated HACK for special handling of green
+	 */
+	static final String green = "green";
 	
 	/**
 	 * Log msg to fast.log file and send appropriate response
@@ -142,11 +152,25 @@ public class LgServlet {
 //		if (ref != null) readGoogleAnalyticsTokens(ref, params);
 
 		// group by
+		// NB: the WTD adunit does set a gby of "bid_blah", so that the events from one ad view get collated in one DataLogEvent
 		String gby = state.get(GBY);
 		if (gby==null) {
 			// bleurgh - it should be a top-level parameter, but lets catch it here too
 			gby = (String) params.get(GBY.name);
 		}
+		// ...unique?
+		// HACK always do unique for green 
+		// ??Should unique be the default when there's no gby?? Otherwise we have a race condition with high-volume ads??
+		boolean uniq = green.equals(ds.toString()) || state.get(UNIQ);
+		if (uniq) {
+			if (gby != null && state.get(UNIQ)) {
+				Log.w(LOGTAG, "uniq + gby?! (use gby:"+gby+") "+state);
+			} else {
+				String nonce = Utils.getNonce();
+				gby = ds+"_"+tag+"_u"+nonce;
+			}
+		}
+		// 
 		ICallable<Time> ctime = state.get(DataLogFields.time);
 		Time time = ctime==null? null : ctime.call();
 		Map unindexed = (Map) state.get(UNINDEXED);	
@@ -260,7 +284,8 @@ public class LgServlet {
 	{
 		assert dataspace != null;		
 		assert tag != null : state;
-		boolean tracking = !"green".equals(dataspace.toString());
+		// HACK never track green
+		boolean tracking = ! green.equals(dataspace.toString());
 		String trckId = tracking ? TrackingPixelServlet.getCreateCookieTrackerId(state) : null;
 		// special vars
 		if (stdTrackerParams) {			
@@ -394,6 +419,7 @@ public class LgServlet {
 	private static void doLog2_removeJunkParams(WebRequest state, Map params) {
 		params.remove("dataspace"); // handled earlier + shouldnt be here
 		// anything else we predictably don't want??
+		// ya_auths? CORS_set?
 	}
 
 	/**
