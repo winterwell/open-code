@@ -10,10 +10,11 @@ import com.winterwell.web.data.XId;
 /**
  * Check here before running probes / using logins.
  * 
- * TODO could this be handled via BigMachine's ResourceManager??
+ * 
  * @author daniel
  *
  */
+// histroical note - see also BigMachine's ResourceManager
 public class Cooldown {
 
 	static ExpiringMap<XId,String> expiringMap = new ExpiringMap();
