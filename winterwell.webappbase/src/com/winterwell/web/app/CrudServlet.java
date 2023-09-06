@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1053,8 +1054,7 @@ public abstract class CrudServlet<T> implements IServlet {
 //		}
 		
 		// shares
-		ISecurityByShares eg = (ISecurityByShares) hits2.get(0).getJThing().java();
-		Map<Class,String> shareBy_field4type = eg.getShareBy();		
+		T pojo = hits2.get(0).getJThing().java();
 		XId uxid = state.getUserId();
 		// ...Collect the things shared with the authorised user
 		Map<Class,List<String>> sharedType = new ArrayMap();
@@ -1067,12 +1067,20 @@ public abstract class CrudServlet<T> implements IServlet {
 		if ("portal".equals(AMain.appName)) {
 			app = "portal.good-loop.com";
 		}
-		for(Class k : shareBy_field4type.keySet()) {						
-			List<String> sharedCampaigns = yac.sharing().getSharedWithItemIds(yac.getIssuer(), app, tokens, k.getSimpleName());
-			sharedType.put(k, sharedCampaigns);
-		}
 		// include direct shares of this type
 		List<String> directshares = yac.sharing().getSharedWithItemIds(yac.getIssuer(), app, tokens, type.getSimpleName());
+		// shared-by e.g. Agency via agencyId?
+		Map<Class,String> shareBy_field4type;
+		if (pojo instanceof ISecurityByShares) {
+			ISecurityByShares eg = (ISecurityByShares) pojo;
+			shareBy_field4type = eg.getShareBy();		
+			for(Class k : shareBy_field4type.keySet()) {						
+				List<String> sharedCampaigns = yac.sharing().getSharedWithItemIds(yac.getIssuer(), app, tokens, k.getSimpleName());
+				sharedType.put(k, sharedCampaigns);
+			}
+		} else {
+			shareBy_field4type = Collections.EMPTY_MAP;
+		}
 		// filter by shares 
 		List<ESHit<T>> myHits = Containers.filter(hits2, hit -> {
 			T gtag = hit.getJThing().java();
@@ -1095,7 +1103,7 @@ public abstract class CrudServlet<T> implements IServlet {
 				if (gtagValue != null && shared.contains(gtagValue)) {
 					return true;
 				}
-			}			
+			}	
 			return false;
 		});
 		
