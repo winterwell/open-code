@@ -22,6 +22,7 @@ import java.util.zip.ZipOutputStream;
 import com.winterwell.bob.BuildTask;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.VersionString;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
@@ -326,24 +327,18 @@ public class JarTask extends BuildTask {
 			// fallback to file date
 			return jara.lastModified() >= jarb.lastModified()? jara : jarb;
 		}
-		// TODO refactor to use VersionString
-		String[] vabits = va.split("\\.");
-		String[] vbbits = vb.split("\\.");
-		int n = Math.min(vabits.length, vbbits.length);
-		for(int i=0; i<n; i++) {
-			String vai = vabits[i];
-			String vbi = vbbits[i];
-			try {
-				Integer vain = Integer.valueOf(vai);
-				Integer vbin = Integer.valueOf(vbi);
-				if (vain == vbin) continue;
-				return vain > vbin? jara : jarb;
-			} catch(Exception ex) {
-				// not a num -- and not a semantic version
-				Log.d("JarTask", "Cannot compare versions for "+jara.getName()+": "+va+" vs "+vb);
-				break;
+		try {
+			VersionString vsa = new VersionString(va);
+			VersionString vsb = new VersionString(vb);
+			if (vsa.isHigher(vsb)) {
+				return jara;
 			}
-		}
+			if (vsb.isHigher(vsa)) {
+				return jarb;
+			}
+		} catch(Exception ex) {
+			Log.d("JarTask", "Cannot compare versions for "+jara.getName()+": "+va+" vs "+vb+" "+ex);			
+		}		
 		// fallback to file date
 		return jara.lastModified() >= jarb.lastModified()? jara : jarb;
 	}

@@ -3,8 +3,12 @@ package com.winterwell.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class VersionString 
-// if you want to: implements Comparable<VersionString> 
+/**
+ * 
+ * @author daniel
+ * @testedby VersionStringTest TODO
+ */
+public final class VersionString implements Comparable<VersionString> 
 {
 
 	private final List bits;
@@ -12,7 +16,7 @@ public final class VersionString
 
 	public VersionString(String version) {
 		this.version = version;
-		String[] sbits = version.split("\\.");
+		String[] sbits = version.split("[\\._ ]");
 		bits = new ArrayList();
 		for (int i = 0; i < sbits.length; i++) {
 			if (StrUtils.isInteger(sbits[i])) {
@@ -40,21 +44,8 @@ public final class VersionString
 	 * @return
 	 */
 	public boolean geq(VersionString vsb) {
-		if (equals(vsb)) {
-			return true;
-		}
-		for(int i=0; i<bits.size(); i++) {
-			Object abi = bits.get(i);
-			if (vsb.bits.size() <= i) {
-				return true;
-			}
-			Object bbi = vsb.bits.get(i);
-			int ci = Utils.compare(abi, bbi);
-			if (ci==0) continue;
-			return ci > 0; // a after b means this is greater than b
-		}
-		// ??
-		return true;
+		int c = compareTo(vsb);
+		return c >= 0;
 	}
 
 	@Override
@@ -85,6 +76,41 @@ public final class VersionString
 	@Override
 	public String toString() {
 		return "v"+version;
+	}
+
+	public boolean isHigher(VersionString vsb) {
+		return compareTo(vsb) > 0;
+	}
+
+	@Override
+	public int compareTo(VersionString vsb) {
+		if (equals(vsb)) {
+			return 0;
+		}
+		for(int i=0; i<bits.size(); i++) {
+			Object abi = bits.get(i);
+			if (vsb.bits.size() <= i) {
+				if (abi instanceof Integer) {
+					return -1;	
+				}
+				return 0;
+			}
+			Object bbi = vsb.bits.get(i);
+			if (abi instanceof Integer) {
+				if (bbi instanceof Integer) {
+					int abin = (Integer) abi;
+					int bbin = (Integer) bbi;
+					if (abin==bbin) continue;
+					return abin - bbin;
+				} else {
+					return -1;
+				}
+			}
+			if (bbi instanceof Integer) {
+				return 1;
+			}
+		}
+		return 0;
 	}
 
 }
