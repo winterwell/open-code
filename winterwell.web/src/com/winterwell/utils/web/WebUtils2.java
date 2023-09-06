@@ -1495,7 +1495,7 @@ public class WebUtils2 extends WebUtils {
 			if (wc) {
 				Log.d("cors", "Huh? Blank origin, and withCredentials is set so we cant use ACAO = * "+ReflectionUtils.getSomeStack(8));
 			} else {
-				Log.d("cors", "Altering ACAO from unset Origin "+origin+" to * for "+state.getRequestUrl());
+//				Log.d("cors", "Altering ACAO from unset Origin "+origin+" to * for "+state.getRequestUrl());
 				originOut= "*";
 			}
 		}

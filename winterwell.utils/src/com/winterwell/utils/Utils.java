@@ -693,7 +693,7 @@ public final class Utils {
 	/**
 	 * WARNING: Differs from javascript truthiness!
 	 * @param x
-	 * @return false if x is null, false, 0, an empty collection or map, or a blank String or CharSequence.
+	 * @return false if x is null, false, 0, NaN, an empty collection or map, or a blank String or CharSequence.
 	 * All other objects return true.
 	 */
 	public static boolean truthy(Object x) {		
@@ -701,13 +701,19 @@ public final class Utils {
 		if (x instanceof Boolean) {
 			return (Boolean) x;
 		}
+		// numbers
 		if (x instanceof Double) {
 			double v = (double) x;
 			if (Double.isNaN(v)) return false;
-		}
-		if (x instanceof Number) {
+			return v != 0.0;
+		} else if (x instanceof Float) {
+			float v = (float) x;
+			if (Float.isNaN(v)) return false;
+			return v != 0.0f;
+		} else if (x instanceof Number) {
 			if (((Number) x).doubleValue() == 0) return false;
 		}
+		// lists & maps
 		if (x instanceof Collection) {
 			return ! ((Collection) x).isEmpty();
 		}
