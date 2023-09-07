@@ -22,6 +22,7 @@ import com.winterwell.utils.web.XStreamUtils;
 public class TimeTest {
 	
 	public static void main(String[] args) {
+		System.out.println(new Time("2023-06-21T13:00Z"));
 		System.out.println(new Time().minus(1, TUnit.MONTH).getTime());
 	}
 
