@@ -152,7 +152,7 @@ public class FileUtils {
 	 *
 	 * @param file
 	 * @param type
-	 *            E.g. "txt" Must not be null. If "", we remove the last type -
+	 *            E.g. "txt" (no leading .) Must not be null. If "", we remove the last type -
 	 *            e.g. foo.bar.txt would be converted to foo.bar
 	 *
 	 * @return A file which is the same as file except for the type. E.g.
