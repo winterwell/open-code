@@ -61,6 +61,19 @@ public class DataLog {
 		init(dlConfig);
 	}
 	
+	/**
+	 * Use false to switch off DataLog
+	 */
+	public static void init(boolean on) throws RuntimeException {
+		if (on) {
+			init();
+			return;
+		}
+		DummyDataLog dummy = new DummyDataLog(null);
+		dummy.warnings = 1000; // this switches off warnings
+		dflt = dummy;
+	}
+	
 
 	public static DataLogConfig init2_getDefaultConfig() {
 		DataLogConfig dlConfig = ConfigFactory.get().getConfig(DataLogConfig.class);

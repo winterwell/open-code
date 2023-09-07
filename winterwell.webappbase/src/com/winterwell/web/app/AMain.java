@@ -104,6 +104,15 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 	protected boolean noJetty;
 
 	/**
+	 * If true (the default) then a local DataLog is run. If there is no database settings -- it may try a few times then fail.
+	 * If false, then local DataLog calls will silently do nothing.
+	 * 
+	 * This does NOT affect calls to DataLogRemoteStorage
+	 */
+	protected boolean localDatalog = true;
+	
+
+	/**
 	 * @deprecated avoid static if possible
 	 */
 	public static AMain main;
@@ -352,8 +361,12 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 		if (initFlag) return;
 		initFlag = true;		
 		// init DataLog
-		DataLog.init();
-		DataLog.getImplementation();
+		if (localDatalog) {
+			DataLog.init();
+			DataLog.getImplementation();
+		} else {
+			DataLog.init(false);
+		}
 		// YA - manual
 //		init3_youAgain();
 		// app auth - manual
