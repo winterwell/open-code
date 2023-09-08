@@ -579,7 +579,20 @@ public class ConfigBuilder {
 		}
 		// map?
 		if (ReflectionUtils.isa(field.getType(), Map.class)) {
-			if (bits.length > 2) {
+			String mapKey = "";
+			int bi = 1, consumed=0;
+			// HACK allow \\. escapes NB \\ is needed in the file to get through the Properties reader!
+			for(bi=1; bi<bits.length; bi++) {
+				String biti = bits[bi];
+				consumed++;
+				if (biti.endsWith("\\")) {
+					mapKey += bits[1].substring(0, bits[1].length()-1)+".";
+				} else {
+					mapKey += biti;
+					break;
+				}
+			}
+			if (consumed+1 < bits.length) {
 				errors.add(new IllegalArgumentException("Cannot set nested map key: "+a));
 				return false;
 			}
@@ -589,7 +602,7 @@ public class ConfigBuilder {
 					map = (Map) (field.getType().isInterface()? new ArrayMap() : field.getType().newInstance());
 					fieldSet(field, map);
 				}
-				map.put(bits[1], v);
+				map.put(mapKey, v);
 				return true;
 			} catch (Exception e) {
 				throw Utils.runtime(e);
