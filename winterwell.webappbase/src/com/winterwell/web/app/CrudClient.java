@@ -303,9 +303,25 @@ public class CrudClient<T> {
 	 * @return
 	 */
 	public JSend search(SearchQuery sq) {
+		return search(sq, null);
+	}
+	
+	
+	/**
+	 * 
+	 * @param sq Can be null (list all)
+	 * @param searchParams Can be null e.g. sort and pit
+	 * @return
+	 */
+	JSend search(SearchQuery sq, Map searchParams) {		
 		FakeBrowser fb = fb();
 		ArrayMap qparams = new ArrayMap(params);
-		qparams.put(CommonFields.Q.name, sq.getRaw());
+		if (searchParams!=null) {
+			qparams.putAll(searchParams);
+		}
+		if (sq != null) {
+			qparams.put(CommonFields.Q.name, sq.getRaw());
+		}
 		String response = fb.getPage(endpoint+"/"+CrudServlet.LIST_SLUG, qparams);
 		
 		JSend jsend = jsend(fb, response);
@@ -313,7 +329,17 @@ public class CrudClient<T> {
 	}
 
 	public CrudSearchResults<T> searchHits(SearchQuery sq) {
-		JSend res = search(sq);
+		return searchHits(sq, null);
+	}
+	
+	/**
+	 * 
+	 * @param sq
+	 * @param searchParams Can be null e.g. sort and pit
+	 * @return
+	 */
+	public CrudSearchResults<T> searchHits(SearchQuery sq, Map searchParams) {
+		JSend res = search(sq, searchParams);
 		JThing<CrudSearchResults<T>> jthing = res.getData().setType(CrudSearchResults.class);
 		CrudSearchResults<T> csr = jthing.java();
 		return csr;
