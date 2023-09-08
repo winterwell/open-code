@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.winterwell.es.client.ESHit;
+import com.winterwell.utils.TodoException;
 
 public class ListHits<T> 
 // implements SearchResponse // based on
@@ -21,20 +22,20 @@ public class ListHits<T>
 		return total;
 	}
 
-	public List<Map<String, Object>> getSearchResults() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public <X> List<X> getSearchResults(Class<? extends X> klass) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public <X> List<ESHit<X>> getHits(Class<? extends X> type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	public List<Map<String, Object>> getSearchResults() {
+//		// TODO Auto-generated method stub
+//		throw new TodoException();
+//	}
+//
+//	public <X> List<X> getSearchResults(Class<? extends X> klass) {
+//		// TODO Auto-generated method stub
+//		throw new TodoException();
+//	}
+//
+//	public <X> List<ESHit<X>> getHits(Class<? extends X> type) {
+//		// TODO Auto-generated method stub
+//		throw new TodoException();
+//	}
 
 
 	@Override
