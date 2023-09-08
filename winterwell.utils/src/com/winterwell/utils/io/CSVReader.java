@@ -256,6 +256,11 @@ public class CSVReader implements Iterable<String[]>, Iterator<String[]>, Closea
 
 		// The logic here is a bit deep, but hopefully clear
 		while (c != -1) {
+			// skip \r (e.g. windows can use \r\n) Mac??
+			if (c=='\r') {
+				c = input.read();
+				continue;
+			}
 			// Not in quotes
 			if (!inQuote) {
 				if (c == spec.delimiter) {
