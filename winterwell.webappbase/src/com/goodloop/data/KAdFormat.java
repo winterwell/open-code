@@ -1,7 +1,9 @@
 package com.goodloop.data;
 
 /**
- * aka MediaType
+ * aka MediaType. 
+ * 
+ * NB: this file is in webappbase so that both adserver and greendata can use it
  * @author daniel
  *
  */
