@@ -972,6 +972,7 @@ public class SimpleMessage extends MimeMessage {
 		return refs;
 	}
 	
+	
 	private List<String> getReferences2() {
 		String refs = getHeader("References", " ");
 		if (refs==null) return null;
