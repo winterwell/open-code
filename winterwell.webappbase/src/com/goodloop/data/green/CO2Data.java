@@ -183,7 +183,7 @@ public class CO2Data {
 	}
 	
 	/** CO2 (using some generic settings -- it is fine that these are arbitrary, as long as we keep them the same for consistency) */
-	public static CO2 getCo2Generic(double meanMbperad, double meanMbperadbml, int sspCount) {
+	public static CO2 getCo2Generic(double meanMbperad, double meanMbperadbml, Number sspCount) {
 		double mbperadAvg = (meanMbperad+meanMbperadbml)/2;
 		return getCo2(KAdFormat.display, "GB", null, new Time(2023,6,21), mbperadAvg, 
 				true, sspCount, MB_DISPLAY_CREATIVE);
