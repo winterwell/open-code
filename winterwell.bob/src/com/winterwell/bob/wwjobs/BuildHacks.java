@@ -100,8 +100,8 @@ public class BuildHacks {
 
 	private static final List<String> LOCAL_MACHINES = Arrays.asList(
 			"enchantedtray", "stross", "aardvark", "burgess", "kornbluth", "butcher", "kai-goodloop",  
-			"gravitas.vertexel.com", "pinkthad", "geoff-vm", "wingpad", "wingvm", "Lewis-GoodLoop", "vdurkin-gl"
-			);
+			"gravitas.vertexel.com", "pinkthad", "geoff-vm", "wingpad", "wingvm", "Lewis-GoodLoop", "vdurkin-gl",
+			"michael-ThinkPad-T14-Gen-2i");
 	private static final List<String> TEST_MACHINES = Arrays.asList(
 			"hugh", "baker"
 			);
