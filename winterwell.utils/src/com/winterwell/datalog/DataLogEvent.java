@@ -87,6 +87,7 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"city", String.class, /** Name of city */
 			// ad tracking
 			"adid", String.class,
+			"xadid", String.class, // external ad-id
 			"idfa", String.class,
 			// common event-defining properties
 			"cause", String.class,
@@ -109,12 +110,14 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"ad", String.class,
 			"agency", String.class,
 			"format", String.class, // video|display
-			"vert", String.class,
+			"vert", String.class, // dupe of adid??
 			"vertiser", String.class, // advertiser
+			"xvertiser", String.class, // external 3rd party advertiser ID
 			"bid", String.class, // Our Bid ID
-			"xbid", String.class, // someone elses (possibly broken) bid id
+			"xbid", String.class, // external 3rd party (possibly broken) bid id
 			"variant", String.class,
 			"campaign", String.class, // also a utm_ parameter
+			"xcampaign", String.class, // external 3rd party campaign ID
 			"macro", String.class, // what format of macro are we trying to use? e.g. dv360 use-case: debugging
 			"medium", String.class, // utm_ parameter. See https://www.terminusapp.com/blog/mastering-utm_campaign-utm_medium-and-utm_source-google-analytics/#medium
 			"source", String.class, // utm_ parameter
