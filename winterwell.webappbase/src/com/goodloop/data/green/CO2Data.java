@@ -1,15 +1,9 @@
 package com.goodloop.data.green;
 
+
 import java.io.StringReader;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.goodloop.data.KAdFormat;
-import com.goodloop.data.green.AnnualElectricityData;
-import com.goodloop.data.green.CO2DataTest;
-import com.goodloop.data.green.IElectricityData;
-import com.goodloop.data.green.CO2Data.CO2;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.io.CSVReader;
@@ -28,7 +22,7 @@ import com.winterwell.web.FakeBrowser;
  * See: https://github.com/good-loop/impact/tree/master/carbon
  * 
  * @author geoff, dan
- * @testedby {@link CO2DataTest}
+ * @testedby CO2DataTest
  */
 public class CO2Data {
 	private static final String LOGTAG = "CO2Data";
