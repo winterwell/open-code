@@ -11,7 +11,8 @@ public enum KAdFormat {
 	/** i.e. banner ads, though display is more obviously a generic term for a range of sizes */
 	display, 
 	video,
-	social;
+	social,
+	audio;
 
 
 	/**
