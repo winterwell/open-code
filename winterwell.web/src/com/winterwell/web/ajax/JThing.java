@@ -114,7 +114,6 @@ implements INotSerializable, IHasJson // serialize the json not this wrapper
 			map = WebUtils2.parseJSON(json);
 		}
 		if (map==null) {
-			//
 			return null;
 		}
 		return Collections.unmodifiableMap(map);

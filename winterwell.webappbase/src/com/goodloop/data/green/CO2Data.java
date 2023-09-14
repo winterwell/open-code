@@ -14,11 +14,8 @@ import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.FakeBrowser;
 
 /**
- * Core of our GL DIY carbon scoring, derived from the simple fudge used in the IAS POC.
- * 
- * TODO refactor to support different data providers in CarbonScorer (e.g. GL(this one), Scope3, Impact+)
- * TODO refactor to split the data source (currently a spreadsheet) code off from the data classes.
- * 
+ * Core of our GL Auto carbon scoring
+ *  
  * See: https://github.com/good-loop/impact/tree/master/carbon
  * 
  * @author geoff, dan
@@ -32,6 +29,8 @@ public class CO2Data {
 	 * 
 	 * Weighted average of the publisher data we hold
 	 */
+//	Do we introduce a country-neutral score for emissions for benchmarks??
+//	Or do country by country?? (probably simpler)
 	static final double WTAVG_DESKTOP;
 	static final double WTAVG_MOBILE;
 
@@ -61,7 +60,7 @@ public class CO2Data {
 	 * 
 	 * from https://docs.google.com/spreadsheets/d/1iDAJf72tkRk7ZTBXKBAxrFW2IZRgdimka1gyA8NeM3I/edit#gid=367059901
 	 */
-	private static final int WTAVG_SSPS = 107;
+	private static final int WTAVG_SSPS; // = 107;
 
 	/**
 	 * Score a SINGLE impression

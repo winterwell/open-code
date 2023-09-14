@@ -241,12 +241,22 @@ public class Dictionary implements IDictionary {
 		return m.split(DUPE_SEPARATOR);
 	}
 
-
+	/**
+	 * loop over keys
+	 */
 	@Override
 	public Iterator<String> iterator() {
 		return dict.keySet().iterator();
 	}
 
+	public Set<String> keySet() {
+		return dict.keySet();
+	}
+	public Set<String> values() {
+		Collection<String> vs = dict.values();
+		return new HashSet(vs);
+	}
+	
 	@Override
 	public String match(String input, int start) {
 		
