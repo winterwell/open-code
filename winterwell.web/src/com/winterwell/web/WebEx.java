@@ -160,6 +160,11 @@ public class WebEx extends RuntimeException {
 		 */
 		public Time retry;
 		
+		/**
+		 * HACK
+		 * @param ra number? treat as seconds, otherwise try to interpret as a Time
+		 * @return
+		 */
 		public RateLimitException setRetryAfter(String ra) {
 			if (ra==null) return this;
 			try {
