@@ -36,51 +36,7 @@ public class CO2Data {
 	static final double WTAVG_MOBILE;
 
 	private static IElectricityData electricityData = new AnnualElectricityData();
-	
-	// TODO replace this with analysis of our data
-	static {												// Load the publishers and work out the weighted averages
-		long totalWeight = 0;
-		double wtSumDesktop = 0.0;
-		double wtSumMobile = 0.0;
 		
-		// Load publishers from: https://docs.google.com/spreadsheets/d/1leEr9slQ5Gs3qsTPdGl-mPmbGRvKfMAVvNEDg24-wuU/edit#gid=0
-		CSVReader pubsCSV = new CSVReader(new StringReader(new FakeBrowser().getPage(
-				"https://docs.google.com/spreadsheets/d/1leEr9slQ5Gs3qsTPdGl-mPmbGRvKfMAVvNEDg24-wuU/export?format=csv&gid=0")),
-			new CSVSpec());
-		pubsCSV.setNumFields(-1); // allow e.g. notes 
-		String[] headers = pubsCSV.next();	// headers
-		Log.d(LOGTAG, "Fetched google spreadsheet with headers: "+Printer.str(headers));
-		
-		for (String[] row: pubsCSV)
-		{	
-			String domain = WebUtils2.getDomain(row[0].trim()); 				// remove and www etc.
-			if (domain==null || domain.isEmpty()) {
-				continue;
-			}			
-
-			// TODO more checks / paranoia?
-			
-			long weight = Long.parseLong(row[1]);										// Weight/impressions
-			
-			DomainSurvey survey = new DomainSurvey(
-					Double.parseDouble(row[2]) / neverZero(Integer.parseInt(row[3])),	// Desktop MB and count
-					Double.parseDouble(row[4]) / neverZero(Integer.parseInt(row[5])),	// Mobile MB and count
-					Utils.isBlank(row[6])? null : Integer.parseInt(row[6].trim())	    // SSP count (if set)
-			);
-						
-//			PUBLISHERS.put(domain, survey);
-			
-			totalWeight += weight;
-			wtSumDesktop += survey.desktopMBperAd() * weight;
-			wtSumMobile += survey.mobileMBperAd() * weight;
-		}
-		
-		pubsCSV.close();
-		
-		WTAVG_DESKTOP = wtSumDesktop / totalWeight;
-		WTAVG_MOBILE = wtSumMobile / totalWeight;		
-	}
-	
 	@Deprecated
 	static record DomainSurvey(Double desktopMBperAd, Double mobileMBperAd, Integer sspCount) {}
 
