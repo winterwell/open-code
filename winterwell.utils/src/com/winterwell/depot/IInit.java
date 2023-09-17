@@ -5,7 +5,8 @@ package com.winterwell.depot;
  * resources that should be setup when they are created/loaded. init() should be
  * called:
  * 
- * - By constructors - On de-serialisation
+ * - By constructors
+ * - On de-serialisation
  * 
  * @author daniel
  * 
