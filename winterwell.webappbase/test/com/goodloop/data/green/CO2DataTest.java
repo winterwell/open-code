@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.goodloop.data.KAdFormat;
 import com.goodloop.data.green.CO2Data;
-import com.goodloop.data.green.CO2Data.CO2;
 import com.goodloop.data.green.CO2Data.DomainSurvey;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.time.Time;
