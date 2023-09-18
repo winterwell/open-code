@@ -2,6 +2,7 @@ package com.winterwell.utils.containers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import com.winterwell.utils.Utils;
 
@@ -29,7 +30,29 @@ public interface ITree<X> {
 			flatten2((ITree) kid, flat);
 		}
 	}
-
+	
+	/**
+	 * Walk the tree, creating a new tree
+	 * 
+	 * @param fn (old-value) -> new-value 
+	 * 	Apply this to each node (leaf and branch). 
+	 * 	If it returns null, remove the node.
+	 */
+	public default <Y> Tree<Y> apply(Function<X, Y> fn) {
+		Y nv = fn.apply(getValue());
+		if (nv==null) return null;
+		Tree<Y> nn = new Tree(nv);
+		List<? extends ITree<X>> kids = getChildren();
+		if (kids == null) return nn;
+		for (ITree<X> kid : kids) {
+			Tree<Y> nkid = kid.apply(fn);
+			if (nkid!=null) {
+				nkid.setParent(nn);
+			}
+		}
+		return nn;
+	}
+	
 	/**
 	 * Add a child node.
 	 * 
