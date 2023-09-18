@@ -128,6 +128,14 @@ public class AppUtils {
 		return get(id, klass, KStatus.PUBLISHED);
 	}
 	
+	/**
+	 * 
+	 * @param <X>
+	 * @param id
+	 * @param klass
+	 * @param status
+	 * @return object or null
+	 */
 	public static <X> X get(String id, Class<X> klass, KStatus status) {
 		assert id != null : "No ID for get "+klass;
 		ESPath path = Dep.get(IESRouter.class).getPath(klass, id, status);
