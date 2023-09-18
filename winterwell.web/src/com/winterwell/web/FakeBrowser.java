@@ -844,7 +844,7 @@ public class FakeBrowser {
 	/**
 	 * max 10 mb by default. -1 for unlimited
 	 */
-	public void setMaxDownload(int mb) {
+	public void setMaxDownload(long mb) {
 		if (mb==-1) {
 			MAX_DOWNLOAD = -1; //unlimited
 			return;
@@ -1111,6 +1111,20 @@ public class FakeBrowser {
 	public FakeBrowser setContentType(String contentType) {
 		 setRequestHeader("Content-Type", contentType);
 		 return this;
+	}
+
+	/**
+	 * Convenience / aide-memoire for request methid HEAD
+	 * @param url
+	 */
+	public void getHeadersOnly(String url) {
+		String prev = requestMethod;
+		try {
+			setRequestMethod("HEAD");
+			String noBody = getPage(url);
+		} finally {
+			setRequestMethod(prev);
+		}
 	}
 
 	
