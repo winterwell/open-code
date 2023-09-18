@@ -126,7 +126,9 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"via", String.class, // exchange / DSP / agency used to make the connection. ??Can be a list.??is that supported			
 			"invalid", String.class, // keyword for "bot" | "test" (ie us or the publisher). Blank for fine!
 			"inview", Boolean.class, // the advert was visible -- same meaning as evt:visible, but for Green Media data rather than WTD adunits. true=inview, false=not, can be unset for unknown. 
+
 			// green
+			"ads", Integer.class,
 			"co2", Double.class, // kg of CO2e
 			"co2base", Double.class, // base / creative / supply-path emissions 
 			"co2creative", Double.class,
@@ -135,12 +137,15 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"creativebytes", Long.class,
 			"proc", String.class, // see KProcessor
 			"alg", String.class, // FUTURE algorithm used"
+			"ssps", Integer.class,
+
 			// text properties (support tokenisation)
 			"place", StringBuilder.class,
 			"locn", StringBuilder.class,
 			"location", StringBuilder.class,
 			"msg", StringBuilder.class,
 			"message", StringBuilder.class,
+
 			// Can we do an aggregation on message??
 //			"m", String.class, // the keyword version of message (for doing exact-text repeat breakdowns, which are handy)
 
