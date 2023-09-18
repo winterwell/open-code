@@ -44,6 +44,15 @@ public class FakeBrowserTest {
 		}
 	}
 
+
+	@Test
+	public void testHeadersOnly() {
+		FakeBrowser fb = new FakeBrowser();
+		String url = "https://www.bbc.co.uk";
+		fb.getHeadersOnly(url);
+		Map<String, List<String>> rh = fb.getResponseHeaders();
+		assert ! rh.isEmpty();
+	}
 		
 	@Test
 	public void testSetRetryOnError() {

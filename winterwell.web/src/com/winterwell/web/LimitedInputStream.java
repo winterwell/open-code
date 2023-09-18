@@ -18,10 +18,15 @@ public class LimitedInputStream extends FilterInputStream {
 	
 	private final long maxSize;
 	private int size;
+	private String optionalSrc;
 
 	public LimitedInputStream(InputStream in, long maxSize) {
+		this(in, maxSize, null);
+	}
+	public LimitedInputStream(InputStream in, long maxSize, String optionalSrc) {
 		super(in);
 		this.maxSize= maxSize;
+		this.optionalSrc = optionalSrc;
 	}
 
 	/** Called to check, whether the input streams
@@ -64,7 +69,7 @@ public class LimitedInputStream extends FilterInputStream {
      *   to raise an IOException.
      */
     protected void raiseError(long _maxSize) {
-    	throw new FileTooLargeException("File too large - exceeded "+_maxSize);
+    	throw new FileTooLargeException("File too large - exceeded "+_maxSize+" src:"+optionalSrc);
     }
 
 

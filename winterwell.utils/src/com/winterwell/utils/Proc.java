@@ -66,6 +66,11 @@ public class Proc implements Closeable {
 		List<String> parsed = parse(command);
 		pb = new ProcessBuilder(parsed);
 	}
+	
+	public Proc(ProcessBuilder pb) {
+		this.command = String.join(" ", pb.command());
+		this.pb = pb;
+	}
 
 	/**
 	 * Close the process' 3 pipes in, out and error. See

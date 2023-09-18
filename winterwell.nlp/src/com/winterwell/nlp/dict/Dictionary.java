@@ -430,4 +430,8 @@ public class Dictionary implements IDictionary {
 		return oneEdits;
 	}
 
+	public Collection<String> values() {
+		return dict.values();
+	}
+
 }
