@@ -236,7 +236,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements
 
 	@Override
 	public V put(K key, V value) {
-		assert key != null : value;
+		if (key==null) throw new NullPointerException("key:null value:"+value);
 		// should we quietly ignore null values? No, let's treat them like any other value
 		mod++;
 		char m = mod;
