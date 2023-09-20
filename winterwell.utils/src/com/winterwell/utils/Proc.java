@@ -23,11 +23,37 @@ import com.winterwell.utils.time.Dt;
  * </p>
  * See http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html for some
  * motivating examples.
+ * 
+ * <h4>Cybersecurity</h4>
+ *<p>Command line tools in Unix are awesome.
+One caveat: when you use command-line tools, have a think about cyber security, and
+especially injection attacks.</p>
+
+<p>A mantra for security-first coding:
+
+<blockquote>
+	Every user is a hacker.
+	Every input is an attack.
+	Our other defences are already compromised.
+</blockquote>
+
+General guidelines to reduce the risk:
+
+1. Create a wrapper that uses structured parameters (i.e. custom java classes) 
+which get unpacked, instead of String.
+That makes it harder or impossible to do an injection attack.
+This is also usually nicer code UX, as it makes it clear to the caller what 
+they should pass in.
+
+2. Check string inputs for dodgy characters (e.g. ".." to reach a more sensitive directory).
+
+3. Document vulnerabilities, so that future coders know to be careful.
+
  *
  * @author daniel
  *
  *         NB - named Proc to make it easy to distinguish from java.lang.Process
- * @testedby  ProcTest}
+ * @testedby  ProcTest
  */
 public class Proc implements Closeable {
 	

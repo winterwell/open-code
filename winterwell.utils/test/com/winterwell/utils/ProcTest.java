@@ -18,6 +18,28 @@ import com.winterwell.utils.io.FileUtils;
 public class ProcTest {
 
 	@Test
+	public void testSecurityWithPB() {
+		// The difference between command line and Java Process means this will fail
+		// HOWEVER passing extra urls in to curl could work.
+		ProcessBuilder pb = new ProcessBuilder("curl","https://bbc.co.uk", "; grep export /home/daniel/.bashrc > /home/daniel/TEST.txt");
+		Proc proc = new Proc(pb);
+		proc.start();
+		System.out.println(proc);
+		proc.close();
+	}
+	@Test
+	public void testSecurityWithPB2() {
+		// The difference between command line and Java Process _probably_ makes this safe
+		ProcessBuilder pb = new ProcessBuilder("curl","https://bbc.co.uk", "; grep export /home/daniel/.bashrc > /home/daniel/TEST.txt");
+		Proc proc = new Proc(pb);
+		proc.start();
+		System.out.println(proc);
+		System.out.println(proc.getError());
+		System.out.println(proc.getOutput());
+		proc.close();
+	}
+	
+	@Test
 	public void testBashEncode() {
 		{
 			String raw = "http://foo.com/a.html?a=1&b=a%40com";
