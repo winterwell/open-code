@@ -756,7 +756,7 @@ public final class Utils {
 	 * Use case: for anonymous functions where the IDE won't let you set one directly.
 	 */
 	public static void breakpoint() {
-		int x = 1 + 1;
+		new String("no-op");
 	}
 
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.winterwell.datalog.server.DataLogFields;
+import com.winterwell.maths.stats.distributions.d1.MeanVar1D;
 import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.FailureException;
@@ -232,6 +233,8 @@ public class DataLogHttpClient {
 	
 	/** As a bit of security (cos examples carry more data than aggregate stats), we default to 0 */
 	int numExamples = 0;
+
+	private Map<String,MeanVar1D> statsFor;
 	
 	public void setNumExamples(int numExamples) {
 		this.numExamples = numExamples;
@@ -267,7 +270,7 @@ public class DataLogHttpClient {
 	 * 
 	 * @param q
 	 * @param breakdown
-	 * @return double or map,double if multiple breakdowns
+	 * @return field:double or map,double if multiple breakdowns
 	 */
 	Map<String, Object> getBreakdown2(SearchQuery q, Breakdown breakdown) {
 		// Call DataServlet		
@@ -278,7 +281,7 @@ public class DataLogHttpClient {
 		// e.g. by_cid buckets
 		// FIXME handle multi-level breakdown e.g. "agency/campaign"
 		List<Map> buckets = new ArrayList();		
-		for(String byi : breakdown.by) { 
+		for(String byi : breakdown.by) { // NB: this loop will be a no-op for by=null=[""]
 			// NB: can include byi="" for top-level total, but that will be null here (there's no "by_") - handled later
 			List byi_buckets = Containers.asList((Object)SimpleJson.get(jobjMap, "by_"+byi, "buckets"));
 			if (byi_buckets==null) {
@@ -316,8 +319,9 @@ public class DataLogHttpClient {
 		allCount = MathUtils.toNum(_allCount);
 		
 		// ...total
+		totalFor = new ArrayMap();
 		// e.g. .cid -- ??How is this ever set?? Does this code work??
-		for(String byi : breakdown.by) {
+		for(String byi : breakdown.by) {if (byi=="") continue;
 			Object _btotal = SimpleJson.get(jobjMap, byi);
 			if (_btotal == null) {
 				Log.d(LOGTAG, "No top-by total?! "+byi+" "+jobjMap);
@@ -328,11 +332,23 @@ public class DataLogHttpClient {
 			Log.w(LOGTAG, "Yes top-by total "+byi+" "+jobjMap);
 		}	
 		// e.g. sum of "dntn"
+		statsFor = new ArrayMap();
 		for(String f : breakdown.getFields()) {
-			Object _btotal = SimpleJson.get(jobjMap, f);
-			if (_btotal != null) {
+			Object _bf = SimpleJson.get(jobjMap, f);
+			if (_bf != null) {
+				Object _btotal = _bf;
+				if (_bf instanceof Map) {
+					_btotal = ((Map)_btotal).get("sum");
+				}
 				double bttl = MathUtils.toNum(_btotal);
 				totalFor.put(f, bttl);
+			}
+			// stats?
+			if (breakdown.op == KBreakdownOp.stats || breakdown.op==KBreakdownOp.avg) {
+				Map _bstats = (Map)_bf;
+				_bstats.put("mean", _bstats.get("avg")); // HACK
+				MeanVar1D mv = new MeanVar1D(_bstats);
+				statsFor.put(f, mv);
 			}
 		}
 
@@ -462,6 +478,7 @@ public class DataLogHttpClient {
 	 */
 	Map<String,Double> totalFor = new ArrayMap();
 
+
 	private Double randomSamplingProb;
 
 	/**
@@ -532,6 +549,10 @@ public class DataLogHttpClient {
 		return totalFor;
 	}
 
+	public Map<String, MeanVar1D> getStatsFor() {
+		return statsFor;
+	}
+	
 	public String getLastCall() {
 		return lastCall;
 	}

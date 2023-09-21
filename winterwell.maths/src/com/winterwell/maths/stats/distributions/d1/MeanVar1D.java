@@ -34,6 +34,40 @@ public class MeanVar1D extends ADistribution1D implements
 	private int count;
 	double lossFactor;
 
+	public MeanVar1D() {
+	}
+
+	public MeanVar1D(Map _bstats) {
+		Number c = (Number)_bstats.get("count");
+		if (c!=null) {
+			this.count = c.intValue();
+		}
+		{
+			Number n = (Number)_bstats.get("min");
+			if (n!=null) {
+				this.min = n.doubleValue();
+			}
+		}
+		{
+			Number n = (Number)_bstats.get("max");
+			if (n!=null) {
+				this.max = n.doubleValue();
+			}
+		}
+		{
+			Number n = (Number)_bstats.get("mean");
+			if (n!=null) {
+				this.mean = n.doubleValue();
+			}
+		}
+		{
+			Number n = (Number)_bstats.get("mean2");
+			if (n!=null) {
+				this.mean2 = n.doubleValue();
+			}
+		}
+	}
+
 	@Override
 	public void train(double[] weights, Iterable<? extends Double> wdata) {
 		int i=0;
