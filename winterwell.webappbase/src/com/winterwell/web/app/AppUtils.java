@@ -569,6 +569,9 @@ public class AppUtils {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		String errMsg = null;			
 		for(Class k : dbclasses) {
+			if ("NGO".equals(k.getSimpleName())) {
+				System.out.println(k);
+			}
 			for(KStatus status : statuses) {
 				ESPath path = esRouter.getPath(dataspace, k, null, status);
 				try {					
