@@ -847,7 +847,7 @@ public abstract class CrudServlet<T> implements IServlet {
 		String q = state.get(CommonFields.Q);
 		String prefix = state.get("prefix");
 		String sort = state.get(SORT, defaultSort);
-		int size = state.get(SIZE, 2); // FIXME 1000);
+		int size = state.get(SIZE, 1000);
 		int from = 0;
 		try {
 			from = state.get(FROM, 0);
