@@ -60,6 +60,7 @@ import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
+import com.winterwell.web.ajax.JSend;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest.KResponseType;
@@ -637,7 +638,10 @@ public abstract class CrudServlet<T> implements IServlet {
 	public static final IntField FROM = new IntField("from");
 	public static final String ALL = "all";
 
-	private static final SField AFTERNEXT = new SField("afterNext");
+	/**
+	 * for using `next`
+	 */
+	private static final SField AFTER = new SField("after");
 
 	protected final JThing<T> doPublish(WebRequest state) throws Exception {
 		// For publish, let's force the update.
@@ -830,6 +834,9 @@ public abstract class CrudServlet<T> implements IServlet {
 	 * Note: status defaults to DRAFT! This is on the assumption you want a list for editing.
 	 * ??should we switch to PUB_OR_DRAFT instead??
 	 * 
+	 * Returns JSend{hits: Item[], next: json-string, after, total, estimate:number}
+	 * Warning: `total`=`estimate` and is an estimate!
+	 * 
 	 * @param state
 	 * @return for debug purposes! The results are sent back in state
 	 * @throws IOException
@@ -840,7 +847,7 @@ public abstract class CrudServlet<T> implements IServlet {
 		String q = state.get(CommonFields.Q);
 		String prefix = state.get("prefix");
 		String sort = state.get(SORT, defaultSort);
-		int size = state.get(SIZE, 1000);
+		int size = state.get(SIZE, 2); // FIXME 1000);
 		int from = 0;
 		try {
 			from = state.get(FROM, 0);
@@ -926,6 +933,7 @@ public abstract class CrudServlet<T> implements IServlet {
 		if (_hits.size() < size) {
 			total = (long) hits2.size(); // we have all of them
 		} else if (total!=null) {
+			// guess!
 			double hitRatio = hits2.size() * 1.0/ size;
 			double total2 = total*hitRatio;
 			total = Math.round(total2);
@@ -936,15 +944,20 @@ public abstract class CrudServlet<T> implements IServlet {
 		String pit = sr.getPointInTime();
 		String next = null;
 		if (sa!=null) next = gson().toJson(new ArrayMap("searchAfter", sa, "pit", pit));
-		String json = gson().toJson(
-				new ArrayMap( // NB: see CrudSearchResults, which can consume this json
+		String afterNext = state.get(AFTER);
+//		String json = gson().toJson(
+		Map jobj = new ArrayMap( // NB: see CrudSearchResults, which can consume this json
 					"hits", items, 
-					"total", total,
-					"next", next
-				));
-		JsonResponse output = new JsonResponse(state).setCargoJson(json);
-		// ...send
-		WebUtils2.sendJson(output, state);
+					"total", total, // deprecated as unreliable
+					"estimate", total,
+					"next", next,
+					"after", afterNext
+				);
+		JSend jsend = new JSend<>(jobj);
+		jsend.send(state);
+//		JsonResponse output = new JsonResponse(state).setCargoJson(json);
+//		// ...send
+//		WebUtils2.sendJson(output, state);
 		return hits2;
 	}
 	
@@ -1286,12 +1299,12 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 
 		// paging?
-		String afterNext = stateOrNull==null?null : stateOrNull.get(AFTERNEXT);
+		String afterNext = stateOrNull==null?null : stateOrNull.get(AFTER);
 		String pit = null;
 		if (afterNext!=null) {
 			Map an = gson().fromJson(afterNext);
 			List sa = SimpleJson.getList(an,"searchAfter");
-			pit = (String) an.get("pit");
+			pit = (String) an.get("pit"); // ??old??
 			if (pit!=null) {
 				s.setPointInTime(pit, keep_alive);
 			}
