@@ -436,7 +436,7 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 		Log.i("init", "Emailer with config "+ec);
 		LoginDetails ld = ec.getLoginDetails();
 		if (ld == null) {
-			Log.i("init", "No Emailer: no login details");
+			Log.w("init", "No Emailer: no login details");
 			return null;
 		}
 		Emailer emailer = new Emailer(ec);

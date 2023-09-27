@@ -757,6 +757,11 @@ public class SimpleMessage extends MimeMessage {
 		}
 	}
 
+	/**
+	 * 
+	 * @param in
+	 * @see #createReply(Message, InternetAddress, String)
+	 */
 	public void setInReplyTo(Message in) {
 		try {
 			String msgId = ((MimeMessage) in).getMessageID();
