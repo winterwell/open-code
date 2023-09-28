@@ -36,7 +36,7 @@ public class Emailer implements Closeable {
 	public Emailer(EmailConfig config) {
 		this.config = config;
 		LoginDetails ld = config.getLoginDetails();		
-		this.displayName = (String) Utils.or(
+		this.displayName = (String) Utils.or(config.emailDisplayName,
 			ld.get(new Key("displayName")),
 			ld.get(new Key("displayname")),
 			! Utils.isBlank(AMain.appName)? StrUtils.toTitleCase(AMain.appName)+" Notifications" : null,
