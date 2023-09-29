@@ -126,6 +126,8 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 	 * NB: use https repo urls for public repos, and git@github.com ssh info for private ones
 	 */
 	static final Map<String,String> KNOWN_PROJECTS = new ArrayMap(
+		"goodloop.locksmith",
+			"https://github.com/good-loop/open-code open-code goodloop.locksmith",
 		"winterwell.utils", 
 			"https://github.com/good-loop/open-code open-code winterwell.utils",
 		"winterwell.web", 
