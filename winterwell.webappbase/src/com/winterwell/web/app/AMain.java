@@ -3,7 +3,9 @@ package com.winterwell.web.app;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.winterwell.bob.tasks.GitTask;
 import com.winterwell.bob.wwjobs.BuildHacks;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.es.IESRouter;
@@ -156,6 +158,14 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 	 * @param args
 	 */
 	public void doMain(String[] args) {
+		String info = "";
+		try {
+			Map<String, Object> gitInfo = GitTask.getLastCommitInfo(new File(""));
+			info += gitInfo;
+		} catch(Throwable ex) {
+			// ignore
+		}
+		Log.d(appName, "Starting! "+info);
 		try {
 			Thread.currentThread().setName(getClass().getSimpleName()+".doMain");
 			// logfile before log config??! Is that right?
