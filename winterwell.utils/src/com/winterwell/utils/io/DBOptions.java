@@ -1,6 +1,10 @@
 package com.winterwell.utils.io;
 
 public class DBOptions {
+	
+	@Option
+	public boolean debug;
+	
 	@Option
 	public String dbUrl;
 	@Option

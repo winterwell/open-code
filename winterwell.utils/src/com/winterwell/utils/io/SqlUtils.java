@@ -208,6 +208,7 @@ public class SqlUtils {
 	 */
 	public static Iterable<Object[]> executeQuery(String select,
 			Connection con, int max) {
+		if (options.debug) Log.d(LOGTAG, select);
 		boolean autoClose = false;
 		try {
 			if (con == null) {
@@ -242,6 +243,7 @@ public class SqlUtils {
 	 * @return results
 	 */
 	public static int executeUpdate(String sql, Connection con) {
+		if (options.debug) Log.d(LOGTAG, sql);
 		boolean autoClose = false;
 		Statement stmnt = null;
 		try {
@@ -276,6 +278,7 @@ public class SqlUtils {
 	public static boolean executeCommand(String sql, Connection con,
 			boolean swallowExceptions) 
 	{
+		if (options.debug) Log.d(LOGTAG, sql);
 		boolean autoClose = false;
 		Statement stmnt = null;
 		try {
