@@ -17,9 +17,10 @@ public class BuildLockSmith extends BuildWinterwellProject {
 	@Override
 	public List<BuildTask> getDependencies() {
 		List<BuildTask> deps = super.getDependencies();
-		
-//		MavenDependencyTask mdt = new MavenDependencyTask();
-//		deps.add(mdt);
+
+		MavenDependencyTask mdt = new MavenDependencyTask();
+		mdt.addDependency("org.yaml", "snakeyaml", "1.26");
+		deps.add(mdt);
 		
 		return deps;
 	}	
