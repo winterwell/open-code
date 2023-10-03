@@ -126,7 +126,9 @@ public final class DataLogEvent implements Serializable, IHasJson
 			"via", String.class, // exchange / DSP / agency used to make the connection. ??Can be a list.??is that supported			
 			"invalid", String.class, // keyword for "bot" | "test" (ie us or the publisher). Blank for fine!
 			"inview", Boolean.class, // the advert was visible -- same meaning as evt:visible, but for Green Media data rather than WTD adunits. true=inview, false=not, can be unset for unknown. 
-
+			"placement", String.class, // publisher placement slot ID
+			"adunit", String.class, //https://support.google.com/admanager/answer/2376981?hl=en#ad-unit&zippy=%2Cad-unit
+			
 			// green
 			"ads", Integer.class,
 			"co2", Double.class, // kg of CO2e
