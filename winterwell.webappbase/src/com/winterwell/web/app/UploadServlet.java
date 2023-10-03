@@ -83,7 +83,7 @@ public final class UploadServlet implements IServlet {
 	 * @return asset for the uploaded file
 	 * @throws WebInputException
 	 */
-	private File doUpload(WebRequest state, Map cargo) throws WebInputException {
+	public File doUpload(WebRequest state, Map cargo) throws WebInputException {
 		if (cargo==null) cargo = new ArrayMap(); // avoid NPEs
 		state.processMultipartIncoming(new ArrayMap<String, AField>(
 //			CONVERT.getName(), CONVERT

@@ -25,6 +25,9 @@ public enum KAdFormat {
 		String s = object.toString().toLowerCase();
 		
 		// HACK convert some possible inputs??
+		if ("image".equals(s)) {
+			s = "display";
+		}
 		
 		return valueOf(s);
 	}

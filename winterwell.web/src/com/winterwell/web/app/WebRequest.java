@@ -780,6 +780,10 @@ public class WebRequest implements IProperties, Closeable {
 	public final HttpServletRequest getRequest() {
 		return request;
 	}
+	
+	public final String getContentType() {
+		return request.getContentType();
+	}
 
 	/**
 	 * @return the servlet and slug, but not the query parameters, e.g.
@@ -1053,7 +1057,6 @@ public class WebRequest implements IProperties, Closeable {
 		// (as this is not picked up by the normal mechanism in the constructor)
 		redirect = (String) properties.get(REDIRECT_REQUEST);
 	}
-
 	
 
     /**
