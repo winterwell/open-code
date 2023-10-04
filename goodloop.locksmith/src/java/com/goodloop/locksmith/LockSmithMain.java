@@ -26,6 +26,8 @@ public class LockSmithMain extends AMain<LockSmithConfig> {
 
 	public LockSmithMain() {
 		super("locksmith", LockSmithConfig.class);
+		localDatalog = false;
+
 	}
 	
 	public static void main(String[] args) {	
