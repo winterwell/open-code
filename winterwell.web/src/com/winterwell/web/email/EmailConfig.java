@@ -27,7 +27,7 @@ public class EmailConfig {
 	public boolean emailSSL;
 	
 	@Option
-	public boolean emailDisplayName;
+	public String emailDisplayName;
 	
 	public LoginDetails getLoginDetails() {
 		if (emailServer==null) return null;
