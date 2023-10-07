@@ -26,7 +26,10 @@ public enum KAdFormat {
 		
 		// HACK convert some possible inputs??
 		if ("image".equals(s)) {
-			s = "display";
+			return display;
+		}
+		if ("banner".equals(s)) {
+			return display;
 		}
 		
 		return valueOf(s);
