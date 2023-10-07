@@ -690,7 +690,7 @@ public class AppUtils {
 					ar.getBodyJson();
 //								("{'actions':[{'remove':{'index':"+OLD+",'alias':'"+alias+"'}},{'add':{'index':'"+index+"','alias':'"+alias+"'}}]}")
 //								.replace('\'', '"');
-			String switchMsg = "To switch old -> new:\n\n"
+			String switchMsg = "After reindex, to switch old -> new:\n\n"
 					+"curl http://localhost:9200/_aliases -d '"+switchjson+"' -H 'Content-Type:application/json'\n\n";
 			Log.i("ES.init", switchMsg);
 			msg += "\n"+switchMsg;
