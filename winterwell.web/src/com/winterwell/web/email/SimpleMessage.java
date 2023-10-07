@@ -289,7 +289,7 @@ public class SimpleMessage extends MimeMessage {
 		try {
 			this.setFrom(from);
 			if (to != null) {
-				this.setRecipient(jakarta.mail.Message.RecipientType.TO, to);
+				setTo(to);
 			}
 			this.setSubject(subject, "UTF-8");			
 			// Is there html?
@@ -447,9 +447,29 @@ public class SimpleMessage extends MimeMessage {
 		}
 	}
 
+	/**
+	 * Add another To recipient.
+	 * 
+	 * Convenience for {@link #addRecipient(jakarta.mail.Message.RecipientType, Address)}
+	 * @param to
+	 */
 	public void addTo(InternetAddress to) {
 		try {
 			addRecipient(jakarta.mail.Message.RecipientType.TO, to);
+		} catch (MessagingException e) {
+			throw new ExternalServiceException(e);
+		}
+	}
+
+	/**
+	 * Set who the email is to (replacing any previous set).
+	 * 
+	 * Convenience for {@link #setRecipient(jakarta.mail.Message.RecipientType, Address)}
+	 * @param to
+	 */
+	public void setTo(InternetAddress to) {
+		try {
+			setRecipient(jakarta.mail.Message.RecipientType.TO, to);
 		} catch (MessagingException e) {
 			throw new ExternalServiceException(e);
 		}
