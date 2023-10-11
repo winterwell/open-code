@@ -36,6 +36,9 @@ import com.winterwell.youagain.client.YouAgainClient;
  * it across eg servlets. 
  * 
  * Get data via the DataLog web service (i.e. call DataServlet)
+ * 
+ * @see DataLogRemoteStorage
+ * 
  * @author daniel
  * @testedby  DataLogHttpClientTest
  */
