@@ -119,12 +119,11 @@ public class SearchQuery implements Serializable, IHasJson {
 
 	/**
 	 * 
-	 * @param raw
+	 * @param raw Can be empty
 	 * @param services
 	 */
 	public SearchQuery(String raw) {
-		assert raw != null;
-		this.raw = raw.trim();
+		this.raw = raw==null? "" : raw.trim();
 		parse();
 	}
 

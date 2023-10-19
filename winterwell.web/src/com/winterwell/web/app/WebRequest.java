@@ -277,6 +277,8 @@ public class WebRequest implements IProperties, Closeable {
 	private static final SField NONCE = new SField("nonce");
 
 	private static final SField DNT = new SField("DNT");
+
+	private static final String LOGTAG = "WebRequest";
 	
 	private String action;
 	
@@ -454,7 +456,7 @@ public class WebRequest implements IProperties, Closeable {
 		HttpSession s = request.getSession();
 		if (s!=null) {
 			if (tempSession!=null) {
-				Log.e("web", "Transient and proper session?! "+this);
+				Log.e(LOGTAG, "Transient and proper session?! "+this);
 			}
 			return s;
 		}
@@ -631,7 +633,7 @@ public class WebRequest implements IProperties, Closeable {
 	 */
 	public final <T> T get(Key<T> key, T defaultValue) {
 		if (defaultValue == null) {
-			Log.w("web", "null default for "+key);
+			Log.w(LOGTAG, "null default for "+key);
 		} else {
 			// HACK defence
 			if (key instanceof Checkbox && defaultValue!=null) {
@@ -841,14 +843,6 @@ public class WebRequest implements IProperties, Closeable {
 		return servlet;
 	}
 
-	/**
-	 * Over-ride to handle servlet paths, e.g. as done in Creole
-	 * 
-	 * @return ??
-	 */
-	protected String getServletPath() {
-		return "";
-	}
 	
 	@SuppressWarnings("unchecked")
 	public <X> X getSessionAttribute(Key<X> key) {
@@ -898,21 +892,35 @@ public class WebRequest implements IProperties, Closeable {
 			pi = pi.substring(0, pi.length() - 1);
 			keepFileType = true; // its not a file type!
 		}
-		String servletPath = getServletPath();
-		if (pi == null || pi.length() <= servletPath.length())
-			return null;
-		assert pi.startsWith(servletPath) : pi + " vs " + servletPath;
-		if (pi.charAt(servletPath.length()) == '.')
-			// instead of a trailing /slug we've found a trailing .type
-			return null;
-		pi = pi.substring(servletPath.length() + 1); // remove initial servlet
-														// path plus trailing /
+		// remove initial servlet path plus trailing /
+//		String servletPath = getServletPath();
+		if (servletPath != null) {
+			if (pi == null || pi.length() <= servletPath.length())
+				return null;
+			assert pi.startsWith(servletPath) : pi + " vs " + servletPath;
+			if (pi.charAt(servletPath.length()) == '.')
+				// instead of a trailing /slug we've found a trailing .type
+				return null;
+			pi = pi.substring(servletPath.length() + 1); // remove initial servlet path plus trailing /
+		} else {
+			if (pi.charAt(0)=='/') {
+				pi = pi.substring(1); // chop the /
+			} else {
+				Log.w(LOGTAG, pi);
+			}
+		}
 		// remove file type
 		if ( ! keepFileType) {
 			pi = FileUtils.getBasenameCautious(pi);
 		}
 		return pi;
 	}
+	
+	/**
+	 * If set, this gets removed from getSlug(), and also getSlugBits()
+	 */
+	String servletPath;
+	
 
 	/**
 	 * Convenience method for {@link #getSlug()} where the slug is split up by
@@ -942,7 +950,7 @@ public class WebRequest implements IProperties, Closeable {
 		String bi = bits[i];
 		// Treat undefined and null as badly handled nulls
 		if (Utils.isBlank(bi) || "undefined".equals(bi) || "null".equals(bi)) {
-			Log.w("web", "Interpreted-as-null "+i+"="+bi+" in url "+getRequestUrl());
+			Log.w(LOGTAG, "Interpreted-as-null "+i+"="+bi+" in url "+getRequestUrl());
 			return null;
 		}
 		return bi;
@@ -1407,6 +1415,14 @@ public class WebRequest implements IProperties, Closeable {
 	 */
 	public Map<Key, Object> getProperties() {
 		return properties;
+	}
+
+	public void setServletPath(String v) {
+		if (v!=null && ! v.startsWith("/")) {
+			Log.e(LOGTAG, "(adjust) servlet path should start / "+v);
+			v = "/"+v;
+		}
+		this.servletPath = v;
 	}
 
 }

@@ -643,6 +643,11 @@ public abstract class CrudServlet<T> implements IServlet {
 	 */
 	private static final SField AFTER = new SField("after");
 
+	/**
+	 * Status: NOT used widely. But matches some use in the front end (see C.js)
+	 */
+	public static final String NEW_ID = "new";
+
 	protected final JThing<T> doPublish(WebRequest state) throws Exception {
 		// For publish, let's force the update.
 		return doPublish(state, KRefresh.TRUE, false);
@@ -802,17 +807,18 @@ public abstract class CrudServlet<T> implements IServlet {
 			return _id;
 		}
 		// Beware if ID can have a / in it!
-		String slug = state.getSlug();
+//		String slug = state.getSlug();
 		String[] slugBits = state.getSlugBits();
 		// FIXME handle if the ID has a / encoded within it
 		String sid = slugBits[slugBits.length - 1]; 
 		// NB: slug-bit-0 is the servlet, slug-bit-1 might be the ID - or the dataspace for e.g. SegmentServlet
+		if (slugBits.length == 1) sid = "new"; // just the servlet => new
 		_id = getId2(state, sid);
 		return _id;
 	}
 
 	protected String getId2(WebRequest state, String sid) {
-		if (ACTION_NEW.equals(sid)) {
+		if (NEW_ID.equals(sid)) {
 			String nicestart = StrUtils.toCanonical(
 					Utils.or(state.getUserId(), state.get("name"), type.getSimpleName()).toString()
 					).replace(' ', '_');
