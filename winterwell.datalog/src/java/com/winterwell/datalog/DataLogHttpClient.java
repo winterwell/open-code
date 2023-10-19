@@ -264,11 +264,12 @@ public class DataLogHttpClient {
 	 * (e.g. emissions -> co2 co2base co2creative)
 	 * @param q
 	 * @param breakdown
-	 * @return
+	 * @return The nested-map structure is the difference from getBreakdown()
 	 */
 	public Map<String, Map<String, Double>> getBreakdownMultiField(SearchQuery q, Breakdown breakdown) {
 		return (Map) getBreakdown2(q, breakdown);
 	}
+	
 	/**
 	 * 
 	 * @param q
