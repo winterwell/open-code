@@ -484,6 +484,9 @@ public abstract class CrudServlet<T> implements IServlet {
 	 */
 	protected JThing<T> getThingFromDB(WebRequest state) throws WebEx.E403 {
 		ESPath path = getPath(state);
+		if (path==null) {
+			return null;
+		}
 		KStatus status = state.get(AppUtils.STATUS);
 		// fetch from DB
 		T obj = AppUtils.get(path, type);		
@@ -518,18 +521,21 @@ public abstract class CrudServlet<T> implements IServlet {
 	 * Use getId() to make an ESPath.
 	 * NB: the path depends on status - defaulting to published 
 	 * @param state
-	 * @return
+	 * @return null if there's no Id
 	 */
 	protected ESPath getPath(WebRequest state) {
 		assert state != null;
 		String id = getId(state);
+		if (id==null) {
+			return null;
+		}
 		if ("list".equals(id)) {
 			throw new WebEx.E400(
 					state.getRequestUrl(),
 					"Bad input: 'list' was interpreted as an ID -- use /_list.json to retrieve a list.");
 		}
 		KStatus status = state.get(AppUtils.STATUS, KStatus.PUBLISHED);
-		ESPath path = esRouter.getPath(dataspace,type, id, status);
+		ESPath path = esRouter.getPath(dataspace, type, id, status);
 		return path;
 	}
 
@@ -812,7 +818,14 @@ public abstract class CrudServlet<T> implements IServlet {
 		// FIXME handle if the ID has a / encoded within it
 		String sid = slugBits[slugBits.length - 1]; 
 		// NB: slug-bit-0 is the servlet, slug-bit-1 might be the ID - or the dataspace for e.g. SegmentServlet
-		if (slugBits.length == 1) sid = "new"; // just the servlet => new
+		if (slugBits.length == 1) {
+			if (state.actionIs("new")) {
+				sid = "new"; // just the servlet => new
+			} else {
+				Log.w(LOGTAG(), "no ID "+state);
+				return null;
+			}
+		}
 		_id = getId2(state, sid);
 		return _id;
 	}

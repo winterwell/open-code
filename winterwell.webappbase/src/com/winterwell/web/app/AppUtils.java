@@ -363,6 +363,7 @@ public class AppUtils {
 	}
 	
 	/**
+	 * Convenience for {@link #doSaveEdit(ESPath, JThing, List, WebRequest)}
 	 * @deprecated Backwards compatability
 	 */
 	public static JThing doSaveEdit(ESPath path, JThing item, WebRequest state) {
@@ -1232,6 +1233,8 @@ public class AppUtils {
 
 
 	/**
+	 * @deprecated Better to use "your" IESRouter
+	 * 
 	 * Std implementation of IESRouter
 	 * @param dataspaceIgnored
 	 * @param type
@@ -1317,7 +1320,7 @@ public class AppUtils {
 	/**
 	 * @deprecated Better to manage the save-path directly.
 	 * @param item
-	 * @param state
+	 * @param state Can be null
 	 */
 	public static void doSaveEdit(AThing item, WebRequest state) {
 		ESPath path = getPath(null, item.getClass(), item.getId(), item.getStatus());
