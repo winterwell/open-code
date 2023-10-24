@@ -1213,13 +1213,13 @@ public class WebUtils2 extends WebUtils {
 			// issues at all?
 			// PrintWriter pw = response.getWriter();
 			out = FileUtils.getWriter(response.getOutputStream());
-			if (output.callback != null) {
-				out.append(output.callback + "(");
-				out.append(json);
-				out.append(");");
-			} else {
-				out.append(json);
-			}
+//			if (output.callback != null) {
+//				out.append(output.callback + "(");
+//				out.append(json);
+//				out.append(");");
+//			} else {
+			out.append(json);
+//			}
 		} finally {
 			FileUtils.close(out);
 		}
