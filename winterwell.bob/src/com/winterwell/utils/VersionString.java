@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * See https://semver.org/
  * @author daniel
  * @testedby VersionStringTest TODO
  */
 public final class VersionString implements Comparable<VersionString> 
 {
 
+	/**
+	 * each bit is Integer|String
+	 */
 	private final List bits;
 	private final String version;
 
+	/**
+	 * 
+	 * @param version e.g. "2.1.3"
+	 */
 	public VersionString(String version) {
 		this.version = version;
 		String[] sbits = version.split("[\\._ ]");
@@ -111,6 +118,11 @@ public final class VersionString implements Comparable<VersionString>
 			}
 		}
 		return 0;
+	}
+
+	public String getMajorVersion() {
+		// NB: bits are Integer or String
+		return String.valueOf(bits.get(0));
 	}
 
 }
