@@ -1266,6 +1266,11 @@ public class AppUtils {
 			String i2 = index + ".draft"; // draft etc
 			ESPath esp = new ESPath(new String[] {i1, i2}, stype, id);
 			return esp;
+		case DRAFT_OR_PUB: // like PUB_OR_DRAFT but draft index first
+			i1 = index + ".draft"; // draft etc
+			i2 = index; // pub or arc
+			esp = new ESPath(new String[] {i1, i2}, stype, id);
+			return esp;
 		default:
 			throw new IllegalArgumentException(type+" "+status);
 		}

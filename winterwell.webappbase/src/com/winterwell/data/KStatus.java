@@ -56,7 +56,11 @@ public enum KStatus {
 	 * Returns PUBLISHED if possible, DRAFT if published does not exist.
 	 * */
 	PUB_OR_DRAFT,	
-	
+
+	/** Like PUB_OR_DRAFT, but it prefers DRAFT if it exists.
+	 * */
+	DRAFT_OR_PUB,	
+
 	/** this thing does not exist */
 	ABSENT;
 	
@@ -72,7 +76,7 @@ public enum KStatus {
 	 * Utility for "is this a special value which translates to multiple indices?"
 	 */
 	public static boolean isMultiIndex(KStatus status) {
-		return Arrays.asList(ALL_BAR_TRASH, PUB_OR_ARC, PUB_OR_DRAFT).contains(status);
+		return Arrays.asList(ALL_BAR_TRASH, PUB_OR_ARC, PUB_OR_DRAFT, DRAFT_OR_PUB).contains(status);
 	}
 
 	/**

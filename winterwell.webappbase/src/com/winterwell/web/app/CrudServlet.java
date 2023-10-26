@@ -1432,6 +1432,12 @@ public abstract class CrudServlet<T> implements IServlet {
 					esRouter.getPath(dataspace, type, null, KStatus.DRAFT).index()
 				);
 			break;
+		case DRAFT_OR_PUB:
+			s.setIndices(
+					esRouter.getPath(dataspace, type, null, KStatus.DRAFT).index(),
+					esRouter.getPath(dataspace, type, null, KStatus.PUBLISHED).index()
+				);
+			break;
 		default:
 			// normal
 			s.setIndex(esRouter.getPath(dataspace, type, null, status).index());
@@ -1596,7 +1602,7 @@ public abstract class CrudServlet<T> implements IServlet {
 				Log.w(LOGTAG(), "null status for "+id+" "+h.getJThing());
 			}
 			KStatus hitStatus = shitStatus==null? null : KStatus.valueOf(shitStatus);			
-			if (requestStatus == KStatus.ALL_BAR_TRASH) {
+			if (requestStatus == KStatus.ALL_BAR_TRASH || requestStatus==KStatus.DRAFT_OR_PUB) {
 				// prefer draft
 				if (index != null && index.toString().contains(".draft")) {
 					things.put(id, h);	
