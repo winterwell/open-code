@@ -29,6 +29,7 @@ import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.FakeBrowser;
+import com.winterwell.web.ajax.JSend;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.BrowserType;
@@ -242,10 +243,10 @@ public class LgServlet {
 	}
 
 	/**
-	 * TODO refactor as Map key:ip value=user-type eg "bot"
+	 * key:ip value=user-type eg "bot"
 	 */
-	static List<Map> userTypeForIPorXId;
-	static volatile Time userTypeForIPorXIdFetched;
+	static Map<String,String> userTypeForIP;
+	static volatile Time userTypeForIPFetched;
 
 	/**
 	 * null unindexed @deprecated For backwards compatability.
@@ -424,41 +425,55 @@ public class LgServlet {
 
 	/**
 	 * Is it a bot? works with Portal which holds the data
+	 * 
+	 * TODO Portal only has 1 entry (Oct 2023) -- Is this maintained at all??
 	 * @param ips
 	 * @return
 	 */
 	private static String getInvalidType(List ips) {
 		assert ips != null;
-		if (userTypeForIPorXId==null || userTypeForIPorXIdFetched==null || userTypeForIPorXIdFetched.isBefore(new Time().minus(10, TUnit.MINUTE))) {
-			//Needs to be set first -- will get caught in a loop otherwise as userTypeForIPorXId is still null
-			userTypeForIPorXIdFetched = new Time();			
-			FakeBrowser fb = new FakeBrowser();
-			fb.setRequestMethod("GET");
-
-			try {
-				//Right now, just set to point at local. TODO read in correct endpoint from state
-				String json= fb.getPage("https://portal.good-loop.com/botip/_list.json");
-				Map response = (Map) WebUtils2.parseJSON(json);
-				Map esres = (Map) response.get("data");
-				List<Map> hits = Containers.asList(esres.get("hits"));
-				
-				userTypeForIPorXId = hits;
-			}
-			catch(Exception ex) {
-				Log.e("lg.getInvalidType", ex);
-				userTypeForIPorXId = new ArrayList(); // paranoia: keep logging fast. This will get checked again in 10 minutes
-			}
+		// unset or not updated within an hour
+		if (userTypeForIP==null || userTypeForIPFetched==null || userTypeForIPFetched.isBefore(new Time().minus(1, TUnit.HOUR))) {
+			getInvalidType2_init();
 		}
 		//At this point, can safely assume that we have a valid list of IPs
 		for (Object userIP : ips) {
-			for(Map botIP : userTypeForIPorXId) {
-				String badIP = (String) botIP.get("ip");
-				if (userIP.equals(badIP)) return (String) botIP.get("type");
-			}
+			String utype = userTypeForIP.get(userIP);
+			if (utype!=null) return utype;
 		}
 		return null;
 	}
 
+
+	private static void getInvalidType2_init() {
+		//Needs to be set first -- will get caught in a loop otherwise as userTypeForIPorXId is still null
+		userTypeForIPFetched = new Time();			
+		FakeBrowser fb = new FakeBrowser();
+		fb.setRequestMethod("GET");
+		try {
+			String json= fb.getPage("https://portal.good-loop.com/botip/_list.json");
+			JSend jsend = JSend.parse(json);
+			Map esres = (Map)  jsend.getDataMap();
+			List<Map> hits = Containers.asList(esres.get("hits"));
+			// unpack into a key-value map
+			HashMap u4i = new HashMap();
+			for (Map map : hits) {
+				Object ip = u4i.get("ip");
+				Object ut = u4i.get("type");
+				if (ip==null || ut==null) {
+					Log.e(LOGTAG, "(skip) Bad BotIP entry "+map);
+					continue;
+				}
+				u4i.put(ip, ut);
+			}
+			userTypeForIP = u4i;
+		} catch(Exception ex) {
+			Log.e("lg.getInvalidType", ex);
+			if (userTypeForIP==null) {
+				userTypeForIP = new ArrayMap(); // paranoia: keep logging fast. This will get checked again in an hour
+			}
+		}		
+	}
 
 	static ua_parser.Parser parser;
 
