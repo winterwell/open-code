@@ -550,7 +550,7 @@ public abstract class CrudServlet<T> implements IServlet {
 		T item;
 		if (json == null) {
 			try {
-				item = type.newInstance();
+				item = doNew2_newBlankInstance(state, id);
 			} catch (InstantiationException | IllegalAccessException e) {
 				throw Utils.runtime(e);
 			}
@@ -572,6 +572,13 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 		return new JThing().setJava(item);
 	}
+
+	protected T doNew2_newBlankInstance(WebRequest state, String id) throws InstantiationException, IllegalAccessException {
+		return type.newInstance();
+	}
+
+
+
 
 	private ESHttpClient _es;
 	
