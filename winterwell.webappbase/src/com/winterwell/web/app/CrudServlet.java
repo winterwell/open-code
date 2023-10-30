@@ -184,6 +184,10 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 		
 		// crud?
+		// HACK: /new => action=new
+		if (slug.endsWith("/new") && state.getAction()==null) {
+			state.setAction(ACTION_NEW);
+		}
 		if (state.getAction() != null && ! state.actionIs("get")) {
 			// do it
 			doAction(state);

@@ -404,7 +404,7 @@ public class WebRequest implements IProperties, Closeable {
 	 */
 	public final boolean actionIs(String myAction) {
 		assert myAction != null;
-		return Utils.equals(action, myAction);
+		return Utils.equals(getAction(), myAction);
 	}
 
 	/**
