@@ -197,10 +197,11 @@ public abstract class CrudServlet<T> implements IServlet {
 	
 		if (jthing != null) {
 			if (state.getAction() == ACTION_NEW) {
-				returnId(state);
+				returnJson(state, "id");
 			} else {
 				returnJson(state);
 			}
+			return;
 		}
 		
 		// no object...
@@ -219,14 +220,15 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 	}
 	
-	private void returnId(WebRequest state) throws IOException {
+	protected void returnJson(WebRequest state, String key) throws IOException {
 		Map json = new ArrayMap<String, String>();
-		json.put("id", jthing.map().get("id"));
+		json.put("id", jthing.map().get(key));
 		String jsonString = Gson.toJSON(json);
 		WebUtils2.sendJson(state, jsonString);
+		return;
 	}
 	
-	private void returnJson(WebRequest state) throws IOException {
+	protected void returnJson(WebRequest state) throws IOException {
 		// security filter?
 		List<ESHit<T>> hit = Arrays.asList(new ESHit(jthing));
 		YouAgainClient yac = Dep.get(YouAgainClient.class);
