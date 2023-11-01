@@ -194,42 +194,13 @@ public abstract class CrudServlet<T> implements IServlet {
 		}						
 
 		getThingStateOrDB(state);
-
-		// return json?		
-		if (jthing != null) {			
-			// security filter?
-			List<ESHit<T>> hit = Arrays.asList(new ESHit(jthing));
-			YouAgainClient yac = Dep.get(YouAgainClient.class);
-			List<AuthToken> tokens = yac.getAuthTokens(state);
-			List<ESHit<T>> hitSafe = doList2_securityFilter(hit, state, tokens, yac);
-			if (hitSafe.isEmpty()) {
-				throw new WebEx.E403("User "+state.getUserId()+" cannot access "+state.getSlug());
-			}			
-			// privacy: potentially filter some stuff from the json!
-			JThing<T> cleansed = cleanse(jthing, state);			
-			// Editor safety
-			if (cleansed != null) {
-				cleanse2_dontConfuseEditors(cleansed, jthing, state);				
+	
+		if (jthing != null) {
+			if (state.getAction() == ACTION_NEW) {
+				returnJson(state, "id");
 			} else {
-				cleansed = jthing; // never null
+				returnJson(state);
 			}
-			// augment?
-			if (augmentFlag) {
-				JThing<T> aug = augment(cleansed, state);
-				if (aug!=null) {
-					cleansed = aug;
-				}
-			}
-			String json = cleansed.string();
-			// pretty?
-			if (state.get(new Checkbox("pretty"))) {
-				Gson gson = new GsonBuilder().setPrettyPrinting().create();
-				Object jobj = gson.fromJson(json);
-				String prettyJson = gson.toJson(jobj);
-				json = prettyJson;
-			}
-			JsonResponse output = new JsonResponse(state).setCargoJson(json);			
-			WebUtils2.sendJson(output, state);
 			return;
 		}
 		
@@ -249,6 +220,51 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 	}
 	
+	protected void returnJson(WebRequest state, String key) throws IOException {
+		Map json = new ArrayMap<String, String>();
+		json.put("id", jthing.map().get(key));
+		String jsonString = Gson.toJSON(json);
+		WebUtils2.sendJson(state, jsonString);
+		return;
+	}
+	
+	protected void returnJson(WebRequest state) throws IOException {
+		// security filter?
+		List<ESHit<T>> hit = Arrays.asList(new ESHit(jthing));
+		YouAgainClient yac = Dep.get(YouAgainClient.class);
+		List<AuthToken> tokens = yac.getAuthTokens(state);
+		List<ESHit<T>> hitSafe = doList2_securityFilter(hit, state, tokens, yac);
+		if (hitSafe.isEmpty()) {
+			throw new WebEx.E403("User " + state.getUserId() + " cannot access " + state.getSlug());
+		}
+		// privacy: potentially filter some stuff from the json!
+		JThing<T> cleansed = cleanse(jthing, state);
+		// Editor safety
+		if (cleansed != null) {
+			cleanse2_dontConfuseEditors(cleansed, jthing, state);
+		} else {
+			cleansed = jthing; // never null
+		}
+		// augment? 
+		if (augmentFlag) {
+			JThing<T> aug = augment(cleansed, state);
+			if (aug != null) {
+				cleansed = aug;
+			}
+		}
+		String json = cleansed.string();
+		// pretty?
+		if (state.get(new Checkbox("pretty"))) {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Object jobj = gson.fromJson(json);
+			String prettyJson = gson.toJson(jobj);
+			json = prettyJson;
+		}
+		JsonResponse output = new JsonResponse(state).setCargoJson(json);
+		WebUtils2.sendJson(output, state);
+		return;
+	};
+
 	protected boolean isListRequest(String slug) {
 		return slug.endsWith("/_list") || LIST_SLUG.equals(slug);
 	}
