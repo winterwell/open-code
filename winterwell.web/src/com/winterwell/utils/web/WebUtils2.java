@@ -1247,6 +1247,10 @@ public class WebUtils2 extends WebUtils {
 			req.close();
 		}
 	}
+	
+	public static void sendCSV(WebRequest req, String csv) {
+		send2(KResponseType.csv, req, csv);
+	}
 
 	/**
 	 * Send a text return (closes the response).
