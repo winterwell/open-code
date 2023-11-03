@@ -288,6 +288,7 @@ public class WebUtils2 extends WebUtils {
 					"png", "image/png",
 					"jpg", "image/jpeg",
 					"gif", "image/gif",
+					"webp", "image/webp",
 					"svg", "image/svg+xml",
 					// Workaround for bug in MimeUtil re css
 					"css", "text/css",
