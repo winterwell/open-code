@@ -356,12 +356,7 @@ public class LgServlet {
 			Log.d("lg", "not accepted "+tag+" "+params);
 			return null;
 		}
-		
-		// Add ip/user type
-		String userType = getInvalidType(ips);
-		if (userType!=null) {
-			params.put("invalid", userType);
-		}
+
 		
 		// Convert into USD
 		// Minor TODO refactor into a method
@@ -423,57 +418,6 @@ public class LgServlet {
 		// ya_auths? CORS_set?
 	}
 
-	/**
-	 * Is it a bot? works with Portal which holds the data
-	 * 
-	 * TODO Portal only has 1 entry (Oct 2023) -- Is this maintained at all??
-	 * @param ips
-	 * @return
-	 */
-	private static String getInvalidType(List ips) {
-		assert ips != null;
-		// unset or not updated within an hour
-		if (userTypeForIP==null || userTypeForIPFetched==null || userTypeForIPFetched.isBefore(new Time().minus(1, TUnit.HOUR))) {
-			getInvalidType2_init();
-		}
-		//At this point, can safely assume that we have a valid list of IPs
-		for (Object userIP : ips) {
-			String utype = userTypeForIP.get(userIP);
-			if (utype!=null) return utype;
-		}
-		return null;
-	}
-
-
-	private static void getInvalidType2_init() {
-		//Needs to be set first -- will get caught in a loop otherwise as userTypeForIPorXId is still null
-		userTypeForIPFetched = new Time();			
-		FakeBrowser fb = new FakeBrowser();
-		fb.setRequestMethod("GET");
-		try {
-			String json= fb.getPage("https://portal.good-loop.com/botip/_list.json");
-			JSend jsend = JSend.parse(json);
-			Map esres = (Map)  jsend.getDataMap();
-			List<Map> hits = Containers.asList(esres.get("hits"));
-			// unpack into a key-value map
-			HashMap u4i = new HashMap();
-			for (Map map : hits) {
-				Object ip = u4i.get("ip");
-				Object ut = u4i.get("type");
-				if (ip==null || ut==null) {
-					Log.e(LOGTAG, "(skip) Bad BotIP entry "+map);
-					continue;
-				}
-				u4i.put(ip, ut);
-			}
-			userTypeForIP = u4i;
-		} catch(Exception ex) {
-			Log.e("lg.getInvalidType", ex);
-			if (userTypeForIP==null) {
-				userTypeForIP = new ArrayMap(); // paranoia: keep logging fast. This will get checked again in an hour
-			}
-		}		
-	}
 
 	static ua_parser.Parser parser;
 
