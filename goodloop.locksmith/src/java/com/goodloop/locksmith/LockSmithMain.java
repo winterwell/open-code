@@ -1,6 +1,5 @@
 package com.goodloop.locksmith;
 
-import com.goodloop.adserver.GLBaseConfig;
 import com.winterwell.utils.Dep;
 import com.winterwell.web.app.AMain;
 import com.winterwell.web.app.JettyLauncher;
@@ -29,6 +28,8 @@ public class LockSmithMain extends AMain<LockSmithConfig> {
 		// to classpath just for GLBaseConfig.GOOD_LOOP_APPNAME
 		// HACK 2: product doesn't do anything yet, so this doesn't
 		// necessarily tie locksmith to portal
+		// TODO Once zombie thread issue is resolved this should be cheap enough to run
+		// an instance wherever it's needed - so issuer & product can be in config file if necessary
 		YouAgainClient yac = new YouAgainClient("good-loop", "portal.good-loop.com");
 		Dep.set(YouAgainClient.class, yac);
 	}
