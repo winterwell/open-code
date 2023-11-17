@@ -1,5 +1,12 @@
 # open-code
-Open source Java code from Winterwell/SoDash
+
+Open source Java code from Good-Loop and Winterwell.
+
+Projects in this repo are a mix of:
+ - Utility libraries
+ - Open source share-with-the-world projects
+ 
+Commercially sensitive projects must not be kept in this repo.
 
 ## How to Install
 
