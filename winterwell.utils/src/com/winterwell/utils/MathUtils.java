@@ -278,6 +278,11 @@ public class MathUtils {
 		return ! (Math.abs(x) > TOO_BIG || Double.isNaN(x) || Double.isInfinite(x));
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @return x in [0, 1]
+	 */
 	public static boolean isProb(double x) {
 		return x >= 0 && x <= 1.0000000001;
 	}
