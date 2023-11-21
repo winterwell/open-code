@@ -16,6 +16,8 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.time.Dt;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.time.TimeUtils;
 import com.winterwell.utils.web.SimpleJson;
@@ -495,6 +497,8 @@ public class DataLogHttpClient {
 		FakeBrowser fb = new FakeBrowser();
 		fb.setUserAgent(FakeBrowser.HONEST_USER_AGENT);
 		fb.setDebug(debug);		
+		fb.setRetryOnError(2); // 3 tries
+		fb.setMinRetryPause(new Dt(100, TUnit.MILLISECOND));
 		// auth!
 		if (auth!=null) {
 			AuthToken.setAuth(fb, auth);
