@@ -95,6 +95,8 @@ public class DataServlet implements IServlet {
 	@Deprecated /* let's standardise on `d` for input and query */
 	public static final SField DATASPACE = new SField("dataspace");
 	
+	private static final SField SORT_EXAMPLE = new SField("sortExample");
+	
 	private static final String LOGTAG = "DataServlet";
 	/**
 	 * Any truthy value (e.g. the empty map) will do to start paging.
@@ -234,10 +236,16 @@ public class DataServlet implements IServlet {
 		}
 
 		// sort buckets?
-		String sortBy = state.get(CrudServlet.SORT);
-		if (sortBy != null) {
-			essb.setSortOrder(sortBy);
+		String sortBucketBy = state.get(CrudServlet.SORT);
+		if (sortBucketBy != null) {
+			essb.setSortOrder(sortBucketBy);
 		}
+		
+		String sortExampleBy = state.get(SORT_EXAMPLE);
+		if (sortExampleBy != null) {
+			essb.setSortExample(sortExampleBy);
+		}
+		
 		
 		// shard preference
 		// See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-shard-routing.html

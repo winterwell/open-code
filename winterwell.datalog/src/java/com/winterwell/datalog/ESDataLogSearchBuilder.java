@@ -18,6 +18,7 @@ import com.winterwell.es.client.agg.Aggregations;
 import com.winterwell.es.client.query.BoolQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
+import com.winterwell.es.client.sort.KSortOrder;
 import com.winterwell.es.client.sort.Sort;
 import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.MathUtils;
@@ -155,6 +156,11 @@ public class ESDataLogSearchBuilder {
 			for(String rf : runtimeMappings.keySet()) {
 				search.addRuntimeMapping(rf, runtimeMappings.get(rf));
 			}
+		}
+		
+		if (sortExampleBy != null) {
+			KSortOrder kSortOrder = "desc".equals(sortExampleBy) ? KSortOrder.desc : KSortOrder.asc;
+			search.setSort(new Sort("time", kSortOrder));
 		}
 		
 		// paging?
@@ -461,6 +467,7 @@ public class ESDataLogSearchBuilder {
 	private Double randomSamplingProb;
 	private boolean randomFixedSeed;
 	private String sortBy;
+	private String sortExampleBy;
 	
 	public void setInterval(Dt interval) {
 		this.interval = interval;
@@ -619,6 +626,14 @@ public class ESDataLogSearchBuilder {
 		this.sortBy = sortBy;
 		if (sortBy != null && ! "desc".equals(sortBy) && ! "asc".equals(sortBy)) { 
 			throw new WebEx.E400("Bad sort - use desc (highest keys), or asc, or null (which gives document_count desc)");
+		}
+		return this;
+	}
+	
+	public ESDataLogSearchBuilder setSortExample(String sortExampleBy) {
+		this.sortExampleBy = sortExampleBy;
+		if (sortBy != null && ! "desc".equals(sortBy) && ! "asc".equals(sortBy)) { 
+			throw new WebEx.E400("Bad sort - use desc (latest time), or asc)");
 		}
 		return this;
 	}
