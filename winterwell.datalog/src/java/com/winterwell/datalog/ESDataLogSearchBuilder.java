@@ -623,7 +623,7 @@ public class ESDataLogSearchBuilder {
 	}
 
 	/**
-	 * 
+	 * TODO support fieldname-format like here CrudServlet.doList3_addSort()
 	 * @param sortBy desc or asc??
 	 * @return
 	 */
