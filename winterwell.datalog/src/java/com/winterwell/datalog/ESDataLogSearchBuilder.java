@@ -360,8 +360,13 @@ public class ESDataLogSearchBuilder {
 				if (numResults>0) {
 					leaf.setSize(numResults);
 				}
-				if (sortBy!=null) {
-					leaf.setOrder("_key", sortBy);
+				if (sortBucketBy!=null) {
+					String[] sorts = sortBucketBy.split("-");
+					if (sorts.length == 1) {
+						leaf.setOrder("_key", sorts[0]);
+					} else {
+						leaf.setOrder(sorts[0], sorts[1]);
+					}
 				}
 				// HACK avoid "unset" -> parse exception
 				leaf.setMissing(ESQueryBuilders.UNSET);
@@ -466,7 +471,7 @@ public class ESDataLogSearchBuilder {
 
 	private Double randomSamplingProb;
 	private boolean randomFixedSeed;
-	private String sortBy;
+	private String sortBucketBy;
 	private String sortExampleBy;
 	
 	public void setInterval(Dt interval) {
@@ -623,18 +628,25 @@ public class ESDataLogSearchBuilder {
 	}
 
 	/**
-	 * TODO support fieldname-format like here CrudServlet.doList3_addSort()
+	 * This doesn't quite work like CrudServlet.doList3_addSort() as there are not
+	 * much to sort in pipeline aggregation. But here will keeping the same
+	 * behaviour just to be consistent
+	 * 
 	 * @param sortBy desc or asc??
 	 * @return
 	 */
-	public ESDataLogSearchBuilder setSortOrder(String sortBy) {
-		this.sortBy = sortBy;
-		if (sortBy != null && ! "desc".equals(sortBy) && ! "asc".equals(sortBy)) { 
-			throw new WebEx.E400("Bad sort - use desc (highest keys), or asc, or null (which gives document_count desc)");
+	public ESDataLogSearchBuilder setSortOrder(String sortBucketBy) {
+		if ("desc".equals(sortBucketBy)  && "asc".equals(sortBucketBy)) {
+			String[] sorts = sortBucketBy.split("-");
+			if (sorts.length != 2) {
+				throw new WebEx.E400(
+						"Bad sort - Either use fieldname-desc (highest keys), or fieldname-asc. If no field name provided, it will sort by key.");
+			}
 		}
+		this.sortBucketBy = sortBucketBy;
 		return this;
 	}
-	
+
 	/**
 	 * TODO change to support fieldname-asc|desc format
 	 * @param sortExampleBy currently asc|desc
@@ -642,7 +654,7 @@ public class ESDataLogSearchBuilder {
 	 */
 	public ESDataLogSearchBuilder setSortExample(String sortExampleBy) {
 		this.sortExampleBy = sortExampleBy;
-		if (sortBy != null && ! "desc".equals(sortBy) && ! "asc".equals(sortBy)) { 
+		if (sortExampleBy != null && ! "desc".equals(sortExampleBy) && ! "asc".equals(sortExampleBy)) { 
 			throw new WebEx.E400("Bad sort - use desc (latest time), or asc)");
 		}
 		return this;
