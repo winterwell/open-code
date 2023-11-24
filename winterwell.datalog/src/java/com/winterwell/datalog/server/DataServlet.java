@@ -95,6 +95,12 @@ public class DataServlet implements IServlet {
 	@Deprecated /* let's standardise on `d` for input and query */
 	public static final SField DATASPACE = new SField("dataspace");
 	
+
+	/**
+	 * Current format: "desc"|"asc" and it always applies to time.
+	 * 
+	 * TODO Update to match the fieldname-desc/asc format used by {@link CrudServlet#SORT}
+	 */
 	private static final SField SORT_EXAMPLE = new SField("sortExample");
 	
 	private static final String LOGTAG = "DataServlet";
@@ -236,6 +242,7 @@ public class DataServlet implements IServlet {
 		}
 
 		// sort buckets?
+		// FIXME This does NOT currently follow the CrudServlet.SORT fielname-asc|desc format
 		String sortBucketBy = state.get(CrudServlet.SORT);
 		if (sortBucketBy != null) {
 			essb.setSortOrder(sortBucketBy);

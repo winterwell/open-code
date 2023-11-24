@@ -622,6 +622,11 @@ public class ESDataLogSearchBuilder {
 		return "ESDataLogSearchBuilder [dataspace=" + dataspace + ", query=" + query + ", breakdown=" + breakdown + "]";
 	}
 
+	/**
+	 * 
+	 * @param sortBy desc or asc??
+	 * @return
+	 */
 	public ESDataLogSearchBuilder setSortOrder(String sortBy) {
 		this.sortBy = sortBy;
 		if (sortBy != null && ! "desc".equals(sortBy) && ! "asc".equals(sortBy)) { 
@@ -630,6 +635,11 @@ public class ESDataLogSearchBuilder {
 		return this;
 	}
 	
+	/**
+	 * TODO change to support fieldname-asc|desc format
+	 * @param sortExampleBy currently asc|desc
+	 * @return
+	 */
 	public ESDataLogSearchBuilder setSortExample(String sortExampleBy) {
 		this.sortExampleBy = sortExampleBy;
 		if (sortBy != null && ! "desc".equals(sortBy) && ! "asc".equals(sortBy)) { 
