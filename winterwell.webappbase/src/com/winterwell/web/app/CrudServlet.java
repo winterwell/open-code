@@ -661,7 +661,7 @@ public abstract class CrudServlet<T> implements IServlet {
 	protected Collection<String> searchFields;
 	
 	/**
-	 * e.g. "amount-desc"
+	 * Format is fieldname-asc/desc e.g. "amount-desc"
 	 * 
 	 * HACK "all" is handled as Sort._SHARD_DOC
 	 */
