@@ -159,8 +159,9 @@ public class ESDataLogSearchBuilder {
 		}
 		
 		if (sortExampleBy != null) {
-			KSortOrder kSortOrder = "desc".equals(sortExampleBy) ? KSortOrder.desc : KSortOrder.asc;
-			search.setSort(new Sort("time", kSortOrder));
+			String[] sorts = sortExampleBy.split("-");
+			KSortOrder kSortOrder = "desc".equals(sorts[1]) ? KSortOrder.desc : KSortOrder.asc;
+			search.setSort(new Sort(sorts[0], kSortOrder));
 		}
 		
 		// paging?
@@ -362,11 +363,7 @@ public class ESDataLogSearchBuilder {
 				}
 				if (sortBucketBy!=null) {
 					String[] sorts = sortBucketBy.split("-");
-					if (sorts.length == 1) {
-						leaf.setOrder("_key", sorts[0]);
-					} else {
-						leaf.setOrder(sorts[0], sorts[1]);
-					}
+					leaf.setOrder(sorts[0], sorts[1]);
 				}
 				// HACK avoid "unset" -> parse exception
 				leaf.setMissing(ESQueryBuilders.UNSET);
@@ -632,31 +629,42 @@ public class ESDataLogSearchBuilder {
 	 * much to sort in pipeline aggregation. But here will keeping the same
 	 * behaviour just to be consistent
 	 * 
-	 * @param sortBy desc or asc??
+	 * @param sortBucketBy Either use fieldname-desc (highest keys), or fieldname-asc. If no field name provided, it will sort by key.
 	 * @return
 	 */
 	public ESDataLogSearchBuilder setSortOrder(String sortBucketBy) {
-		if ("desc".equals(sortBucketBy)  && "asc".equals(sortBucketBy)) {
-			String[] sorts = sortBucketBy.split("-");
-			if (sorts.length != 2) {
-				throw new WebEx.E400(
-						"Bad sort - Either use fieldname-desc (highest keys), or fieldname-asc. If no field name provided, it will sort by key.");
-			}
+		if ("desc".equals(sortBucketBy) || "asc".equals(sortBucketBy)) {
+			this.sortBucketBy = "_key-" + sortBucketBy;
+			return this;
 		}
+
+		String[] sorts = sortBucketBy.split("-");
+		if (sorts.length != 2 || !("desc".equals(sorts[1]) || "asc".equals(sorts[1]))) {
+			throw new WebEx.E400(
+					"Bad sort - Either use fieldname-desc (highest keys), or fieldname-asc. If no field name provided, it will sort by key.");
+		}
+
 		this.sortBucketBy = sortBucketBy;
 		return this;
 	}
 
 	/**
-	 * TODO change to support fieldname-asc|desc format
-	 * @param sortExampleBy currently asc|desc
+	 * @param sortExampleBy Either use fieldname-desc (highest keys), or fieldname-asc. If no field name provided, it will sort by time.
 	 * @return
 	 */
 	public ESDataLogSearchBuilder setSortExample(String sortExampleBy) {
-		this.sortExampleBy = sortExampleBy;
-		if (sortExampleBy != null && ! "desc".equals(sortExampleBy) && ! "asc".equals(sortExampleBy)) { 
-			throw new WebEx.E400("Bad sort - use desc (latest time), or asc)");
+		if ("desc".equals(sortExampleBy) || "asc".equals(sortExampleBy)) {
+			this.sortExampleBy = "time-" + sortExampleBy;
+			return this;
 		}
+
+		String[] sorts = sortExampleBy.split("-");
+		if (sorts.length != 2 || !("desc".equals(sorts[1]) || "asc".equals(sorts[1]))) {
+			throw new WebEx.E400(
+					"Bad sort - Either use fieldname-desc (highest keys), or fieldname-asc. If no field name provided, it will sort by time.");
+		}
+
+		this.sortExampleBy = sortExampleBy;
 		return this;
 	}
 
