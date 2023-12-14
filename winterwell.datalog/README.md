@@ -13,11 +13,13 @@ Key classes:
 
 - DataLogEvent
 - DataLogServer
-- DataServlet - report on data
+- DataServlet - report on data & query params process
 - LgServlet - log data
 - ESStorage
 
 # Docs
+
+Wiki: https://wiki.good-loop.com/books/in-house-services/page/overview-jvj
 
 Auto-generated Java docs can be found at: https://java-doc.good-loop.com/datalog/
 
