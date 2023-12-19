@@ -42,6 +42,11 @@ import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
 
 /**
+ * Does three things:
+ * 1. Initialise config from properties
+ * 2. Start a web-server
+ * 3. Run a main loop
+ * 
  * Common main/init code. To use:
  * 
  * 1. Create subclass. You should probably override

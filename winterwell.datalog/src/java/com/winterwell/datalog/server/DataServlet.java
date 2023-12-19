@@ -70,7 +70,7 @@ import com.winterwell.youagain.client.YouAgainClient;
 
  * 
  * @author daniel
- * @testedby  DataServletTest}
+ * @testedby  DataServletTest
  */
 public class DataServlet implements IServlet {
 	
@@ -159,7 +159,7 @@ public class DataServlet implements IServlet {
 		
 		// num examples
 		int size = state.get(SIZE, paging==null? 10 : 1000);
-		boolean isGLUser = glUserChecker.check(state);
+		boolean isGLUser = glUserChecker.check(state); // Move into DataLogSecurity for clarity
 		// ONLY give examples for dev 
 		if (size > 0 && ! isGLUser) {
 			size = 0;

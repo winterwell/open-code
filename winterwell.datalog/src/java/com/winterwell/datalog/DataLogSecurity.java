@@ -14,6 +14,9 @@ import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
 
 /**
+ * Security: See https://wiki.good-loop.com/books/in-house-services/page/datalog-security
+ * 
+ * 
  * @author daniel
  *
  */

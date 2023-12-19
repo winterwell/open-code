@@ -41,18 +41,8 @@ import com.winterwell.utils.time.Time;
 import com.winterwell.utils.time.TimeUtils;
 
 /**
- * Vital Statistics: A data-logging & charting service for arbitrary realtime stats.
+ * DataLog: A data-logging & charting service for arbitrary realtime stats.
  *
- * This implementation is backed by a single .csv file per week, holding all the stats.
- * Depot is used to give slice-of-time getData features.
- *
- * TODO an SQL backed version
- * TODO a datacube is what really makes sense, but I couldn't find a nice Java-friendly one.
- *
- * TODO possibly have an index-based version as well as tag-based
- * for extra speed.
- *
- * TODO calculate correlations & other stats for the top 100 tags??
  *
  * @testedby  StatImplTest}
  * @author daniel
@@ -265,6 +255,7 @@ public class DataLogImpl implements Closeable, IDataLog {
 			first = first2;
 			first2 = first.minus(config.interval);
 		}
+//		FIXME allow multiple DataLogs if that is wanted
 		// shutdown the old
 		if (saveThread!=null) {
 			Log.e(DataLog.LOGTAG, "WTF reinitialising stat?");
