@@ -21,6 +21,7 @@ import com.winterwell.utils.threads.Actor;
 import com.winterwell.utils.threads.IFuture;
 import com.winterwell.utils.time.Dt;
 import com.winterwell.utils.time.Period;
+import com.winterwell.utils.time.StopWatch;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.IHasJson;
 import com.winterwell.utils.web.SimpleJson;
@@ -196,14 +197,12 @@ public class DataLogRemoteStorage implements IDataLogStorage {
 
 	static final DataLogRemoteStorageActor saveActor = new DataLogRemoteStorageActor();
 
-	final static class SaveDataLogEvent {
-		private DataLogRemoteStorage dlrs;
-		public SaveDataLogEvent(DataLogRemoteStorage dataLogRemoteStorage, DataLogEvent event2) {
-			this.dlrs = dataLogRemoteStorage;
-			this.event = event2;
-		}
-		DataLogEvent event;
+	/**
+	 * msg to pass into the save-actor
+	 */
+	final static record SaveDataLogEvent(DataLogRemoteStorage dlrs, DataLogEvent event) {
 	}
+	
 	/**
 	 * Use an actor thread for low latency to the caller
 	 * @author daniel
@@ -257,6 +256,14 @@ public class DataLogRemoteStorage implements IDataLogStorage {
 	public static boolean isQueueEmpty() {
 		return saveActor.isIdle();
 	}
+	
+	/**
+	 * Block until the q is consumed. Beware that this could block forever if fresh messages keep coming.
+	 * @see BatchActor#join()
+	 */
+	public void joinWhenIdle() {
+		saveActor.joinWhenIdle();
+	}
 
 	@Override
 	public void saveEvents(Collection<DataLogEvent> events, Period period) {
@@ -264,6 +271,23 @@ public class DataLogRemoteStorage implements IDataLogStorage {
 		for (DataLogEvent e : events) {
 			saveEvent(new Dataspace(e.dataspace), e, period);
 		}
+	}
+
+	/**
+	 * 
+	 * @param maxMsecs
+	 * @return true if queue cleared, false if max-time
+	 */
+	public static boolean waitFor(int maxMsecs) {
+		int m = (int) (maxMsecs/10);
+		for(int i=0; i<m; i++) {
+			if (isQueueEmpty()) {
+				return true;
+			}
+			Utils.sleep(10);
+		}
+		Log.w("lg", "waitFor save timed out with queue : "+saveActor.getQ().size());
+		return false;
 	}
 
 

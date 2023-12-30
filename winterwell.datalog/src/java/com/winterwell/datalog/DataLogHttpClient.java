@@ -582,5 +582,15 @@ public class DataLogHttpClient {
 		randomSamplingProb = p;
 	}
 
+	/**
+	 * allow time to save (but not too long, in case something else is putting events into the queue).
+	 * @see {@link #save(DataLogEvent)}
+	 * @param maxMsecs
+	 * @return true if queue cleared, false if max-time
+	 */
+	public boolean waitFor(int maxMsecs) {
+		return DataLogRemoteStorage.waitFor(maxMsecs);	
+	}
+
 
 }
