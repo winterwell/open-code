@@ -1,0 +1,72 @@
+#!/bin/bash
+# Utility script for using git with multiple checkouts
+# Author: Daniel Winterstein <daniel@winterwell.com>
+# Author: Joe Halliwell <joe@winterwell.com>
+
+FORESTOFGITS=~/winterwell;
+
+REPOSITORIES=`ls $FORESTOFGITS`;
+# echo "REPOSITORIES = $REPOSITORIES";
+# REPOSITORIES="business code open-code sogive-app adserver companies config sodash www sodash.com jtwitter jgeoplanet juice pinpoint SJTest jshorten utr rfm digital-adaptations dns" 
+
+CONFIG=~/.winterwell/gsync
+
+##############################################################################
+# Shouldn't be necessary to edit after this line
+##############################################################################
+
+if [ -f $CONFIG ]
+then
+    #echo Loading configuration from $CONFIG
+    . $CONFIG
+	echo "Loaded config from $CONFIG. Repositories are $REPOSITORIES"
+fi
+
+if [ ! -d $FORESTOFGITS ]
+then
+    echo Could not locate base directory. Please set \$FORESTOFGITS in $CONFIG.
+    exit 1
+fi
+
+# Remember our current position to restore it at the end
+HERE=`pwd`;
+
+failures=""
+
+CMD="$*"
+if [ ! $1 ]
+then
+    echo "gitall - run a git command across all the Good-Loop repos on your laptop";
+    echo "Usage: gitall COMMAND [ARGUMENTS...]";
+    echo "Example: gitall checkout mybranch";
+    exit 1;
+fi
+
+echo "Running $CMD...";
+for REPO in $REPOSITORIES
+do
+	if [ -d $FORESTOFGITS/$REPO ];
+	then
+		if [ -d $FORESTOFGITS/$REPO/.git ];
+		then
+			echo "		***   $REPO   ***"
+			echo "	... git $CMD ..."
+			cd $FORESTOFGITS/$REPO
+			if git $CMD
+			then
+				echo "...$REPO done"
+			else
+				failures+=" $REPO"
+			fi
+		fi
+	else
+		echo "	skipping $REPO"
+	fi
+done
+
+if [ ! -z "$failures" ]
+then 
+	echo "WARNING: command failed on: $failures"
+fi
+
+cd $HERE;

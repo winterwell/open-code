@@ -540,7 +540,7 @@ public class FakeBrowser {
 				postBody = WebUtils2.urlDecode(encodedPostBody);
 			}
 			
-			String curl = StrUtils.compactWhitespace("curl -X"+Utils.or(requestMethod,"POST")+" -d '"+postBody+"'"+sheaders+" '"+uri+"'");
+			String curl = StrUtils.compactWhitespace("curl -X"+Utils.or(requestMethod,"POST")+" '"+uri+"' "+sheaders+" -d '"+postBody+"'");
 			Log.d(LOGTAG, curl);
 			if (debugVars==null) debugVars = new ArrayMap("encodedBody", encodedPostBody);
 		}

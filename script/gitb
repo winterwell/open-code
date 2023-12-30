@@ -1,0 +1,29 @@
+#!/bin/bash
+# Utility script for switching branch on several repositories at once
+# Author: Daniel Winterstein <daniel@winterwell.com>
+
+# The script expects the local repositories to live in ~/winterwell
+
+BRANCH="$1"
+STABLE="stable-closed-code"
+
+if [ ! $BRANCH ]
+then
+    echo "gitb: Switch branch & pull on code, business, & sodash.";
+    echo "Usage: gitb [branchname]       Accepts stable as: $STABLE";
+    exit 1
+fi
+
+if [ $BRANCH = "stable" ]
+then
+BRANCH="$STABLE"
+echo "Branch: $BRANCH"
+fi
+
+START=`pwd`;
+
+gitall checkout $BRANCH
+
+gitall pull &&
+
+cd $START
