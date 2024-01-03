@@ -27,6 +27,9 @@ public class BuildMaths2 extends BuildWinterwellProject {
 		mdt.addDependency("com.google.guava", "guava", "28.2-jre");
 		mdt.addDependency("org.apache.commons", "commons-math3", "3.6.1");
 		mdt.addDependency("com.googlecode.matrix-toolkits-java", "mtj", "1.0.4");
+		
+		// from winterwell.utils
+		mdt.addDependency("com.thoughtworks.xstream","xstream","1.4.19");
 
 		deps.add(mdt);
 		

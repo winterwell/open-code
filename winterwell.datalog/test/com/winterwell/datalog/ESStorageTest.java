@@ -1,6 +1,6 @@
 package com.winterwell.datalog;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -483,7 +483,7 @@ public class ESStorageTest {
 		storage.init(new DataLogConfig());
 		storage.save(p, tag2count, tag2mean);
 		Utils.sleep(1500);
-		assertEquals(4.0, storage.getTotal(tag1, p.first, p.second).get());
+		assert 4.0 == storage.getTotal(tag1, p.first, p.second).get();
 		ListDataStream stream = (ListDataStream) storage.getData(tag2, p.first, p.second, null, null).get();
 		assertEquals(1.5, stream.get(0).x());
 	}

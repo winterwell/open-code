@@ -35,6 +35,8 @@
 	<classpathentry kind="lib" path="dependencies/netlib-native_system-osx-x86_64-natives.jar"/>
 	<classpathentry kind="lib" path="dependencies/netlib-native_system-win-i686-natives.jar"/>
 	<classpathentry kind="lib" path="dependencies/netlib-native_system-win-x86_64-natives.jar"/>
+	<classpathentry kind="lib" path="dependencies/xmlpull.jar"/>
+	<classpathentry kind="lib" path="dependencies/xstream.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.web"/>
 	<classpathentry kind="output" path="bin"/>

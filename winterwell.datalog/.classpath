@@ -19,5 +19,13 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/elasticsearch-java-client"/>
 	<classpathentry kind="lib" path="lib/ua_parser.jar" sourcepath="lib/ua_parser.src.zip"/>
 	<classpathentry kind="lib" path="dependencies/snakeyaml.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-http.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-io.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-security.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-server.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-servlet.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-servlet-api.jar"/>
+	<classpathentry kind="lib" path="dependencies/jetty-util.jar"/>
+	<classpathentry kind="lib" path="dependencies/slf4j-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

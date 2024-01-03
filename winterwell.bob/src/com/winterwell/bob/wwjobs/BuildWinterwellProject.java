@@ -86,6 +86,8 @@ public class BuildWinterwellProject extends BuildTask {
 			File pdir = pf.apply(pname);
 			// no local project? maybe GitBob can get it
 			if (pdir==null || ! pdir.isDirectory()) {
+				// TODO Moved to maven?
+				
 				// known GitBob project?
 				BuildTask bt = GitBobProjectTask.getKnownProject(pname);
 				if (bt!=null) {

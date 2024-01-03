@@ -15,6 +15,7 @@ import com.winterwell.utils.IFn;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.VersionString;
 import com.winterwell.utils.WrappedException;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.containers.ListMap;
@@ -306,7 +307,21 @@ public class EclipseClasspath {
 					libs.add(projectJar);
 					depsFor.add(pro, projectJar.getName());
 				} else {
-					Log.d(LOGTAG, "No project jar for "+p+" dir: "+fp);
+//					String dp = FileUtils.read(new File(fp,".project"));
+//					if (dp.contains("maven")) {
+					List<File> jars = FileUtils.find(new File(fp, "target"), ".*\\.jar");
+//					new VersionString(dp)
+					jars.sort((a,b) -> a.getName().compareTo(b.getName())); // which way does this sort??
+					if ( ! jars.isEmpty()) {
+						if (jars.size() > 1) {
+							System.out.println(jars); // TODO check ordering
+						}
+						File mvnJar = jars.get(0);
+						libs.add(mvnJar);
+						depsFor.add(pro, mvnJar.getName());
+					} else {
+						Log.d(LOGTAG, "No project jar for "+p+" dir: "+fp);
+					}
 				}
 			} else {
 				Log.d(LOGTAG, "Dont include project jar for "+p);

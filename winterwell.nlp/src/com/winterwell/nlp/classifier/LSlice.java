@@ -1,10 +1,11 @@
 package com.winterwell.nlp.classifier;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+//import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.winterwell.utils.containers.Slice;
 
 /**
+ * @deprecated Legacy
  * A labelled Slice (text range).
  * 
  * WARNING: these do NOT serialise well using XStream! Suppose you have a large
@@ -34,7 +35,8 @@ public final class LSlice<X> extends Slice {
 	 */
 	public void appendXml(StringBuilder sb) {
 		sb.append("<slice start='" + start + "' end='" + end + "'>");
-		sb.append(StringEscapeUtils.escapeXml(getLabel().toString()));
+//		sb.append(StringEscapeUtils.escapeXml(getLabel().toString()));
+		sb.append(getLabel()); // FIXME use escape
 		sb.append("</slice>\n");
 	}
 

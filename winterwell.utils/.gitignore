@@ -1,5 +1,1 @@
-test-*
-temp/javadoc
-test/*.jpg
-test/*.pdf
-test/*.txt
+/target/

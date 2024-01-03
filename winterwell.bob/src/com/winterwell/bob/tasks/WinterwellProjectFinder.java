@@ -128,10 +128,10 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 	static final Map<String,String> KNOWN_PROJECTS = new ArrayMap(
 		"goodloop.locksmith",
 			"https://github.com/good-loop/open-code open-code goodloop.locksmith",
-		"winterwell.utils", 
-			"https://github.com/good-loop/open-code open-code winterwell.utils",
-		"winterwell.web", 
-			"https://github.com/good-loop/open-code open-code winterwell.web",
+//		"winterwell.utils", 
+//			"https://github.com/good-loop/open-code open-code winterwell.utils",
+//		"winterwell.web", 
+//			"https://github.com/good-loop/open-code open-code winterwell.web",
 		"winterwell.webappbase", 
 			"https://github.com/good-loop/open-code open-code winterwell.webappbase",
 		"winterwell.nlp", 
@@ -166,8 +166,8 @@ public class WinterwellProjectFinder implements IFn<String, File> {
 			
 		"jtwitter",
 			"https://github.com/winterstein/JTwitter.git",
-		"flexi-gson", 
-			"https://github.com/winterstein/flexi-gson.git",
+//		"flexi-gson", 
+//			"https://github.com/winterstein/flexi-gson.git",
 			
 		"dataloader",
 			"git@github.com:/good-loop/code code dataloader",

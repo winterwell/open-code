@@ -16,7 +16,7 @@ public class BuildDataLog extends BuildWinterwellProject {
 
 	@Override
 	public List<BuildTask> getDependencies() {
-		List<BuildTask> deps = super.getDependencies();
+		List<BuildTask> deps = super.getDependencies();		
 		
 		MavenDependencyTask mdt = new MavenDependencyTask();
 //		mdt.addDependency("org.postgresql", "postgresql", "42.2.11");
@@ -27,6 +27,9 @@ public class BuildDataLog extends BuildWinterwellProject {
 		// https://mvnrepository.com/artifact/org.yaml/snakeyaml 
 		mdt.addDependency("org.yaml", "snakeyaml", "1.26");
 		deps.add(mdt);
+
+		// from winterwell.web
+		mdt.addDependency("org.eclipse.jetty:jetty-servlet:10.0.7");
 		
 		return deps;
 	}	

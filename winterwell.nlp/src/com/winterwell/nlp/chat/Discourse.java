@@ -12,7 +12,7 @@ import com.winterwell.utils.containers.Slice;
 import com.winterwell.utils.containers.Tree;
 
 /**
- * 
+ * @deprecated Legacy
  * Stackable Has text speaker-ids anaphora-references / entity-references
  * annotations/tags speaker obligations??
  * 

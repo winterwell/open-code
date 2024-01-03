@@ -1,26 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="src" path="src"/>
-    <classpathentry kind="src" output="bin.test" path="test"/>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-        <attributes>
-            <attribute name="module" value="true"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-    <classpathentry kind="lib" path="dependencies/xmlpull.jar"/>
-    <classpathentry kind="lib" path="dependencies/junit.jar"/>
-    <classpathentry kind="lib" path="dependencies/dnsjava.jar"/>
-    <classpathentry kind="lib" path="dependencies/hamcrest-core.jar"/>
-    <classpathentry exported="true" kind="lib" path="dependencies/xstream.jar"/>
-    <classpathentry kind="lib" path="dependencies/xpp3.jar"/>
-    <classpathentry kind="lib" path="dependencies/mxparser.jar"/>
-    <classpathentry kind="lib" path="dependencies/jakarta-regexp.jar"/>
-    <classpathentry kind="output" path="bin"/>
-    <classpathentry kind="lib" path="dependencies/junit-sources.jar"/>
-    <classpathentry kind="lib" path="dependencies/hamcrest-core-sources.jar"/>
-    <classpathentry kind="lib" path="dependencies/xstream-sources.jar"/>
-    <classpathentry kind="lib" path="dependencies/xpp3-sources.jar"/>
-    <classpathentry kind="lib" path="dependencies/dnsjava-sources.jar"/>
-    <classpathentry kind="lib" path="dependencies/mxparser-sources.jar"/>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
