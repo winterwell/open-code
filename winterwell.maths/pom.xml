@@ -37,6 +37,11 @@
       <artifactId>winterwell.utils</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>good-loop.com</groupId>
+    	<artifactId>winterwell.web</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
 
