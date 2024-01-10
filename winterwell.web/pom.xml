@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>good-loop.com</groupId>
   <artifactId>winterwell.web</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+  <packaging>jar</packaging>
 
   <name>flex-gson</name>
 
@@ -14,75 +16,130 @@
   </properties>
 
   <dependencies>
-<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-<dependency>
-<groupId>junit</groupId>
-  <artifactId>junit</artifactId>
-  <version>4.7</version>
-    <scope>test</scope>
-</dependency>
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.utils</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>flexi-gson</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    
 
-
-  	<dependency>
-  		<groupId>good-loop.com</groupId>
-  		<artifactId>winterwell.utils</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>good-loop.com</groupId>
-  		<artifactId>flexi-gson</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-
-<dependency><groupId>org.eclipse.jetty</groupId><artifactId>jetty-server</artifactId><version>10.0.7</version></dependency>
-<dependency><groupId>org.eclipse.jetty</groupId><artifactId>jetty-util</artifactId><version>10.0.7</version></dependency>
-<dependency><groupId>org.eclipse.jetty</groupId><artifactId>jetty-util-ajax</artifactId><version>10.0.7</version></dependency>
-<dependency><groupId>org.eclipse.jetty</groupId><artifactId>jetty-servlet</artifactId><version>10.0.7</version></dependency>
-<dependency><groupId>com.sun.mail</groupId><artifactId>jakarta.mail</artifactId><version>2.0.1</version></dependency>
-<dependency><groupId>com.sun.mail</groupId><artifactId>gimap</artifactId><version>2.0.1</version></dependency>
-<dependency><groupId>eu.medsea.mimeutil</groupId><artifactId>mime-util</artifactId><version>1.3</version></dependency>
-<dependency><groupId>org.apache.httpcomponents</groupId><artifactId>httpclient</artifactId><version>4.5.10</version></dependency>
-<dependency><groupId>org.ccil.cowan.tagsoup</groupId><artifactId>tagsoup</artifactId><version>1.2.1</version></dependency>
-<dependency><groupId>commons-fileupload</groupId><artifactId>commons-fileupload</artifactId><version>1.4</version></dependency>
-<dependency><groupId>commons-io</groupId><artifactId>commons-io</artifactId><version>2.6</version></dependency>
-<dependency><groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId><version>3.9</version></dependency>
-<dependency><groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>2.1.9</version></dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>10.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+      <version>10.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-util-ajax</artifactId>
+      <version>10.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+      <version>10.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>gimap</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>eu.medsea.mimeutil</groupId>
+      <artifactId>mime-util</artifactId>
+      <version>1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ccil.cowan.tagsoup</groupId>
+      <artifactId>tagsoup</artifactId>
+      <version>1.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.9</version>
+    </dependency>
+    <dependency>
+      <groupId>dnsjava</groupId>
+      <artifactId>dnsjava</artifactId>
+      <version>2.1.9</version>
+    </dependency>
 
 
   </dependencies>
   <build>
     <pluginManagement>
       <plugins>
-    <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>3.2.3</version>
-    <configuration>
-        <argLine>-ea --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/sun.security.pkcs=ALL-UNNAMED --add-opens java.base/java.lang.ref=ALL-UNNAMED</argLine>
-    </configuration>
-</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.2.3</version>
+          <configuration>
+            <argLine>-ea --add-opens java.base/java.lang=ALL-UNNAMED --add-opens
+              java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens
+              java.base/java.security=ALL-UNNAMED --add-opens
+              java.base/sun.security.pkcs=ALL-UNNAMED --add-opens
+              java.base/java.lang.ref=ALL-UNNAMED</argLine>
+          </configuration>
+        </plugin>
 
 
-<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.6.1</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-<!--               <outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.6.1</version>
+          <executions>
+            <execution>
+              <id>copy-dependencies</id>
+              <phase>package</phase>
+              <goals>
+                <goal>copy-dependencies</goal>
+              </goals>
+              <configuration>
+                <!--               <outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>-->
-              <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+                <overWriteIfNewer>true</overWriteIfNewer>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
 
       </plugins>
     </pluginManagement>
