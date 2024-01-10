@@ -1,50 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" output="bin.test" path="test"/>
-	<classpathentry kind="src" path="builder"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
 		<attributes>
-			<attribute name="module" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="dependencies/jsch.jar"/>
-	<classpathentry kind="lib" path="dependencies/commons-net.jar"/>
-	<classpathentry kind="lib" path="dependencies/flexi-gson-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/winterwell.utils/target/winterwell.utils-0.0.1-SNAPSHOT.jar" sourcepath="/winterwell.utils"/>
-	<classpathentry kind="lib" path="/winterwell.web/target/winterwell.web-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="dependencies/commons-codec.jar"/>
-	<classpathentry kind="lib" path="dependencies/commons-fileupload.jar"/>
-	<classpathentry kind="lib" path="dependencies/commons-io.jar"/>
-	<classpathentry kind="lib" path="dependencies/commons-lang3.jar"/>
-	<classpathentry kind="lib" path="dependencies/commons-logging.jar"/>
-	<classpathentry kind="lib" path="dependencies/dnsjava.jar"/>
-	<classpathentry kind="lib" path="dependencies/gimap.jar"/>
-	<classpathentry kind="lib" path="dependencies/httpclient.jar"/>
-	<classpathentry kind="lib" path="dependencies/httpcore.jar"/>
-	<classpathentry kind="lib" path="dependencies/imap.jar"/>
-	<classpathentry kind="lib" path="dependencies/jakarta.activation.jar"/>
-	<classpathentry kind="lib" path="dependencies/jakarta.mail.jar"/>
-	<classpathentry kind="lib" path="dependencies/jakarta-regexp.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-http.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-io.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-security.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-server.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-servlet.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-servlet-api.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-util.jar"/>
-	<classpathentry kind="lib" path="dependencies/jetty-util-ajax.jar"/>
-	<classpathentry kind="lib" path="dependencies/junit.jar"/>
-	<classpathentry kind="lib" path="dependencies/log4j.jar"/>
-	<classpathentry kind="lib" path="dependencies/mailapi.jar"/>
-	<classpathentry kind="lib" path="dependencies/mime-util.jar"/>
-	<classpathentry kind="lib" path="dependencies/mxparser.jar"/>
-	<classpathentry kind="lib" path="dependencies/slf4j-api.jar"/>
-	<classpathentry kind="lib" path="dependencies/tagsoup.jar"/>
-	<classpathentry kind="lib" path="dependencies/winterwell.utils-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="dependencies/xmlpull.jar"/>
-	<classpathentry kind="lib" path="dependencies/xpp3.jar"/>
-	<classpathentry kind="lib" path="dependencies/xstream.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
