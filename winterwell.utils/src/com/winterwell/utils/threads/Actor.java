@@ -14,7 +14,10 @@ import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 
 /**
- * A simple pure-Java Actor implementation. Maintains a queue of messages.
+ * The Actor model for concurrent async processing (see e.g. https://www.brianstorti.com/the-actor-model/).
+ * This is a simple Java implementation, since Java provides the building blocks. Taking a nice idea from the Akka.io framework, and doing it without the framework or Scala.
+ * 
+ * Maintains a queue of messages.
  * Backed by a daemon thread which is started on the first message.
  * 
  * The Actor code is provided by either:
