@@ -1,8 +1,10 @@
 package com.winterwell.datalog.server;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.goodloop.data.KCurrency;
 import com.winterwell.datalog.DataLogEvent;
@@ -19,6 +21,8 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.time.TimeUtils;
 import com.winterwell.web.FakeBrowser;
+import com.winterwell.web.LoginDetails;
+import com.winterwell.web.app.Logins;
 
 /**
  * Uses a static cache, so individual objects are cheap to make
@@ -202,40 +206,37 @@ public class CurrencyConvertor {
 	}
 	
 	private static final String currrate = "currrate";
-	
+
+
 	/**
-	 * fetch and save-to-remote
-	 * @return
+	 * Fetch latest exchange rates from an API and save to central DataLog.
+	 * Currently uses exchangerate.host: https://exchangerate.host/documentation
+	 * @return A DataLogEvent containing a map of currencies
 	 * @throws IOException
 	 */
 	public DataLogEvent fetchCurrRate() throws IOException {
-		// We can only fetch rate in base currency of EUR due to using free tier API Key
-//		URL urlForGetRequest = new URL("http://api.exchangeratesapi.io/v1/latest?access_key="+getAPIKey().apiKey+"&symbols=USD,GBP,AUD,MXN,JPY,HKD,CNY");
-		FakeBrowser fb = new FakeBrowser();
-		String orgRate = fb.getPage("https://api.exchangerate.host/latest?base=EUR");				
-		JSONObject obj = new JSONObject(orgRate);
-		
-		// Doing Math		
-		JSONObject rates = obj.getJSONObject("rates");
-		// we use USD as our base currency, and store everything as XXX2USD
-		// assume: arbitrage on X->EUR->USD vs X->USD is small and ignorable, as is X->USD->Y vs X->Y
-		Double EUR2USD = MathUtils.toNum(rates.get("USD"));
-		Map objMap = new ArrayMap("EUR2USD", EUR2USD);
-		for(KCurrency currency : KCurrency.values()) {
-			if (currency==KCurrency.USD) continue; // don't need USD2USD
-			if ( ! rates.has(currency.name())) {
-				continue; // skip
-			}			
-			double EUR2XXX = MathUtils.toNum(rates.get(currency.name()));
-			double XXX2USD = (1 / EUR2XXX) * EUR2USD;
-			objMap.put(currency.name()+"2USD", XXX2USD);
+		LoginDetails ld = Logins.get("exchangerate.host");
+		assert ld != null && ld.apiKey != null : "No exchangerate.host API key found by Logins.java";
+		// NB DO NOT UPGRADE TO HTTPS: exchangerate.host free tier only permits HTTP access.
+		String resBody = new FakeBrowser().getPage("http://api.exchangerate.host/live&source=USD&access_key=" + ld.apiKey);
+
+		Map<String, ?> quotes = new JSONObject(resBody).getJSONObject("quotes").getMap();
+		Map<String, Double> rateMap = new HashMap<String, Double>();
+
+		// Previous code just pulled out currencies with an entry in KCurrency.java
+		// exchangerate.host gives us a large variety by default - no reason not to store all of them
+		for (Entry<String, ?> usd2x : quotes.entrySet()) {
+			// Quotes object uses key pattern "USDGBP", "USDAUD" etc
+			String toCurrencyCode = usd2x.getKey().substring(3);
+			// How many XXX does one USD buy?
+			double toCurrencyValue = MathUtils.toNum(usd2x.getValue());
+			if (toCurrencyValue == 0) continue; // very funny
+			// By convention we store the inverse - how many USD does one XXX buy?
+			rateMap.put(toCurrencyCode + "2USD", 1 / toCurrencyValue);
 		}
-				
-		// long timestamp = Instant.now().getEpochSecond(); // Don't need timestamp now
 		
-		DataLogEvent event = new DataLogEvent("fx", 1, currrate, objMap);
+		DataLogEvent event = new DataLogEvent("fx", 1, currrate, rateMap);
 		DataLogRemoteStorage.saveToRemoteServer(event);
-		
 		return event;
 	}
 	
