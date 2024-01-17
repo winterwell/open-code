@@ -1,5 +1,8 @@
 package com.winterwell.web.app;
 
+import java.util.Objects;
+
+import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.Option;
 
 /**
@@ -8,6 +11,12 @@ import com.winterwell.utils.io.Option;
  *
  */
 public class BasicSiteConfig implements ISiteConfig {
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+Containers.objectAsMap(this).toString();
+	}
+
 
 	@Option
 	public int port = 8180; // Best to change this
