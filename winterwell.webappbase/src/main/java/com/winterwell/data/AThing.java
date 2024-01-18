@@ -20,124 +20,36 @@ import com.winterwell.youagain.client.ShareToken;
 public class AThing implements IInit {
 
 	/**
+	 * @deprecated TODO fill in from ES
+	 */
+	transient int _version;
+	
+	/**
 	 * Note: sadly this is not present on data before April 2020
 	 * Old items when loaded into memory may pick up a false date of today.
 	 */
-	Time created = new Time();
+	Time created = new Time(); 
+	
+
+	/**
+	 * Normally an XId (so that it has service, and is in a canonical form for that service)
+	 */
+	public String id;
 	
 	/**
 	 * TODO How can we auto set this?
 	 * Currently autoset by {@link com.winterwell.web.app.AppUtils#doSaveEdit(com.winterwell.es.ESPath, com.winterwell.web.ajax.JThing, com.winterwell.web.app.WebRequest)}
 	 */
-	Time lastModified; 
+	Time lastModified;
 	
-
+	public String name;
+	
 	/** Owner XID - users should only see their own tags
 	 * 
 	 * ??replace with shares ShareToken?? Or keep as a simpler alternative to ShareToken for many uses??
 	 * */
 	public XId oxid;
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public Time getLastModified() {
-		return lastModified;
-	}
-	
-	public void setLastModified(Time lastModified) {
-		this.lastModified = lastModified;
-	}
-	
-	public Time getCreated() {
-		return created;
-	}
 
-	public void setCreated(Time created) {
-		this.created = created;
-	}
-	
-	/**
-	 * 
-	 * @return default pattern: if id has an @, use it - otherwise add "@type.good-loop.com"
-	 */
-	public XId getXId() {
-		if (XId.XID_PATTERN.matcher(getId()).matches()) {
-			return new XId(getId());
-		}
-		String type = getClass().getSimpleName().toLowerCase();
-		String service = type+".good-loop.com";
-		return new XId(getId(), service, false);
-	}
-
-	
-	public void setShares(List<ShareToken> shares) {
-		this.shares = shares;
-	}
-	
-	/**
-	 * @deprecated YA is the definitive source. This is a cache.
-	 * @return
-	 */
-	public List<ShareToken> getShares() {
-		return shares;
-	}
-	
-	/**
-	 * @deprecated TODO fill in from ES
-	 */
-	transient int _version;
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		if (this.id!=null && ! this.id.equals("new") && ! id.equals(this.id)) {
-			Log.w(LOGTAG(), "Change id from "+this.id+" to "+id+" "+ReflectionUtils.getSomeStack(10));
-		}
-		this.id = id;
-	}
-
-	protected String LOGTAG() {
-		return getClass().getSimpleName();
-	}
-
-	/**
-	 * Set the local flag. Does NOT trigger a save or any database level action.
-	 * @param status
-	 */
-	public void setStatus(KStatus status) {
-		this.status = status;
-	}
-
-	public String name;
-	
-	@ESKeyword
-	public String url;
-	/**
-	 * Normally an XId (so that it has service, and is in a canonical form for that service)
-	 */
-	public String id;
-	KStatus status;
-	
 	/**
 	 * Cache of shares - YouAgain is the definitive source, but we can store in
 	 * the DB for speedy filtering.
@@ -147,23 +59,12 @@ public class AThing implements IInit {
 	 */
 	private List<ShareToken> shares;
 	
-	/**
-	 * Check (and patch) the data in this Thing.
-	 * @return this
-	 */
-	public void init() {		
-	}
+	KStatus status;
+
 	
-	public KStatus getStatus() {
-		return status;
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+"[name=" + name + ", id=" + id + ", status=" + status
-				+ "]";
-	}
-
+	@ESKeyword
+	public String url;
+	
 	/**
 	 * class + id
 	 */
@@ -183,6 +84,55 @@ public class AThing implements IInit {
 			return false;
 		return true;
 	}
+	
+	public Time getCreated() {
+		return created;
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Time getLastModified() {
+		return lastModified;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @deprecated YA is the definitive source. This is a cache.
+	 * @return
+	 */
+	public List<ShareToken> getShares() {
+		return shares;
+	}
+
+	public KStatus getStatus() {
+		return status;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * 
+	 * @return default pattern: if id has an @, use it - otherwise add "@type.good-loop.com"
+	 */
+	public XId getXId() {
+		if (XId.XID_PATTERN.matcher(getId()).matches()) {
+			return new XId(getId());
+		}
+		String type = getClass().getSimpleName().toLowerCase();
+		String service = type+".good-loop.com";
+		return new XId(getId(), service, false);
+	}
 
 	@Override
 	public int hashCode() {
@@ -190,6 +140,56 @@ public class AThing implements IInit {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
+	}
+
+	/**
+	 * Check (and patch) the data in this Thing.
+	 * @return this
+	 */
+	public void init() {		
+	}
+	
+	protected String LOGTAG() {
+		return getClass().getSimpleName();
+	}
+	public void setCreated(Time created) {
+		this.created = created;
+	}
+	public void setId(String id) {
+		if (this.id!=null && ! this.id.equals("new") && ! id.equals(this.id)) {
+			Log.w(LOGTAG(), "Change id from "+this.id+" to "+id+" "+ReflectionUtils.getSomeStack(10));
+		}
+		this.id = id;
+	}
+	
+	public void setLastModified(Time lastModified) {
+		this.lastModified = lastModified;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setShares(List<ShareToken> shares) {
+		this.shares = shares;
+	}
+
+	/**
+	 * Set the local flag. Does NOT trigger a save or any database level action.
+	 * @param status
+	 */
+	public void setStatus(KStatus status) {
+		this.status = status;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+"[name=" + name + ", id=" + id + ", status=" + status
+				+ "]";
 	}
 	
 	
