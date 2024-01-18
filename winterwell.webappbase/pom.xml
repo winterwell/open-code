@@ -35,6 +35,11 @@
       <artifactId>winterwell.bob</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>winterwell.com</groupId>
+      <artifactId>jtwitter</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>
