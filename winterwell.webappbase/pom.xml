@@ -3,10 +3,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>good-loop.com</groupId>
-  <artifactId>youagain-java-client</artifactId>
+  <artifactId>winterwell.webappbase</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
-  <name>youagain-java-client</name>
+  <name>winterwell.webappbase</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,14 +22,18 @@
     </dependency>
     <dependency>
       <groupId>good-loop.com</groupId>
-      <artifactId>winterwell.web</artifactId>
+      <artifactId>youagain-java-client</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-
     <dependency>
-      <groupId>com.auth0</groupId>
-      <artifactId>java-jwt</artifactId>
-      <version>3.15.0</version>
+      <groupId>good-loop.com</groupId>
+      <artifactId>elasticsearch-java-client</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.bob</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
