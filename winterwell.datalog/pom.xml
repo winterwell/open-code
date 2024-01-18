@@ -40,6 +40,16 @@
       <artifactId>winterwell.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>good-loop.com</groupId>
+    	<artifactId>youagain-java-client</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>good-loop.com</groupId>
+    	<artifactId>winterwell.webappbase</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>
