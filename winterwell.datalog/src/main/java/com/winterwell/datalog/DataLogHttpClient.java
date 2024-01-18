@@ -163,7 +163,7 @@ public class DataLogHttpClient {
 	/**
 	 * 
 	 * @param q
-	 * @param paging ??what does this hold?? Is it "collect the response from a previous page"??
+	 * @param paging This is modified to track a pointer to the next page
 	 * @return
 	 * @throws WebEx.E401
 	 */

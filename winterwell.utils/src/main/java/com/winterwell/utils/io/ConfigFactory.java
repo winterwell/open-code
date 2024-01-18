@@ -238,7 +238,7 @@ winterwell/logins/thingy/thingy.properties
 		}
 		// Set a default (which has no app-name or Main args)
 		ConfigFactory cf = new ConfigFactory();
-		Dep.set(ConfigFactory.class, cf);
+		set(cf);
 		return cf;
 	}
 	/**
