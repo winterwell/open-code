@@ -32,14 +32,14 @@ public class YouAgainClientTest {
 	}
 	
 
-//	@Test // needs a proper password to work
-	public void testGetOAuthTokens() {
-		YouAgainClient yac = new YouAgainClient("sogive");
-//		yac.setENDPOINT("http://localyouagain.good-loop.com/youagain.json");
-		XId txid = new XId("winterstein@twitter");
-		LoginDetails appOwnerAuth = new LoginDetails("localyouagain.good-loop.com", "daniel@sodash.com", "password");
-		String[] oauth = yac.getOAuthTokens(txid, appOwnerAuth);
-		assert oauth.length==2;
-//		Twitter jtwit = new Twitter();
-	}
+////	@Test // needs a proper password to work
+//	public void testGetOAuthTokens() {
+//		YouAgainClient yac = new YouAgainClient("sogive");
+////		yac.setENDPOINT("http://localyouagain.good-loop.com/youagain.json");
+//		XId txid = new XId("winterstein@twitter");
+//		LoginDetails appOwnerAuth = new LoginDetails("localyouagain.good-loop.com", "daniel@sodash.com", "password");
+//		String[] oauth = yac.getOAuthTokens(txid, appOwnerAuth);
+//		assert oauth.length==2;
+////		Twitter jtwit = new Twitter();
+//	}
 }
