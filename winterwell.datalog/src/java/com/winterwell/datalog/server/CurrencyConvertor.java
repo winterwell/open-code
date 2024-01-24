@@ -218,7 +218,7 @@ public class CurrencyConvertor {
 		LoginDetails ld = Logins.get("exchangerate.host");
 		assert ld != null && ld.apiKey != null : "No exchangerate.host API key found by Logins.java";
 		// NB DO NOT UPGRADE TO HTTPS: exchangerate.host free tier only permits HTTP access.
-		String resBody = new FakeBrowser().getPage("http://api.exchangerate.host/live&source=USD&access_key=" + ld.apiKey);
+		String resBody = new FakeBrowser().getPage("http://api.exchangerate.host/live?source=USD&access_key=" + ld.apiKey);
 
 		Map<String, ?> quotes = new JSONObject(resBody).getJSONObject("quotes").getMap();
 		Map<String, Double> rateMap = new HashMap<String, Double>();
