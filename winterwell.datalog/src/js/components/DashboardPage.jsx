@@ -180,11 +180,17 @@ function ExamplesTable({examples}) {
 	return <SimpleTable data={egs} columns={columns} hasCsv="top" significantDigits={4} precision={4} />
 }
 
-function getExampleKeys(examples) {
+/**
+ * 
+ * @param {*} egs 
+ * @returns {string[]}
+ */
+function getExampleKeys(egs) {
 	// key-value keys and top-level indexed keys
-	let ks = uniq(flatten(egs.map(eg => [eg.props.map(prop => prop.k), Object.keys(eg)])));
+	let keyss = egs.map(eg => eg.props.map(prop => prop.k).concat(Object.keys(eg)));
+	let ks = uniq(flatten(keyss));
 	ks.sort();
-	ks = ks.filter(k => ["id", "props", "domain"].includes(k));
+	ks = ks.filter(k => ! ["id", "props", "domain"].includes(k));
 	return ks;
 }
 
@@ -196,10 +202,10 @@ function ScatterPlots({examples}) {
 	let ks = getExampleKeys(egs);
 	// HACK hardcode some
 	// ks = "glAutoBase glAutoSupplyPath glAutoTotal mb mbmbl mbperad mbperadmbl ssps".split(/\s+/);
-	return <table border={1}>
+	return <table border={1}><tbody>
 		<tr><th></th>{ks.map(k => <th key={k}>{k}</th>)}</tr>
 		{ks.map(k => <tr key={k}><th>{k}</th>{ks.map(k2 => <td key={k2}><small>{k} x {k2}</small><ScatterPlot examples={examples} x={k} y={k2} /></td>)}</tr>)}
-	</table>;
+	</tbody></table>;
 }
 
 /**
@@ -220,7 +226,7 @@ function ScatterPlot({examples, x, y}) {
 			{data:xys, labels:labels}
 		]
 	};
-	return <NewChartWidget width={200} height={200} type='scatter' data={data} />
+	return <NewChartWidget width={200} height={200} type='scatter' data={data} legend={false} />
 }
 
 export default DashboardPage;
