@@ -172,23 +172,28 @@ function ExamplesTable({examples}) {
 	let columns = [
 		"id", "evt", "domain", "count"
 	];
-	let ks = uniq(flatten(egs.map(eg => eg.props.map(prop => prop.k))));
-	ks.sort();
+	let ks = getExampleKeys(egs);
 	let kcols = ks.map(k => {
-		return {Header:k, accessor:eg => eg.props.find(p => p.k === k)?.n};
+		return {Header:k, accessor:eg => eg[k] || eg.props.find(p => p.k === k)?.n};
 	});
 	columns = columns.concat(kcols);
 	return <SimpleTable data={egs} columns={columns} hasCsv="top" significantDigits={4} precision={4} />
 }
 
+function getExampleKeys(examples) {
+	// key-value keys and top-level indexed keys
+	let ks = uniq(flatten(egs.map(eg => [eg.props.map(prop => prop.k), Object.keys(eg)])));
+	ks.sort();
+	ks = ks.filter(k => ["id", "props", "domain"].includes(k));
+	return ks;
+}
 
 function ScatterPlots({examples}) {
 	if ( ! examples) {
 		return "None. Are you logged in properly? "+Login.getId();
 	}
 	let egs = examples.map(example => Object.assign({id:example._id}, example._source));
-	let ks = uniq(flatten(egs.map(eg => eg.props.map(prop => prop.k))));	
-	ks.sort();
+	let ks = getExampleKeys(egs);
 	// HACK hardcode some
 	// ks = "glAutoBase glAutoSupplyPath glAutoTotal mb mbmbl mbperad mbperadmbl ssps".split(/\s+/);
 	return <table border={1}>
@@ -204,7 +209,7 @@ function ScatterPlots({examples}) {
  */
 function ScatterPlot({examples, x, y}) {
 	let xys = [], labels= []; 
-	let accessor = (eg, k) => eg.props.find(p => p.k === k)?.n
+	let accessor = (eg, k) => eg[k] || eg.props.find(p => p.k === k)?.n
 	let egs = examples.map(example => Object.assign({id:example._id}, example._source));
 	egs.forEach(eg => {
 		xys.push([accessor(eg, x), accessor(eg, y)]);
