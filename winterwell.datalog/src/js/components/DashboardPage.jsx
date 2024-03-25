@@ -172,29 +172,40 @@ function ExamplesTable({examples}) {
 	let columns = [
 		"id", "evt", "domain", "count"
 	];
-	let ks = uniq(flatten(egs.map(eg => eg.props.map(prop => prop.k))));
-	ks.sort();
+	let ks = getExampleKeys(egs);
 	let kcols = ks.map(k => {
-		return {Header:k, accessor:eg => eg.props.find(p => p.k === k)?.n};
+		return {Header:k, accessor:eg => eg[k] || eg.props.find(p => p.k === k)?.n};
 	});
 	columns = columns.concat(kcols);
-	return <SimpleTable data={egs} columns={columns} hasCsv="top" significantDigits={4} precision={4} />
+	return <SimpleTable data={egs} columns={columns} hasCsv="top" significantDigits={4} precision={4} addTotalRow />
 }
 
+/**
+ * 
+ * @param {*} egs 
+ * @returns {string[]}
+ */
+function getExampleKeys(egs) {
+	// key-value keys and top-level indexed keys
+	let keyss = egs.map(eg => eg.props.map(prop => prop.k).concat(Object.keys(eg)));
+	let ks = uniq(flatten(keyss));
+	ks.sort();
+	ks = ks.filter(k => ! ["id", "props", "domain"].includes(k));
+	return ks;
+}
 
 function ScatterPlots({examples}) {
 	if ( ! examples) {
 		return "None. Are you logged in properly? "+Login.getId();
 	}
 	let egs = examples.map(example => Object.assign({id:example._id}, example._source));
-	let ks = uniq(flatten(egs.map(eg => eg.props.map(prop => prop.k))));	
-	ks.sort();
+	let ks = getExampleKeys(egs);
 	// HACK hardcode some
 	// ks = "glAutoBase glAutoSupplyPath glAutoTotal mb mbmbl mbperad mbperadmbl ssps".split(/\s+/);
-	return <table border={1}>
+	return <table border={1}><tbody>
 		<tr><th></th>{ks.map(k => <th key={k}>{k}</th>)}</tr>
 		{ks.map(k => <tr key={k}><th>{k}</th>{ks.map(k2 => <td key={k2}><small>{k} x {k2}</small><ScatterPlot examples={examples} x={k} y={k2} /></td>)}</tr>)}
-	</table>;
+	</tbody></table>;
 }
 
 /**
@@ -204,7 +215,7 @@ function ScatterPlots({examples}) {
  */
 function ScatterPlot({examples, x, y}) {
 	let xys = [], labels= []; 
-	let accessor = (eg, k) => eg.props.find(p => p.k === k)?.n
+	let accessor = (eg, k) => eg[k] || eg.props.find(p => p.k === k)?.n
 	let egs = examples.map(example => Object.assign({id:example._id}, example._source));
 	egs.forEach(eg => {
 		xys.push([accessor(eg, x), accessor(eg, y)]);
@@ -215,7 +226,7 @@ function ScatterPlot({examples, x, y}) {
 			{data:xys, labels:labels}
 		]
 	};
-	return <NewChartWidget width={200} height={200} type='scatter' data={data} />
+	return <NewChartWidget width={200} height={200} type='scatter' data={data} legend={false} />
 }
 
 export default DashboardPage;

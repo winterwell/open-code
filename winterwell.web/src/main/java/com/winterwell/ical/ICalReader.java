@@ -52,6 +52,8 @@ public class ICalReader {
 	
 	/**
 	 * NB repeating events are not unravelled -- they appear once here
+	 * 
+	 * Warning: Google can return giant files which are slow to process
 	 * @return
 	 */
 	public List<ICalEvent> getEvents() {
@@ -79,6 +81,7 @@ public class ICalReader {
 				noDupes.add(dupeKey);
 				
 				list.add(e);
+				if (list.size() % 1000 == 0) Log.d(LOGTAG, "getEvents... parsed "+list.size()+" "+(Math.round(100*m.end()/ical.length()))+"%");
 			} catch(Throwable ex) {
 				switch(errorPolicy) {
 				case REPORT:
