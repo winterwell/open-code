@@ -177,7 +177,7 @@ function ExamplesTable({examples}) {
 		return {Header:k, accessor:eg => eg[k] || eg.props.find(p => p.k === k)?.n};
 	});
 	columns = columns.concat(kcols);
-	return <SimpleTable data={egs} columns={columns} hasCsv="top" significantDigits={4} precision={4} />
+	return <SimpleTable data={egs} columns={columns} hasCsv="top" significantDigits={4} precision={4} addTotalRow />
 }
 
 /**
