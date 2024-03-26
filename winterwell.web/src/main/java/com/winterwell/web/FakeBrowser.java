@@ -499,6 +499,8 @@ public class FakeBrowser {
 
 	/**
 	 * Convenience for {@link #post(String, String, String)} with content-type url-form-encoded
+	 * 
+	 * If sending json -- use {@link #post(String, String, String)} with CONTENT_TYPE_JSON
 	 * @param uri
 	 *            The uri to post to.
 	 * @param body

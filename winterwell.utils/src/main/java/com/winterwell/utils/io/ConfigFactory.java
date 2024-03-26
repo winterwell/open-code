@@ -291,6 +291,14 @@ winterwell/logins/thingy/thingy.properties
 			throw Utils.runtime(ex);
 		}
 	}
+	
+	/**
+	 * main args, if set via {@link #setArgs(String[])}
+	 * @return
+	 */
+	public String[] getArgs() {
+		return args;
+	}
 
 	protected Object getConfigBuilder2_newConfigObject(Class configClass) throws Exception {
 		try {

@@ -328,7 +328,7 @@ public class ReflectionUtils {
 	 * @param <X>
 	 * @param obj
 	 * @param fieldName
-	@return Field or null
+	@return value for field or null
 	 */
 	public static <X> X getPrivateField(Object obj, String fieldName) {
 		Utils.check4null(obj, fieldName);

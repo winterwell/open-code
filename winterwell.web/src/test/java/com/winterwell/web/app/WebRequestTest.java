@@ -4,6 +4,11 @@ import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.test.TestHttpServletRequest;
 import com.winterwell.web.test.TestHttpServletResponse;
 
+/**
+ * This is a TEST it is not _for_ tests
+ * @author daniel
+ *
+ */
 public class WebRequestTest {
 
 //	@Test -- sadly the test things dont cut it yet

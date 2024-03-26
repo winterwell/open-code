@@ -10,7 +10,6 @@ import com.goodloop.portal.KImpactName;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESKeyword;
 import com.winterwell.es.ESNoIndex;
-import com.winterwell.jgeoplanet.SimplePlace;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
@@ -162,7 +161,8 @@ public class Impact {
 	String notes;
 
 	@ESNoIndex
-	SimplePlace location;
+//	SimplePlace // FIXME jtwitter mvn dependency
+	Object location;
 	
 	/**
 	 * Did the charity say something nice?

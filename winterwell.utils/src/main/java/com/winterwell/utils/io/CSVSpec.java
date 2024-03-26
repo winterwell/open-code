@@ -13,6 +13,10 @@ public class CSVSpec {
 	public char delimiter;
 	public char quote;
 	public Boolean headerRow;
+	/**
+	 * Trim leading/trailing whitespace from values.
+	 */
+	public boolean trim = false;
 	
 	/**
 	 * Defaults!
@@ -26,7 +30,7 @@ public class CSVSpec {
 		this.comment = comment;
 	}
 
-	public char comment;
+	public Character comment;
 
 	public CSVSpec setCommentMarker(Character comment) {
 		this.comment = comment==null? UNSET : comment;

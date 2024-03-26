@@ -33,7 +33,7 @@ public final class Report implements Serializable {
 	 */
 	public final String tag;
 	private final Time time = new Time();
-	final Throwable ex;
+	public final Throwable ex;
 //	final long threadId;
 
 	public Report(String tag, Exception ex) {

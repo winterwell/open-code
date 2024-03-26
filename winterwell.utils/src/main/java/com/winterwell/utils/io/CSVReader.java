@@ -244,14 +244,16 @@ public class CSVReader implements Iterable<String[]>, Iterator<String[]>, Closea
 			return null;
 
 		// Ignore comment lines (but increment line counter)
-		while (c == spec.comment) {
-			// read to line end
-			while (!(c == -1 || c == '\n')) {
+		if (spec.comment != null) {
+			while (c == spec.comment) {
+				// read to line end
+				while (!(c == -1 || c == '\n')) {
+					c = input.read();
+				}
 				c = input.read();
+				nextLineNumber++;
+				scanLineNumber++;
 			}
-			c = input.read();
-			nextLineNumber++;
-			scanLineNumber++;
 		}
 
 		// The logic here is a bit deep, but hopefully clear
@@ -264,11 +266,12 @@ public class CSVReader implements Iterable<String[]>, Iterator<String[]>, Closea
 			// Not in quotes
 			if (!inQuote) {
 				if (c == spec.delimiter) {
-					row.add(currentField.toString());
+					getNextRecord2_addToRow(row, currentField);					
 					currentField = new StringBuilder();
 					// NB currentField.setLength(0); is slower in my (JH) tests
 				} else if (c == '\n') { // TODO mac/windows formats
-					row.add(currentField.toString());
+					getNextRecord2_addToRow(row, currentField);
+					currentField = new StringBuilder();
 					break;
 				} else if (c == spec.quote) {
 					inQuote = true;
@@ -299,10 +302,17 @@ public class CSVReader implements Iterable<String[]>, Iterator<String[]>, Closea
 			c = input.read();
 		}
 		if (c == -1) {
-			row.add(currentField.toString());
+			getNextRecord2_addToRow(row, currentField);
+			currentField = new StringBuilder();
 		}
 		scanLineNumber++;
 		return row.toArray(new String[0]);
+	}
+
+	private void getNextRecord2_addToRow(ArrayList<String> row, StringBuilder currentField) {
+		String s = currentField.toString();
+		if (spec.trim) s = s.trim();
+		row.add(s);
 	}
 
 	/**

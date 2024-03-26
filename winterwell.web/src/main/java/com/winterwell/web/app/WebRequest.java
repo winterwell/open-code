@@ -1425,4 +1425,8 @@ public class WebRequest implements IProperties, Closeable {
 		this.servletPath = v;
 	}
 
+	public String getRequired(String parameter) {
+		return getRequired(new SField(parameter));
+	}
+
 }

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
@@ -38,9 +39,11 @@ import com.winterwell.utils.Utils;
  * @param <V>
  */
 public class ArrayMap<K, V> extends AbstractMap<K, V> implements
-		Serializable, Iterable<K>, Cloneable {
+		Serializable, Iterable<K>, Cloneable 	
+{
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	@Override
 	protected ArrayMap<K, V> clone() throws CloneNotSupportedException {
 		// NB: a more clone-based approach doesn't let us set final values

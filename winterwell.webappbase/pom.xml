@@ -34,12 +34,7 @@
       <groupId>good-loop.com</groupId>
       <artifactId>winterwell.bob</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>winterwell.com</groupId>
-      <artifactId>jtwitter</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+    </dependency>    
   </dependencies>
 
   <build>
@@ -83,4 +78,13 @@
       </plugins>
     </pluginManagement>
   </build>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>winterwell.com</groupId>
+  			<artifactId>jtwitter</artifactId>
+  			<version>3.6.7</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
 </project>

@@ -117,5 +117,18 @@ public class Logins {
 		}		
 		return (LoginDetails) ld;
 	}
+
+	/**
+	 * @param keyName
+	 * @return value set by environment variable
+	 */
+	public static String getKey(String keyName) {
+		// a main property?? KEY=VALUE or --KEY VALUE
+		ConfigFactory cf = ConfigFactory.get();
+		
+		// env variable?
+		String ev = System.getenv(keyName);
+		return ev;
+	}
 	
 }

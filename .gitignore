@@ -58,3 +58,4 @@ __pycache__/
 .venv/goodloop.chat/data
 goodloop.chat/data
 **/javadoc
+winterwell.datalog/lg.txt*

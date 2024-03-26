@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.winterwell.bob.tasks.GitTask;
 import com.winterwell.bob.wwjobs.BuildHacks;
 import com.winterwell.datalog.DataLog;
@@ -88,6 +91,10 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 		return appName;
 	}
 	
+	/**
+	 * Set this to use e.g. SLF4J
+	 */
+	protected Class loggerClass;
 	public static LogFile logFile;
 	public static LogFile auditlogFile;
 
@@ -142,7 +149,7 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 	}
 	
 	/**
-	 * aka app local name e.g. "myapp" (and NOT myapp.mydomain.com)
+	 * @param projectName aka app local name e.g. "myapp" (and NOT myapp.mydomain.com)
 	 */
 	public AMain(String projectName, Class<ConfigType> configType) {
 		this.appName = projectName;
@@ -174,25 +181,29 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 		try {
 			Thread.currentThread().setName(getClass().getSimpleName()+".doMain");
 			// logfile before log config??! Is that right?
-			LogConfig logConfig = ConfigFactory.get().getConfig(LogConfig.class);
-			Log.setConfig(logConfig);
-			// Try to use the "logs" subdirectory - but use the app root if that's impossible.
-			File logDir = new File("logs");
-			boolean useSubDir = true;
-			if (!logDir.exists()) {
-				// Try to create it - use dir if successful
-				useSubDir = logDir.mkdir();
-			} else if (!logDir.isDirectory()) {
-				// Exists but isn't a directory - don't use dir
-				useSubDir = false;
+			if (loggerClass==null || Log.class.equals(loggerClass)) {
+				LogConfig logConfig = ConfigFactory.get().getConfig(LogConfig.class);
+				Log.setConfig(logConfig);
+				// Try to use the "logs" subdirectory - but use the app root if that's impossible.
+				File logDir = new File("logs");
+				boolean useSubDir = true;
+				if (!logDir.exists()) {
+					// Try to create it - use dir if successful
+					useSubDir = logDir.mkdir();
+				} else if (!logDir.isDirectory()) {
+					// Exists but isn't a directory - don't use dir
+					useSubDir = false;
+				}
+				File logLocation = new File((useSubDir ? "logs/" : "") + getAppNameLocal() + ".log"); 
+				// NB: this log setup will call ConfigFactory early (before the full init)
+				logFile = new LogFile(logLocation).setLogRotation(TUnit.DAY.dt, 14);
+				
+				// also add a never-rotates! audit log for important audit trail info only (ie stuff tagged "audit"		
+				File auditlogLocation = new File((useSubDir ? "logs/" : "") + getAppNameLocal() + ".audit");
+				auditlogFile = new LogFile(auditlogLocation).setFilter(r -> "audit".equals(r.tag));
+			} else if (org.slf4j.Logger.class.equals(loggerClass)) {				
+				Log.addListener(new SLF4JLogListener());
 			}
-			File logLocation = new File((useSubDir ? "logs/" : "") + getAppNameLocal() + ".log"); 
-			// NB: this log setup will call ConfigFactory early (before the full init)
-			logFile = new LogFile(logLocation).setLogRotation(TUnit.DAY.dt, 14);
-			
-			// also add a never-rotates! audit log for important audit trail info only (ie stuff tagged "audit"		
-			File auditlogLocation = new File((useSubDir ? "logs/" : "") + getAppNameLocal() + ".audit");
-			auditlogFile = new LogFile(auditlogLocation).setFilter(r -> "audit".equals(r.tag));
 			
 			// don't log to sysout on prod (blockage seen there with contended threads dec 2021)
 			if (BuildHacks.getServerType() != KServerType.LOCAL) {
