@@ -120,7 +120,7 @@ public class Logins {
 
 	/**
 	 * @param keyName
-	 * @return value set by environment variable
+	 * @return value set by environment variable, or from a special folder `.env`
 	 */
 	public static String getKey(String keyName) {
 		// a main property?? KEY=VALUE or --KEY VALUE
@@ -128,7 +128,14 @@ public class Logins {
 		
 		// env variable?
 		String ev = System.getenv(keyName);
-		return ev;
+		if (ev!=null) return ev;
+		// a file?
+		File f = new File(".env", FileUtils.safeFilename(keyName, false));
+		if (f.isFile()) {
+			return FileUtils.read(f).trim();
+		}
+//		System.out.println(f.getAbsolutePath());
+		return null;
 	}
 	
 }
