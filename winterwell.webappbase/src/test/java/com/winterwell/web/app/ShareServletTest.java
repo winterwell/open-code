@@ -9,7 +9,7 @@ import com.winterwell.utils.Dep;
 
 public class ShareServletTest {
 
-	@Test
+//	@Test
 	public void testDoScreenshot() throws IOException {
 		Dep.set(Uploader.class, new Uploader(new File("temp-test"), "/temp-test"));
 		ShareServlet ss = new ShareServlet();

@@ -11,7 +11,9 @@ import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.threads.ICallable;
 import com.winterwell.utils.time.Period;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.time.TimeParser;
 import com.winterwell.utils.time.TimeUtils;
 
 /**
@@ -32,8 +34,6 @@ public class TimeField extends AField<ICallable<Time>> {
 
 	private static final long serialVersionUID = 1L;
 
-	boolean preferEnd;
-	
 	/**
 	 * If true, then a month will be interpreted as the end of the month, 
 	 * 
@@ -43,7 +43,7 @@ public class TimeField extends AField<ICallable<Time>> {
 	 * @return 
 	 */
 	public TimeField setPreferEnd(boolean preferEnd) {
-		this.preferEnd = preferEnd;
+		this.tp.setPreferEnd(preferEnd);
 		return this;
 	}
 	
@@ -54,6 +54,7 @@ public class TimeField extends AField<ICallable<Time>> {
 		// we want to support
 		cssClass = "DateField";
 	}
+	TimeParser tp = new TimeParser();
 
 	/**
 	 * First tries the "canonical" "HH:mm dd/MM/yyyy", then the other formats,
@@ -65,7 +66,7 @@ public class TimeField extends AField<ICallable<Time>> {
 		// HACK fixing bugs elsewhere really. Handle "5+days+ago" from a query
 		v = v.replace('+', ' ');		
 		
-		Time t = parse(v, isRel);
+		Time t = tp.parse2(v, isRel);
 		if ( ! isRel.get()) {
 			return new Constant(t);
 		}
@@ -74,52 +75,6 @@ public class TimeField extends AField<ICallable<Time>> {
 		return new RelTime(v); 
 	}
 	
-	/**
-	 * Attempts to parse a string to a date/time as several standard formats, returns null for specific malformed strings similar to "+0000", and finally attempts natural-language parsing.
-	 * @param v A String which should represent a date/time.
-	 * @param isRelative True if the String represents a time relative to now
-	 * @return A Time object on successful parsing, or null for strings similar to "+0000"
-	 */
-	Time parse(String v, AtomicBoolean isRelative) {
-		assert isRelative==null || ! isRelative.get() : v;
-		// UTC milliseconds code?
-		if (StrUtils.isInteger(v)) {
-			return new Time(Long.parseLong(v));
-		}
-		for (SimpleDateFormat df : DateField.formats) {
-			try {
-				// NOTE: SimpleDateFormat.parse and SimpleDateFormat.format
-				// are not thread safe... hence the .clone
-				// (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335)
-				SimpleDateFormat df2 = (SimpleDateFormat) df.clone();
-				String patternForDebug = df2.toPattern();
-				// Don't use heuristics to interpret inputs that don't exactly match the format.
-				df2.setLenient(false);
-				
-				Date date = df2.parse(v);
-				if (date==null) continue; // WTF?! Happens.
-				// NB: includes timezone				
-				
-				// TODO is this a date-only format, and do we have preferEnd set??
-				
-				
-				Time t = new Time(date);
-				return t;
-			} catch (Exception e) {
-				// oh well - try something else
-			}
-		}
-
-		// catch malformed strings with a time zone and no date/time & return null
-		if(v.matches("^[+-]\\d\\d\\d\\d\\W*$")) {
-			return null;
-		}
-		
-		// support for e.g. "yesterday"
-		Period t = TimeUtils.parsePeriod(v, isRelative);
-		// start/end of month
-		return preferEnd? t.getEnd() : t.getStart();
-	}
 
 	@Override
 	public String toString(ICallable<Time> _time) {

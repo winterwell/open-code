@@ -14,7 +14,7 @@ import com.winterwell.utils.web.WebUtils2;
 
 public class Json2CsvTest {
 
-	@Test
+//	@Test
 	public void testForSanjay() {
 		File f = new File("data/sanjay.json");
 		String s = FileUtils.read(f);

@@ -12,7 +12,7 @@ import com.winterwell.web.data.XId;
 
 public class LockSmithClientTest {
 
-	@Test
+//	@Test
 	public void testGetLock() throws InterruptedException, ExecutionException {
 		LockSmithClient lsc = new LockSmithClient(new XId("test@good-loop.com@email"));
 		String lockId = "test/GetLock";

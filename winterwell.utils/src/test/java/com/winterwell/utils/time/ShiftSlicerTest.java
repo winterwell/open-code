@@ -10,12 +10,14 @@ public class ShiftSlicerTest {
 	public void testHourSlices() {
 		OfficeHours base = new OfficeHours(TimeUtils._GMT_TIMEZONE);
 		ShiftSlicer ss = new ShiftSlicer(TUnit.HOUR.dt, base);
-		List<Period> shifts = TimeUtils.getShifts(ss, new Time(), new Time().plus(TUnit.DAY));
-		System.out.println(shifts);
+		List<Period> shifts = TimeUtils.getShifts(ss, new Time(2024,03,28), new Time(2024,03,29));
+//		Printer.out("SHIFTS "+shifts.size());
 		for (Period period : shifts) {
+//			Printer.out(period);
 			assert period.getMillisecs() <= TUnit.HOUR.millisecs : period;
 		}
 		assert shifts.size() >= 7;
+		assert shifts.size() < 20;
 	}
 
 	

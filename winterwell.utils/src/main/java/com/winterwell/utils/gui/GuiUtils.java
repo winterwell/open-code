@@ -33,7 +33,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
-import javax.swing.plaf.FileChooserUI;
 
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Mutable;

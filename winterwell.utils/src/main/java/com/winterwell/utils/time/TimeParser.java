@@ -2,9 +2,11 @@ package com.winterwell.utils.time;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,6 +26,13 @@ import com.winterwell.utils.Utils;
  * @testedby {@link TimeParserTest}
  */
 public class TimeParser {	
+	
+	boolean preferEnd;
+	
+	public TimeParser setPreferEnd(boolean preferEnd) {
+		this.preferEnd = preferEnd;
+		return this;
+	}
 	
 	/**
 	 * Parse a string representing a time/date. Uses the
@@ -195,6 +204,76 @@ public class TimeParser {
 		return period.first;
 	}
 	
+	
+
+	static final SimpleDateFormat[] formats = initFormats();
+	static TUnit[] formats_dt;
+
+	private static SimpleDateFormat[] initFormats() {
+		List<SimpleDateFormat> _formats = new ArrayList();
+		List<TUnit> _formats_dt = new ArrayList();
+		
+		// formats[0] -- the "canonical" format
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ")); // ISO 8601, with milliseconds.
+		_formats_dt.add(TUnit.MILLISECOND);
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'")); // WTF, Java doesn't parse Z properly?
+		_formats_dt.add(TUnit.MILLISECOND);
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss Z")); // ISO 8601, with milliseconds.
+		_formats_dt.add(TUnit.MILLISECOND);
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")); // ISO 8601, with seconds.
+		_formats_dt.add(TUnit.SECOND);
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")); // WTF, Java doesn't parse Z properly?
+		_formats_dt.add(TUnit.MINUTE);
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ")); // ISO 8601, without seconds.
+		_formats_dt.add(TUnit.MINUTE);		
+		_formats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss Z"));
+		_formats_dt.add(TUnit.SECOND);
+		_formats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm Z"));
+		_formats_dt.add(TUnit.MINUTE);
+		try {
+			Class<?> mdf = Class.forName("jakarta.mail.internet.MailDateFormat");
+			Object mdfi = mdf.newInstance();
+			_formats.add((SimpleDateFormat) mdfi);
+			_formats_dt.add(TUnit.SECOND); // pattern is EEE, d MMM yyyy HH:mm:ss Z (z)
+		} catch (Exception ex) {
+			// oh well
+		}
+		// This is for YahooSearch
+		// UK standard format (2-digit year first, otherwise they get misread)
+		_formats.add(new SimpleDateFormat("dd/MM/yy"));
+		_formats_dt.add(TUnit.DAY);
+		_formats.add(new SimpleDateFormat("dd/MM/yyyy"));
+		_formats_dt.add(TUnit.DAY);
+		// US standard
+		_formats.add(new SimpleDateFormat("MM/dd/yy"));
+		_formats_dt.add(TUnit.DAY);
+		// year first "computer friendly" 
+		_formats.add(new SimpleDateFormat("yyyy/MM/dd"));
+		_formats_dt.add(TUnit.DAY);
+		_formats.add(new SimpleDateFormat("MMM yyyy"));
+		_formats_dt.add(TUnit.MONTH);
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+		_formats_dt.add(TUnit.SECOND);
+		_formats.add(new SimpleDateFormat("yyyy-MM-dd")); // that's a shit format (homeserve "rss" feed)
+		_formats_dt.add(TUnit.DAY);
+		
+		// assume GMT! And 2000!
+		TimeZone zone = TimeZone.getTimeZone("GMT");
+		for (SimpleDateFormat df : _formats) {
+			try {
+				df.setTimeZone(zone);
+				// 21st century
+				Date c = df.get2DigitYearStart();
+				df.set2DigitYearStart(new Time(2000,1,1).getDate());
+			} catch(Exception ex) {
+				// MDF throws an exception if 2digityearstart is touched!
+			}
+		}
+		formats_dt = _formats_dt.toArray(new TUnit[0]);
+		assert formats_dt.length == _formats.size();
+		return _formats.toArray(new SimpleDateFormat[0]);
+	}
+
 	Time now = new Time();
 	
 	public void setNow(Time now) {
@@ -484,6 +563,66 @@ public class TimeParser {
 		// no time - so treat as whole day
 		return true;
 	}
+
+	public Time parse(String v) {
+		return parse2(v, null);
+	}
+	
+	/**
+	 * Attempts to parse a string to a date/time as several standard formats, returns null for specific malformed strings similar to "+0000", and finally attempts natural-language parsing.
+	 * @param v A String which should represent a date/time.
+	 * @param isRelative True if the String represents a time relative to now
+	 * @return A Time object on successful parsing, or null for strings similar to "+0000"
+	 */
+	public Time parse2(String v, AtomicBoolean isRelative) {
+		assert isRelative==null || ! isRelative.get() : v;
+		// UTC milliseconds code?
+		if (StrUtils.isInteger(v)) {
+			return new Time(Long.parseLong(v));
+		}
+		for(int i=0; i<formats.length; i++) { 
+			try {
+				SimpleDateFormat df = formats[i];
+				// NOTE: SimpleDateFormat.parse and SimpleDateFormat.format
+				// are not thread safe... hence the .clone
+				// (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335)
+				SimpleDateFormat df2 = (SimpleDateFormat) df.clone();
+				String patternForDebug = df2.toPattern();
+				// Don't use heuristics to interpret inputs that don't exactly match the format.
+				df2.setLenient(false);
+				
+				Date date = df2.parse(v);
+				if (date==null) continue; // WTF?! Happens.
+				// NB: includes timezone				
+								
+				Time t = new Time(date);
+
+				// Is this a date-only format, and do we have preferEnd set??
+				if (preferEnd) {
+					TUnit dt = formats_dt[i];
+					if (dt.millisecs > TUnit.HOUR.millisecs) {
+						Time endt = t.plus(dt);
+						return endt;
+					}
+				}
+				
+				return t;
+			} catch (Exception e) {
+				// oh well - try something else
+			}
+		}
+
+		// catch malformed strings with a time zone and no date/time & return null
+		if(v.matches("^[+-]\\d\\d\\d\\d\\W*$")) {
+			return null;
+		}
+		
+		// support for e.g. "yesterday"
+		Period t = TimeUtils.parsePeriod(v, isRelative);
+		// start/end of month
+		return preferEnd? t.getEnd() : t.getStart();
+	}
+
 
 
 }

@@ -3,6 +3,7 @@ package com.winterwell.web.app;
 import java.io.File;
 import java.util.Properties;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.winterwell.utils.Dep;
@@ -17,6 +18,7 @@ import jakarta.mail.internet.InternetAddress;
  * @author daniel
  *
  */
+@Ignore // needs internet
 public class EmailerTest {
 
 /**
