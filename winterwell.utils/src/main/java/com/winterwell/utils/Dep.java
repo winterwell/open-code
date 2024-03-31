@@ -189,7 +189,7 @@ public final class Dep {
 		}
 		// try a vanilla constructor? - no someone should knowingly set the value		
 		// should we return null? Typical use case is for key config objects where a null might be problematic.
-		throw new DepNotSetException("No value set for "+class1+". Note: you can use Dep.has() to check.");
+		throw new DepNotSetException(class1+" - No value set. Note: you can use Dep.has() to check.");
 	}
 	
 	/**

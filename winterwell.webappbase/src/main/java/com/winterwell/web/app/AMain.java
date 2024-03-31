@@ -560,7 +560,7 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 			Log.i("web", "...Launching Jetty web server on port "+jl.getPort());
 			jl.run();		
 			
-			Log.i("Running...");
+			Log.i("Running... http://localhost:"+jl.getPort()+"/");
 		} catch (Throwable ex) {
 			// make sure it gets logged
 			Log.e("launchJetty", ex);

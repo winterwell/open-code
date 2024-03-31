@@ -407,11 +407,13 @@ public class AppUtils {
 		if (id==null) {
 			Object _id = item.map().get("id");
 			if (_id instanceof String) id= (String) _id;
-			if (_id.getClass().isArray()) id= (String) Containers.asList(_id).get(0);
+			if (_id != null && _id.getClass().isArray()) id= (String) Containers.asList(_id).get(0);
 		}
-		assert id != null && ! id.equals("new") : "use action=new "+stateCanBeNull;
-		assert id.equals(path.id) : path+" vs "+id;
-				
+		if (id!=null) {
+			assert ! id.equals("new") : "use action=new "+stateCanBeNull;
+			assert id.equals(path.id) : path+" vs "+id;
+		}
+		
 		// save to ES
 		UpdateRequest up = client.prepareUpdate(path);
 		if (DEBUG) up.setDebug(DEBUG); // NB: only set if its extra debugging??

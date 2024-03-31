@@ -1684,7 +1684,7 @@ public class WebUtils2 extends WebUtils {
 	
 	/**
 	 * Generate JSON from a java object. Convenience for JSON.toJSON
-	 * @param mapOrListOrPrimitive Something that's ready for being json. Use GSON for POJOs
+	 * @param mapOrListOrPrimitive Something that's ready for being json. Use GSON (not this) for POJOs
 	 * @return json
 	 */
 	public static String stringify(Object mapOrListOrPrimitive) {
