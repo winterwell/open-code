@@ -2,6 +2,7 @@ package com.winterwell.depot;
 
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.winterwell.depot.merge.Merger;
@@ -15,7 +16,7 @@ import com.winterwell.utils.containers.ArrayMap;
 public class ESStoreTest {
 
 	
-	@Test
+	@Test @Ignore // needs ES running
 	public void testSimple() {
 		Dep.setIfAbsent(FlexiGson.class, new FlexiGson());
 		Dep.setIfAbsent(Merger.class, new Merger());

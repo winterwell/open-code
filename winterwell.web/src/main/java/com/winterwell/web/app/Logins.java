@@ -1,9 +1,12 @@
 package com.winterwell.web.app;
 
+
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.Utils;
@@ -35,6 +38,8 @@ public class Logins {
 	static final Logins dflt = init();
 	
 	private static File loginsDir;
+
+	private static Properties dotEnv;
 	
 	public static File getLoginsDir() {
 		return loginsDir;
@@ -120,21 +125,36 @@ public class Logins {
 
 	/**
 	 * @param keyName
-	 * @return value set by environment variable, or from a special folder `.env`
+	 * @return value set by environment variable, or from a special file `.env`
+	 * 
+	 * See https://medium.com/lseg-developer-community/how-to-separate-your-credentials-secrets-and-configurations-from-your-source-code-with-70a9c8850edb
 	 */
-	public static String getKey(String keyName) {
-		// a main property?? KEY=VALUE or --KEY VALUE
-		ConfigFactory cf = ConfigFactory.get();
-		
+	public static String getKey(String keyName) {		
 		// env variable?
 		String ev = System.getenv(keyName);
 		if (ev!=null) return ev;
+		// see https://stackoverflow.com/questions/531694/how-can-i-get-system-variable-value-in-java/536150#536150
+		ev = System.getProperty(keyName);
+		if (ev!=null) return ev;
+		
+		// ??a main property?? KEY=VALUE or --KEY VALUE
+//		ConfigFactory cf = ConfigFactory.get();
+
 		// a file?
-		File f = new File(".env", FileUtils.safeFilename(keyName, false));
-		if (f.isFile()) {
-			return FileUtils.read(f).trim();
+		if (dotEnv==null) {
+			try {
+				File f = new File(".env");
+				if (f.isFile()) {
+					dotEnv = new Properties();
+					dotEnv.load(FileUtils.getReader(f));
+				}
+			} catch(IOException iox) {
+				throw Utils.runtime(iox);
+			}
 		}
-//		System.out.println(f.getAbsolutePath());
+		if (dotEnv!=null) {
+			return dotEnv.getProperty(keyName);
+		}
 		return null;
 	}
 	
