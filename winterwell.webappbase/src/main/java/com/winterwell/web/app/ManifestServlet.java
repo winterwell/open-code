@@ -227,7 +227,11 @@ public class ManifestServlet extends HttpServlet implements IServlet {
 				if (files==null) {
 					return manifestFromJar; // odd, but oh well
 				}
-			}			
+			}	
+			if (files==null) {
+				Log.info("limited jar manifests - null files in "+dir);
+				return manifestFromJar; // odd, but oh well
+			}
 			for (File file : files) {
 				pool.submit(() -> {
 					Map<String, Object> manifest = JarTask.getManifest(file);
