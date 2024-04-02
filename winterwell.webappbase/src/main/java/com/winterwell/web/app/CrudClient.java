@@ -41,8 +41,8 @@ public class CrudClient<T> {
 		return getClass().getSimpleName()+"[endpoint=" + endpoint + "]";
 	}
 
-	private Class<T> type;
-	private String endpoint;
+	Class<T> type;
+	String endpoint;
 	private boolean debug;
 
 	/**
@@ -248,7 +248,7 @@ public class CrudClient<T> {
 		return jsend;
 	}
 
-	private JSend jsend(FakeBrowser fb, String response) {
+	protected JSend jsend(FakeBrowser fb, String response) {
 		Gson gson = gson();
 		Map data = gson.fromJson(response);
 		JSend jsend = JSend.parse2_create(data);
@@ -257,7 +257,7 @@ public class CrudClient<T> {
 		return jsend;
 	}
 
-	private FakeBrowser fb() {
+	protected FakeBrowser fb() {
 		FakeBrowser fb = new FakeBrowser();
 		fb.setDebug(debug);
 		fb.setRetryOnError(2); // 3 tries

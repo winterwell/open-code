@@ -618,7 +618,7 @@ public abstract class CrudServlet<T> implements IServlet {
 	 * The focal thing's ID.
 	 * This might be newly minted for a new thing
 	 */
-	private String _id;
+	protected String _id;
 	
 	/**
 	 * Rarely used! Set the focal thing's ID.
@@ -845,7 +845,7 @@ public abstract class CrudServlet<T> implements IServlet {
 		// FIXME handle if the ID has a / encoded within it
 		String sid = slugBits[slugBits.length - 1]; 
 		// NB: slug-bit-0 is the servlet, slug-bit-1 might be the ID - or the dataspace for e.g. SegmentServlet
-		if (slugBits.length == 1) {
+		if (slugBits.length == 1 || (dataspaceFromPath && slugBits.length == 2)) {
 			if (state.actionIs("new")) {
 				sid = "new"; // just the servlet => new
 			} else {
@@ -854,6 +854,15 @@ public abstract class CrudServlet<T> implements IServlet {
 			}
 		}
 		_id = getId2(state, sid);
+
+		// dataspace the id??
+		if (dataspace != null) {
+			String dataspaceWart = "@"+dataspace;
+			if ( ! _id.endsWith(dataspaceWart)) {
+				_id = _id+dataspaceWart; 
+			}
+		}
+
 		return _id;
 	}
 
@@ -1859,7 +1868,16 @@ public abstract class CrudServlet<T> implements IServlet {
 	}
 
 	protected String getJson(WebRequest state) {
-		return state.get(new SField(AppUtils.ITEM.getName()));
+		String json = state.get(new SField(AppUtils.ITEM.getName()));
+		if (json!=null) return json;
+		// body?
+		json = state.getPostBody();
+		if (json!=null) {
+			if (json.startsWith("{") || json.startsWith("[")) {
+				return json;
+			}
+		}
+		return null;
 	}
 	
 }

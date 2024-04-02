@@ -34,6 +34,7 @@ public class AThing implements IInit {
 	/**
 	 * Normally an XId (so that it has service, and is in a canonical form for that service)
 	 */
+	@ESKeyword
 	public String id;
 	
 	/**

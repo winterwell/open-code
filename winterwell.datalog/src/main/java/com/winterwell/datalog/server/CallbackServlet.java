@@ -22,7 +22,7 @@ public class CallbackServlet extends CrudServlet<Callback> implements IServlet {
 
 
 	public CallbackServlet() {
-		super(Callback.class, new FixedESRouter("datalog.callbacks", "Callback"));
+		super(Callback.class, new FixedESRouter("datalog.callbacks"));
 	}
 
 	@Override

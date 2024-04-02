@@ -84,7 +84,10 @@ public class MasterServlet extends HttpServlet {
 			// everyone wants CORS
 			WebUtils2.CORS(state, false);
 			// servlet
-			String path = state.getRequestPath();						
+			String path = state.getRequestPath();		
+			if (path==null) {
+				throw new WebEx.E403(null, "Specify a servlet path");
+			}
 			String servletName = servletNameFromPath(path);		
 			Thread.currentThread().setName("servlet: "+servletName);
 			// make a servlet
