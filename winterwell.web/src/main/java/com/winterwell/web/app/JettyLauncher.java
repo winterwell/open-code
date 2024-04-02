@@ -467,7 +467,6 @@ public class JettyLauncher {
 	 * @throws ServletException
 	 */
 	public Map<String,String> getServletMappings() throws ServletException {
-		Server server = getServer();
 		Handler[] handlers = server.getChildHandlers();
 		ArrayMap s4p = new ArrayMap();
 		for (Handler handler : handlers) {
@@ -479,7 +478,7 @@ public class JettyLauncher {
 					String path = Printer.toString(servletMapping.getPathSpecs());
 					ServletHolder sholder = sh.getServlet(servletMapping.getServletName());
 					Servlet s = sholder.getServlet();
-					s4p.put(path, s.toString());
+					s4p.put(path, s==null? "no servlet for ServletHolder "+sholder : s.toString());
 				}
 			}
 		}

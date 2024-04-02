@@ -10,6 +10,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.IHasJson;
+import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.app.WebRequest;
@@ -32,7 +33,7 @@ code: Number // optional numeric code for errors
  * Note: requires Gson set in Dep, as JThing requires this
  * 
  * @author daniel
- *
+ * @testedby  JSendTest
  */
 public class JSend<X> implements IHasJson {
 
@@ -147,8 +148,17 @@ public class JSend<X> implements IHasJson {
 	
 	@Override
 	public String toJSONString() {
-		// TODO for the case where data has a json String, we could be more efficient
-		String json = IHasJson.super.toJSONString();
+		// designed for efficiency in the case where data has a json String
+		String json = new SimpleJson().toJson(new ArrayMap(
+				"status", status,
+				"message", message,
+				"code", code
+					));
+		if (data == null) return json;
+		String json2 = data.toJSONString();
+		// pop the end } and add in data
+		json = json.substring(0, json.length()-1)
+				+ ",\"data\":" + json2 + "}";
 		return json;
 	}
 	

@@ -260,10 +260,12 @@ public abstract class CrudServlet<T> implements IServlet {
 			String prettyJson = gson.toJson(jobj);
 			json = prettyJson;
 		}
-		JsonResponse output = new JsonResponse(state).setCargoJson(json);
-		WebUtils2.sendJson(output, state);
-		return;
-	};
+		JSend jsend = new JSend<>();
+		jsend.setData(new JThing<>().setJson(json));
+		jsend.send(state);
+//		JsonResponse output = new JsonResponse(state).setCargoJson(json);
+//		WebUtils2.sendJson(output, state);
+	}
 
 	protected boolean isListRequest(String slug) {
 		return slug.endsWith("/_list") || LIST_SLUG.equals(slug);
