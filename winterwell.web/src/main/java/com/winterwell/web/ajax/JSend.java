@@ -254,4 +254,8 @@ public class JSend<X> implements IHasJson {
 	public boolean isSuccess() {
 		return getStatus()==KAjaxStatus.success;
 	}
+
+	public void setDataJson(String jsonString) {
+		setData(new JThing().setJson(jsonString));
+	}
 }

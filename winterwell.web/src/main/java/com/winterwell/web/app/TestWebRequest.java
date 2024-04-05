@@ -71,5 +71,5 @@ public class TestWebRequest extends WebRequest {
 	public void setPostBody(String postBody) {
 		this.postBody = postBody;
 	}
-	
+
 }

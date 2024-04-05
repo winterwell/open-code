@@ -206,13 +206,18 @@ public abstract class CrudServlet<T> implements IServlet {
 		
 		// no object...
 		// return blank / messages
-		if (state.getAction()==null) {
+		if (state.getAction()==null || state.actionIs("get")) {
 			// no thing? return a 404
 			ESPath path = getPath(state);
 			throw new WebEx.E404(state.getRequestUrl(), "Not found: "+path);
 		}
-		JsonResponse output = new JsonResponse(state);
-		WebUtils2.sendJson(output, state);
+		JSend jsend = new JSend<>();
+		if (state.getMessages().isEmpty()) {
+			jsend.setMessage("No object.");
+		} else {
+			jsend.setMessage(state.getMessages().toString());
+		}
+		jsend.send(state);
 
 		// post-return action? usually not
 		if (state.getAction() != null && ! state.actionIs("get")) {
@@ -850,12 +855,16 @@ public abstract class CrudServlet<T> implements IServlet {
 		if (slugBits.length == 1 || (dataspaceFromPath && slugBits.length == 2)) {
 			if (state.actionIs("new")) {
 				sid = "new"; // just the servlet => new
-			} else {
-				Log.w(LOGTAG(), "no ID "+state);
-				return null;
 			}
 		}
+		// process new / custom logic
 		_id = getId2(state, sid);
+		 
+		if (_id==null) {
+			Log.w(LOGTAG(), "no ID "+state);
+			return null;
+		}
+		assert ! "new".equals(_id) : "ID cannot be 'new' "+state;
 
 		// dataspace the id??
 		if (dataspace != null) {
@@ -868,6 +877,12 @@ public abstract class CrudServlet<T> implements IServlet {
 		return _id;
 	}
 
+	/**
+	 * 
+	 * @param state
+	 * @param sid can be null
+	 * @return
+	 */
 	protected String getId2(WebRequest state, String sid) {
 		if (NEW_ID.equals(sid)) {
 			String nicestart = StrUtils.toCanonical(

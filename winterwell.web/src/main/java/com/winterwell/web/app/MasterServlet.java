@@ -138,10 +138,13 @@ public class MasterServlet extends HttpServlet {
 	 * 
 	 * @param path e.g. "foo" or "/foo" or "/foo/*" 
 	 * 	Leading / and trailing /* are handled as equivalent
-	 * @param klass
+	 * @param singletonServlet Used as a "static" object
 	 */
 	public void addServlet(String path, IServlet singletonServlet) {
 		Utils.check4null(path, singletonServlet);
+		// a safety check
+		Class<?> superClass = singletonServlet.getClass().getSuperclass();
+		assert superClass==null || ! superClass.getSimpleName().equals("CrudServlet") : "use the fresh-servlets addServlet(String, Class) method";		
 		// / * is an annoyingly fiddly part of the standard J2EE -- lets make it irrelevant
 		if (path.endsWith("*")) {
 			path = path.substring(0, path.length()-1);

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.servlet.Servlet;
@@ -478,7 +479,7 @@ public class JettyLauncher {
 					String path = Printer.toString(servletMapping.getPathSpecs());
 					ServletHolder sholder = sh.getServlet(servletMapping.getServletName());
 					Servlet s = sholder.getServlet();
-					s4p.put(path, s==null? "no servlet for ServletHolder "+sholder : s.toString());
+					s4p.put(path, Objects.toString(s==null? sholder : s));
 				}
 			}
 		}

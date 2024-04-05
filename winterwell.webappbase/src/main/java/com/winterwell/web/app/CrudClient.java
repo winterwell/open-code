@@ -89,6 +89,7 @@ public class CrudClient<T> {
 	}
 	
 	public String getEndpoint() {
+		assert ! Utils.isBlank(endpoint) : "No endpoint set for "+this;
 		return endpoint;
 	}
 	
