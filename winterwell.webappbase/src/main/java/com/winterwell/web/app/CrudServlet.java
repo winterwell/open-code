@@ -40,12 +40,15 @@ import com.winterwell.gson.Gson;
 import com.winterwell.gson.GsonBuilder;
 import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.Mutable;
+import com.winterwell.utils.Mutable.Int;
 import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.ArraySet;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.containers.Pair2;
 import com.winterwell.utils.io.CSVSpec;
 import com.winterwell.utils.io.CSVWriter;
 import com.winterwell.utils.io.FileUtils;
@@ -914,6 +917,25 @@ public abstract class CrudServlet<T> implements IServlet {
 	 * @throws IOException
 	 */
 	public final List doList(WebRequest state) throws IOException {
+		Mutable.Int rTotal = new Mutable.Int();
+		Pair2<List<ESHit<T>>, SearchResponse> hits_sr = doList2_search(state, rTotal);
+		List<ESHit<T>> hits = hits_sr.first;
+		SearchResponse sr = hits_sr.second;
+		
+		// HACK: send back csv?
+		if (state.getResponseType() == KResponseType.csv) {
+			doSendCsv(state, hits);
+			return hits;
+		}
+	
+		// send the json back
+		doList2_sendJson(state, sr, hits, rTotal.value);
+		
+		// return
+		return hits;
+	}
+
+	protected Pair2<List<ESHit<T>>, SearchResponse> doList2_search(WebRequest state, Mutable.Int rTotal) {
 		Time now = new Time();
 		KStatus status = state.get(AppUtils.STATUS, KStatus.DRAFT);
 		String q = state.get(CommonFields.Q);
@@ -983,12 +1005,6 @@ public abstract class CrudServlet<T> implements IServlet {
 			}
 		}	
 		
-		// HACK: send back csv?
-		if (state.getResponseType() == KResponseType.csv) {
-			doSendCsv(state, hits2);
-			return hits2;
-		}
-		
 		// augment?
 		if (augmentFlag) {
 			for(int i=0; i<hits2.size(); i++) {
@@ -999,7 +1015,8 @@ public abstract class CrudServlet<T> implements IServlet {
 				hits2.set(i, ah);
 			}
 		}
-		// put together the json response	
+		
+		// Total?	
 		Long total = sr.getTotal();
 		// ...adjust total
 		if (_hits.size() < size) {
@@ -1010,7 +1027,13 @@ public abstract class CrudServlet<T> implements IServlet {
 			double total2 = total*hitRatio;
 			total = Math.round(total2);
 		}
+		if (rTotal!=null) rTotal.value = total.intValue();
 		
+		return new Pair2(hits2,sr);
+	}
+	
+
+	void doList2_sendJson(WebRequest state, SearchResponse sr, List<ESHit<T>> hits2, Number total) {
 		List<Map> items = Containers.apply(hits2, h -> h.getJThing().map());
 		List sa = sr.getSearchAfter(); // null if sort is not set
 		String pit = sr.getPointInTime();
@@ -1027,10 +1050,6 @@ public abstract class CrudServlet<T> implements IServlet {
 				);
 		JSend jsend = new JSend<>(jobj);
 		jsend.send(state);
-//		JsonResponse output = new JsonResponse(state).setCargoJson(json);
-//		// ...send
-//		WebUtils2.sendJson(output, state);
-		return hits2;
 	}
 	
 	/**
@@ -1814,7 +1833,10 @@ public abstract class CrudServlet<T> implements IServlet {
 		{	// update
 			String id = getId(state);
 			assert id != null : "No id? cant save! "+state; 
-			ESPath path = esRouter.getPath(dataspace,type, id, KStatus.DRAFT);
+			ESPath path = esRouter.getPath(dataspace, type, id, KStatus.DRAFT);
+			if (dataspace!=null) {
+				doSave2_checkDataspace(path);
+			}
 			KRefresh refresh = null;
 			String _refresh = state.get(REFRESH);
 			if (Utils.yes(_refresh)) {
@@ -1825,6 +1847,13 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 	}
 	
+
+	protected void doSave2_checkDataspace(ESPath path) {
+		AppUtils.initESindex2(path, es(), type);
+	}
+
+
+
 
 	/**
 	 * HACK: can be a list of Map or JsonPatchOp

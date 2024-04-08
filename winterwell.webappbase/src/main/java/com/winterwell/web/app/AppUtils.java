@@ -7,7 +7,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.winterwell.bob.wwjobs.BuildHacks;
@@ -504,7 +506,8 @@ public class AppUtils {
 		for(KStatus s : main) {
 			for(Class klass : dbclasses) {
 				try {
-					initESindex2(esRouter, es, s, klass, dataspace);
+					ESPath path = esRouter.getPath(dataspace, klass, null, s);
+					initESindex2(path, es, null);
 				} catch (ESException ex) {
 					Log.w("init.ES", ex);
 					if (err==null) err = ex;					
@@ -514,33 +517,55 @@ public class AppUtils {
 		if (err!=null) throw err;
 	}
 
-
-	private static void initESindex2(
-			IESRouter esRouter, ESHttpClient es, KStatus s,
-			Class klass, CharSequence dataspace) 
-	{		
-		ESPath path = esRouter.getPath(dataspace, klass, null, s);
+	private final static Set<String> knownIndexes = new ConcurrentSkipListSet<>();
+	
+	/**
+	 * 
+	 * @param path
+	 * @param es
+	 * @param typeForMapping Can be null. If set, then also put mapping
+	 */
+	public static void initESindex2(ESPath path, ESHttpClient es, Class typeForMapping) 
+	{				
 		String index = path.index();
-		if (es.admin().indices().indexExists(index)) {
+		// already done?
+		if (knownIndexes.contains(index)) {	// fast in-memory check
 			return;
 		}
-		Log.d("ES.init", "init index for "+klass+"...");			
-		// make with an alias to allow for later switching if we change the schema
-		String baseIndex = index+"_"+es.getConfig().getIndexAliasVersion();
-		// what if base-index wo alias??
-		if (es.admin().indices().indexExists(baseIndex)) {
-			Log.d("ES.init", "Base index "+baseIndex+" exists but not the alias "+index+" - Let's link them...");
-			IndicesAliasesRequest alias = es.admin().indices().prepareAliases();
-			alias.addAlias(baseIndex, index);
-			alias.setDebug(true);
-			alias.get().check();
-		} else {
-			// make a new index
-			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
-			pi.setDebug(true);
-			pi.setFailIfAliasExists(true);
-			pi.setAlias(index);
-			IESResponse r = pi.get().check();
+		if (es.admin().indices().indexExists(index)) {
+			Log.i("skip initESindex2 - index exists: "+index);
+			knownIndexes.add(index);
+			return;
+		}
+		synchronized (knownIndexes) {
+			if (knownIndexes.contains(index)) {	// race-condition on synchronized
+				return;
+			}
+			Log.d("ES.init", "init index "+index+"...");			
+			// make with an alias to allow for later switching if we change the schema
+			String baseIndex = index+"_"+es.getConfig().getIndexAliasVersion();
+			// what if base-index wo alias??
+			if (es.admin().indices().indexExists(baseIndex)) {
+				Log.d("ES.init", "Base index "+baseIndex+" exists but not the alias "+index+" - Let's link them...");
+				IndicesAliasesRequest alias = es.admin().indices().prepareAliases();
+				alias.addAlias(baseIndex, index);
+				alias.setDebug(true);
+				alias.get().check();
+			} else {
+				// make a new index
+				CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
+				pi.setDebug(true);
+				pi.setFailIfAliasExists(true);
+				pi.setAlias(index);
+				IESResponse r = pi.get().check();
+			}
+			
+			// mapping
+			if (typeForMapping!=null) {
+				Log.i("ES.init", "init index - Make mapping for "+index);
+				initESMappings2_putMapping(null, es, typeForMapping, path, index);
+			}
+			knownIndexes.add(index);
 		}
 	}
 
