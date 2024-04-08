@@ -197,7 +197,7 @@ public abstract class CrudServlet<T> implements IServlet {
 	
 		if (jthing != null) {
 			if (state.getAction() == ACTION_NEW) {
-				returnJson(state, "id");
+				process2_returnJSend_idOnly(state, getId(state));
 			} else {
 				returnJson(state);
 			}
@@ -225,12 +225,10 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 	}
 	
-	protected void returnJson(WebRequest state, String key) throws IOException {
-		Map json = new ArrayMap<String, String>();
-		json.put("id", jthing.map().get(key));
-		String jsonString = Gson.toJSON(json);
-		WebUtils2.sendJson(state, jsonString);
-		return;
+	protected void process2_returnJSend_idOnly(WebRequest state, String id) throws IOException {
+		JSend jsend = new JSend<>();
+		jsend.setDataJson(WebUtils2.stringify(id));
+		jsend.send(state);
 	}
 	
 	protected void returnJson(WebRequest state) throws IOException {
@@ -688,6 +686,8 @@ public abstract class CrudServlet<T> implements IServlet {
 	 */
 	public static final String NEW_ID = "new";
 
+	public static final SField REFRESH = new SField("refresh");
+
 	protected final JThing<T> doPublish(WebRequest state) throws Exception {
 		// For publish, let's force the update.
 		return doPublish(state, KRefresh.TRUE, false);
@@ -888,7 +888,7 @@ public abstract class CrudServlet<T> implements IServlet {
 			String nicestart = StrUtils.toCanonical(
 					Utils.or(state.getUserId(), state.get("name"), type.getSimpleName()).toString()
 					).replace(' ', '_');
-			sid = nicestart+"_"+Utils.getRandomString(8);
+			sid = nicestart+"_"+Utils.getRandomString(10);
 			// avoid ad, 'cos adblockers dont like it!
 			if (sid.startsWith("ad")) {
 				sid = sid.substring(2, sid.length());
@@ -1815,7 +1815,12 @@ public abstract class CrudServlet<T> implements IServlet {
 			String id = getId(state);
 			assert id != null : "No id? cant save! "+state; 
 			ESPath path = esRouter.getPath(dataspace,type, id, KStatus.DRAFT);
-			AppUtils.doSaveEdit(path, jthing, diffs, state);
+			KRefresh refresh = null;
+			String _refresh = state.get(REFRESH);
+			if (Utils.yes(_refresh)) {
+				refresh = KRefresh.TRUE;	
+			}			
+			AppUtils.doSaveEdit2(path, jthing, diffs, state, refresh==KRefresh.TRUE);
 			Log.d("crud", "doSave "+path+" by "+state.getUserId()+" "+state+" "+jthing.string());
 		}
 	}

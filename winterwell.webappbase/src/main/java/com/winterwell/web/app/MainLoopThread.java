@@ -21,10 +21,12 @@ final class MainLoopThread extends Thread {
 		while( ! app.pleaseStop) {					
 			try {						
 				app.doMainLoop();
-			} catch(Throwable ex) {
-				Log.w(LOGTAG, "caught MainLoopThread exception");
+			} catch(Throwable ex) {				
+				if (app.pleaseStop) {
+					Log.d(ex.toString());
+					return;
+				}
 				Log.e(LOGTAG+".MainLoopThread catch-and-carry-on: doMainLoop again", ex);
-				if (app.pleaseStop) return;
 				// pause a moment
 				Utils.sleep(100);
 				// loop again... 

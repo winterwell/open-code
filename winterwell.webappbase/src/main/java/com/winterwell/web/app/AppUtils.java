@@ -393,7 +393,8 @@ public class AppUtils {
 	 * @param instant
 	 * @return
 	 */
-	public static JThing doSaveEdit2(ESPath path, JThing item, List diffs, WebRequest stateCanBeNull, boolean instant) {
+	public static JThing doSaveEdit2(ESPath path, JThing item, List diffs, WebRequest stateCanBeNull, boolean instant) 
+	{
 		assert path.id != null : "need an id in path to save "+item;
 		ESHttpClient client = new ESHttpClient(Dep.get(ESConfig.class));		
 		// save update
@@ -418,7 +419,9 @@ public class AppUtils {
 		UpdateRequest up = client.prepareUpdate(path);
 		if (DEBUG) up.setDebug(DEBUG); // NB: only set if its extra debugging??
 		// force an instant refresh?
-		if (instant) up.setRefresh("true");		
+		if (instant) {
+			up.setRefresh(KRefresh.TRUE);		
+		}
 		Map map = item.map();
 		// delete stuff?? fields or items from a list
 		if (diffs!=null && ! diffs.isEmpty()) {

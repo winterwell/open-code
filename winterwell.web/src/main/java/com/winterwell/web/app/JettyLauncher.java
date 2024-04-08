@@ -425,9 +425,6 @@ public class JettyLauncher {
         server.setHandler(sessions);      
         sessions.setHandler(root);
         
-		// Attempted fix for Egan's transfer bug, Doesn't work :(
-//		root.setMaxFormContentSize(1000000);
-
 		// Add servlets from web.xml
 		if (webXmlFile != null) {
 			if ( ! webXmlFile.exists()) {

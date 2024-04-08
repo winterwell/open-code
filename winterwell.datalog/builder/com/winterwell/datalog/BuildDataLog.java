@@ -29,7 +29,7 @@ public class BuildDataLog extends BuildWinterwellProject {
 		deps.add(mdt);
 
 		// from winterwell.web
-		mdt.addDependency("org.eclipse.jetty:jetty-servlet:10.0.7");
+		mdt.addDependency("org.eclipse.jetty:jetty-servlet:10.0.20");
 		
 		return deps;
 	}	

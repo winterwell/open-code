@@ -283,8 +283,7 @@ public class SearchQuery implements Serializable, IHasJson {
 	}
 
 	/**
-	 * @return the raw search query. Defines the search _apart from_ services and
-	 *         types
+	 * @return the raw search query. Defines the search.
 	 */
 	public String getRaw() {
 		return raw;
@@ -834,9 +833,12 @@ public class SearchQuery implements Serializable, IHasJson {
 		return strict;
 	}
 
+	/**
+	 * Equivalent to {@link #getRaw()}
+	 */
 	@Override
 	public String toString() {
-		return "SearchQuery[" + raw + "]";
+		return getRaw();
 	}
 
 	@Override
