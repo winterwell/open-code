@@ -230,7 +230,7 @@ public abstract class CrudServlet<T> implements IServlet {
 	
 	protected void process2_returnJSend_idOnly(WebRequest state, String id) throws IOException {
 		JSend jsend = new JSend<>();
-		jsend.setDataJson(WebUtils2.stringify(id));
+		jsend.setData(new ArrayMap("id", id));
 		jsend.send(state);
 	}
 	
