@@ -2,10 +2,14 @@ package com.winterwell.web.app;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.winterwell.bob.wwjobs.BuildHacks;
 import com.winterwell.data.AThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.XIdTypeAdapter;
+import com.winterwell.es.client.KRefresh;
 import com.winterwell.gson.Gson;
 import com.winterwell.gson.GsonBuilder;
 import com.winterwell.gson.StandardAdapters;
@@ -36,6 +40,8 @@ import com.winterwell.youagain.client.YouAgainClient;
  */
 public class CrudClient<T> {
 
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Override
 	public String toString() {
 		return getClass().getSimpleName()+"[endpoint=" + endpoint + "]";
@@ -210,7 +216,8 @@ public class CrudClient<T> {
 		String sjson = gson.toJson(item);
 		Map<String, String> vars = new ArrayMap(
 			WebRequest.ACTION_PARAMETER, CrudServlet.ACTION_PUBLISH,
-			AppUtils.ITEM.getName(), sjson
+			AppUtils.ITEM.getName(), sjson,
+			"refresh", refresh
 		);
 		String url = endpoint;
 		// ID?
@@ -226,14 +233,27 @@ public class CrudClient<T> {
 		return jsend;
 	}
 	
-	public JSend saveDraft(T item) {
+	KRefresh refresh;
+	
+	public CrudClient<T> setRefresh(KRefresh refresh) {
+		this.refresh = refresh;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param item
+	 * @return This might just be {id}
+	 */
+	public JSend<Map> saveDraft(T item) {
 		FakeBrowser fb = fb();
 		
 		Gson gson = gson();
 		String sjson = gson.toJson(item);
 		Map<String, String> vars = new ArrayMap(
 			WebRequest.ACTION_PARAMETER, CrudServlet.ACTION_SAVE,
-			AppUtils.ITEM.getName(), sjson
+			AppUtils.ITEM.getName(), sjson,
+			"refresh", refresh
 		);
 		String url = endpoint;
 		// ID?
@@ -241,11 +261,21 @@ public class CrudClient<T> {
 		if (id != null) {
 			String encId = WebUtils.urlEncode(id);
 			url += "/"+encId;
+		} else {
+			// treat as new
+			vars.put(WebRequest.ACTION_PARAMETER, CrudServlet.ACTION_NEW);
 		}
 		
 		String response = fb.post(url, vars);
 
 		JSend jsend = jsend(fb, response);
+		
+		if (id==null && item instanceof AThing) {
+			AThing at = (AThing) item;
+			String idFromServer = (String) jsend.getDataMap().get("id");
+			at.setId(idFromServer);
+		}
+		
 		return jsend;
 	}
 

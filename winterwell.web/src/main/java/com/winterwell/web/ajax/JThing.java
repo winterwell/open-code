@@ -163,6 +163,14 @@ implements INotSerializable, IHasJson // serialize the json not this wrapper
 	}
 	
 	/**
+	 * Equivalent to {@link #java}
+	 * @return
+	 */
+	public final T get() {
+		return java();
+	}
+	
+	/**
 	 * NOT the json - this is a short version for debug / logging.
 	 * @see #string()
 	 */
