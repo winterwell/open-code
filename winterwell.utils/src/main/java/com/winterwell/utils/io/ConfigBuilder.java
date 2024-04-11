@@ -202,7 +202,7 @@ public class ConfigBuilder {
 			} catch(Exception ex) {
 				// not a truthy/falsy value then. oh well
 			}
-			throw new ParseException(e.getMessage(), 1);
+			throw new ParseException(string+" "+e.getMessage(), 1);
 		}
 	}
 

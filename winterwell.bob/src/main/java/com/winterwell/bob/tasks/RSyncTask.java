@@ -13,7 +13,7 @@ import com.winterwell.utils.Utils;
  * 
  * https://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man1/rsync.1.html
  * @author daniel
- *
+ * @testedby RSyncTaskTest
  */
 public class RSyncTask extends ProcessTask {
 
