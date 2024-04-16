@@ -218,7 +218,7 @@ public class JettyLauncher {
 	}
 
 	/**
-	 * Add a servlet. Should be called after setup() and before run().
+	 * Add a (singleton) servlet. Should be called after setup() and before run().
 	 * 
 	 * @param path This should usually end with a * to catch the slug bit, e.g. "/myservlet*" will get "/myservlet/foo"
 	 * but "/myservlet" would not!

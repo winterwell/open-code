@@ -1,6 +1,7 @@
 package com.winterwell.web.app;
 
 import java.io.File;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import com.winterwell.utils.log.SystemOutLogListener;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.web.LoginDetails;
+import com.winterwell.web.WebEx;
 import com.winterwell.web.data.XId;
 import com.winterwell.web.email.EmailConfig;
 import com.winterwell.youagain.client.AuthToken;
@@ -448,7 +450,15 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 			Dep.setIfAbsent(IESRouter.class, new StdESRouter());
 		}
 		// Get the ES version to activate ES-version-specific code
-		esjc.getESVersion();
+		try {
+			esjc.getESVersion();
+		} catch(WebEx.E50X e50x) {
+			// common dev snafu: ES isn't running - send a helpful message
+			if (e50x.getCause() instanceof ConnectException) {
+				throw new WebEx.E50X(500, esc.getESUrl(), "Is ElasticSearch running? "+e50x.toString());
+			}
+			throw Utils.runtime(e50x);
+		}
 		// ?? standard with dbclasses??
 //		AppUtils.initESIndices(KStatus.main(), dbclasses);
 //		AppUtils.initESMappings(KStatus.main(), dbclasses, mappingFromClass);

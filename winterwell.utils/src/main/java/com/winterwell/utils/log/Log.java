@@ -597,6 +597,7 @@ public class Log {
 		String cn = ReflectionUtils.getCallingClassSimpleName(1);
 		e(cn, warning);
 	}
+	
 
 }
 
