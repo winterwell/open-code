@@ -439,7 +439,7 @@ public abstract class CrudServlet<T> implements IServlet {
 		String ckey = doAction2_blockRepeats2_actionId(state);
 		if (ANTI_OVERLAPPING_EDITS_CACHE.getIfPresent(ckey)!=null) {
 			Log.d(LOGTAG(), "Hit 2 second Anti overlap key: "+ckey);
-			throw new WebEx.E409Conflict("Duplicate request within 2 seconds. Blocked for edit safety. "+state
+			throw new WebEx.E409Conflict("Duplicate request within 2 seconds. Blocked for edit safety. overlap-key: "+ckey+ " state: "+state
 					+" Note: this behaviour could be switched off via "+ALLOW_OVERLAPPING_EDITS);
 		}		
 		ANTI_OVERLAPPING_EDITS_CACHE.put(ckey, true);
@@ -452,6 +452,10 @@ public abstract class CrudServlet<T> implements IServlet {
 	protected String doAction2_blockRepeats2_actionId(WebRequest state) {
 		Map<String, Object> pmap = state.getParameterMap();
 		String ckey = state.getAction()+FlexiGson.toJSON(pmap);
+		if (state.actionIs(ACTION_NEW)) {
+			// new requests dont have an ID, so could overlap. Is there a post-body?
+			ckey += state.getPostBody();
+		}
 		return ckey;
 	}
 
@@ -1413,6 +1417,7 @@ public abstract class CrudServlet<T> implements IServlet {
 //		s.setScroll(null) TODO support for big +10k data
 
 		// Call the DB
+		assert ! s.getIndices().isEmpty() : s;
 		SearchResponse sr = s.get();
 		
 		

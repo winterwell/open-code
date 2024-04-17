@@ -185,26 +185,34 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 			// logfile before log config??! Is that right?
 			if (loggerClass==null || Log.class.equals(loggerClass)) {
 				LogConfig logConfig = ConfigFactory.get().getConfig(LogConfig.class);
-				Log.setConfig(logConfig);
-				// Try to use the "logs" subdirectory - but use the app root if that's impossible.
-				File logDir = new File("logs");
-				boolean useSubDir = true;
-				if (!logDir.exists()) {
-					// Try to create it - use dir if successful
-					useSubDir = logDir.mkdir();
-				} else if (!logDir.isDirectory()) {
-					// Exists but isn't a directory - don't use dir
-					useSubDir = false;
+				Log.setConfig(logConfig);				
+				if (logConfig.logsDir==null) {
+					// Try to use the "logs" subdirectory - but use the app root if that's impossible.
+					File logDir = new File("logs");
+					if (logDir.exists() && ! logDir.isDirectory()) {
+						// Exists but isn't a directory - don't use dir
+					} else {
+						logConfig.logsDir = logDir;
+					}
 				}
-				File logLocation = new File((useSubDir ? "logs/" : "") + getAppNameLocal() + ".log"); 
-				// NB: this log setup will call ConfigFactory early (before the full init)
+				if (logConfig.logsDir != null && ! logConfig.logsDir.exists()) {
+					logConfig.logsDir.mkdirs();
+				}
+				File logLocation = new File(logConfig.logsDir, getAppNameLocal() + ".log"); 
+				// NB: this log setup will call ConfigFactory early (before the full init)				
 				logFile = new LogFile(logLocation).setLogRotation(TUnit.DAY.dt, 14);
+				System.out.println("LogFile: "+logLocation.getAbsolutePath());
 				
 				// also add a never-rotates! audit log for important audit trail info only (ie stuff tagged "audit"		
-				File auditlogLocation = new File((useSubDir ? "logs/" : "") + getAppNameLocal() + ".audit");
+				File auditlogLocation = new File(logConfig.logsDir, getAppNameLocal() + ".audit");
 				auditlogFile = new LogFile(auditlogLocation).setFilter(r -> "audit".equals(r.tag));
+				
+				// Also log to SLF4J
+				Log.addListener(new SLF4JLogListener());				
 			} else if (org.slf4j.Logger.class.equals(loggerClass)) {				
 				Log.addListener(new SLF4JLogListener());
+			} else {
+				throw new IllegalArgumentException("Unrecognised logger: "+loggerClass);
 			}
 			
 			// don't log to sysout on prod (blockage seen there with contended threads dec 2021)

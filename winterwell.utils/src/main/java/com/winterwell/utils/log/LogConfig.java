@@ -1,5 +1,6 @@
 package com.winterwell.utils.log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,9 @@ import com.winterwell.utils.time.Time;
  */
 public class LogConfig {
 
+	@Option(description="Where to put log files. Defaults to current-directory/logs")
+	public File logsDir;
+	
 	@Deprecated // replaced by exclude
 	@Option(description="ignore reports by tag e.g. ignore reports from a particular class. See also `exclude` which is more flexible.")
 	List<String> ignoretags;

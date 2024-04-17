@@ -40,7 +40,6 @@ import com.winterwell.youagain.client.YouAgainClient;
  */
 public class CrudClient<T> {
 
-	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Override
 	public String toString() {

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import com.winterwell.datalog.Rate;
 import com.winterwell.utils.Environment;
@@ -596,6 +597,22 @@ public class Log {
 	public static void e(Object warning) {
 		String cn = ReflectionUtils.getCallingClassSimpleName(1);
 		e(cn, warning);
+	}
+	/**
+	 * @deprecated Prefer Log.e() This is here for drop-in compatability with SLF4J
+	 * @param string
+	 */
+	public static void error(String msg, Object... objects) {
+		if (objects.length > 0) {
+			int i = msg.indexOf("{}");
+			int j = 0;
+			while(i != -1 && j < objects.length) {
+				msg = msg.substring(0, i)+objects[j].toString()+msg.substring(i+2);	
+				i = msg.indexOf("{}");
+				j++;
+			}			
+		}
+		e(msg);
 	}
 	
 
