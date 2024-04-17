@@ -166,7 +166,8 @@ public abstract class CrudServlet<T> implements IServlet {
 	public void process(WebRequest state) throws Exception {
 		// CORS??
 		WebUtils2.CORS(state, false);
-		
+		// debug?
+		if (state.debug) this.debug = true;
 		// dataspace?
 		if (dataspaceFromPath) {
 			String ds = state.getSlugBits(1);
@@ -671,6 +672,8 @@ public abstract class CrudServlet<T> implements IServlet {
 	 * Usually unset. If set, _list text search only checks these fields.
 	 */
 	protected Collection<String> searchFields;
+
+	public boolean debug;
 	
 	/**
 	 * Format is fieldname-asc/desc e.g. "amount-desc"
@@ -1380,6 +1383,7 @@ public abstract class CrudServlet<T> implements IServlet {
 	{
 		// copied from SoGive SearchServlet
 		SearchRequest s = new SearchRequest(es());
+		s.setDebug(debug);
 		/// which index? draft (which should include copies of published) by default
 		doList3_setIndex(status, s);
 		

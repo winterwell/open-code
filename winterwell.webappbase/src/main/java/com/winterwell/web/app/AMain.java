@@ -75,7 +75,7 @@ import com.winterwell.youagain.client.YouAgainClient;
  */
 public abstract class AMain<ConfigType extends ISiteConfig> {
 
-	public static final String copyright = "(C) Good-Loop Ltd";
+	public static final String copyright = "(c) Daniel Winterstein";
 	
 	protected JettyLauncher jl;
 	

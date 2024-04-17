@@ -79,6 +79,7 @@ public class MasterServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		WebRequest state = null;
+		String servletName = "servlet";
 		try {
 			state = new WebRequest(req, resp);
 			// everyone wants CORS
@@ -88,7 +89,7 @@ public class MasterServlet extends HttpServlet {
 			if (path==null) {
 				throw new WebEx.E403(null, "Specify a servlet path");
 			}
-			String servletName = servletNameFromPath(path);		
+			servletName = servletNameFromPath(path);		
 			Thread.currentThread().setName("servlet: "+servletName);
 			// make a servlet
 			IServlet s = getMakeServlet(servletName);					
@@ -98,6 +99,7 @@ public class MasterServlet extends HttpServlet {
 			// do stuff
 			s.process(state);
 		} catch(Throwable ex) {
+			Log.w(servletName, ex);
 			HttpServletWrapper.doCatch(ex, resp, state);
 		} finally {
 			Thread ct = Thread.currentThread();

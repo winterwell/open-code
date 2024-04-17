@@ -513,7 +513,6 @@ public class Log {
 	}
 
 	
-	@Deprecated
 	// use i()
 	public static void info(String string) {
 		i(null, string);

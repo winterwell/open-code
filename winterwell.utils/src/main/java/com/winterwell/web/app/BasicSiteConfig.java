@@ -10,6 +10,12 @@ import com.winterwell.utils.io.Option;
  */
 public class BasicSiteConfig implements ISiteConfig {
 
+	/**
+	 * See VersionString for a semantic-version utility
+	 */
+	@Option(description="(optional) label the code with a version number e.g. 1.2.0")
+	public String version;
+	
 	@Override
 	public String toString() {
 		return getClass().getSimpleName()+Containers.objectAsMap(this).toString();
