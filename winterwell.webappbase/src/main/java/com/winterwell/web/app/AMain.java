@@ -187,11 +187,13 @@ public abstract class AMain<ConfigType extends ISiteConfig> {
 				LogConfig logConfig = ConfigFactory.get().getConfig(LogConfig.class);
 				Log.setConfig(logConfig);				
 				if (logConfig.logsDir==null) {
-					// Try to use the "logs" subdirectory - but use the app root if that's impossible.
-					File logDir = new File("logs");
+					// Try to use the "logs" subdirectory - but use the app root if that's impossible.					
+					File logDir = new File("logs");					
 					if (logDir.exists() && ! logDir.isDirectory()) {
 						// Exists but isn't a directory - don't use dir
+						System.out.println("LogConfig.logsDir unset - and logs is a file. Use current-directory.");
 					} else {
+						System.out.println("LogConfig.logsDir unset - use: "+logDir.getAbsolutePath());
 						logConfig.logsDir = logDir;
 					}
 				}
