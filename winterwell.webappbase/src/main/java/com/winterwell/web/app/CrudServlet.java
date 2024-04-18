@@ -186,6 +186,10 @@ public abstract class CrudServlet<T> implements IServlet {
 			doStats(state);
 			return;
 		}
+		if (slug.endsWith("/_mapping") || "_mapping".equals(slug)) {
+			doMappingCheck(state);
+			return;
+		}
 		
 		// crud?
 		// HACK: /new => action=new
@@ -229,6 +233,17 @@ public abstract class CrudServlet<T> implements IServlet {
 		}
 	}
 	
+	protected void doMappingCheck(WebRequest state) {		
+		KStatus status = state.get(AppUtils.STATUS);
+		ESPath path = esRouter.getPath(dataspace, type, null, status);
+		Log.d("doMappingCheck "+path);
+		boolean made = doSave2_checkDataspace(path);
+		Map mapping = es().admin().indices().getMapping(path.index());
+		JSend jsend = new JSend<>();
+		jsend.setData(mapping);
+		jsend.send(state);
+	}
+
 	protected void process2_returnJSend_idOnly(WebRequest state, String id) throws IOException {
 		JSend jsend = new JSend<>();
 		jsend.setData(new ArrayMap("id", id));
@@ -1857,8 +1872,9 @@ public abstract class CrudServlet<T> implements IServlet {
 	}
 	
 
-	protected void doSave2_checkDataspace(ESPath path) {
-		AppUtils.initESindex2(path, es(), type);
+	protected boolean doSave2_checkDataspace(ESPath path) {
+		boolean made = AppUtils.initESindex2(path, es(), type); // NB also calls init-mappings
+		return made;		
 	}
 
 

@@ -524,22 +524,23 @@ public class AppUtils {
 	 * @param path
 	 * @param es
 	 * @param typeForMapping Can be null. If set, then also put mapping
+	 * @return true if a new index is made (false if it already existsed)
 	 */
-	public static void initESindex2(ESPath path, ESHttpClient es, Class typeForMapping) 
+	public static boolean initESindex2(ESPath path, ESHttpClient es, Class typeForMapping) 
 	{				
 		String index = path.index();
 		// already done?
 		if (knownIndexes.contains(index)) {	// fast in-memory check
-			return;
+			return false;
 		}
 		if (es.admin().indices().indexExists(index)) {
 			Log.i("skip initESindex2 - index exists: "+index);
 			knownIndexes.add(index);
-			return;
+			return false;
 		}
 		synchronized (knownIndexes) {
 			if (knownIndexes.contains(index)) {	// race-condition on synchronized
-				return;
+				return false;
 			}
 			Log.d("ES.init", "init index "+index+"...");			
 			// make with an alias to allow for later switching if we change the schema
@@ -566,6 +567,7 @@ public class AppUtils {
 				initESMappings2_putMapping(null, es, typeForMapping, path, index);
 			}
 			knownIndexes.add(index);
+			return true;
 		}
 	}
 
@@ -732,7 +734,7 @@ public class AppUtils {
 	}
 	
 
-	private static void initESMappings2_putMapping(
+	private static ESType initESMappings2_putMapping(
 			Map<Class, Map> mappingFromClass, ESHttpClient es, 
 			Class k,
 			ESPath path, String index) 
@@ -749,6 +751,7 @@ public class AppUtils {
 		pm.setDebug(true); //false); //DEBUG);
 		IESResponse r2 = pm.get();
 		r2.check();
+		return dtype;
 	}
 
 	/**
