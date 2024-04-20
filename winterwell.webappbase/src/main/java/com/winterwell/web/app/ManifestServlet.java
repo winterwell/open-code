@@ -92,7 +92,7 @@ public class ManifestServlet extends HttpServlet implements IServlet {
 	}
 	
 	public void process(WebRequest state) throws IOException {	
-		
+		Log.d(LOGTAG, "manifest request from "+state.getRemoteAddr());
 		ArrayMap cargo = new ArrayMap();
 		if (AMain.main!=null) {
 			cargo.put("app", AMain.main.getAppNameFull());
