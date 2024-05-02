@@ -1,9 +1,11 @@
 package com.winterwell.utils.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Mutable;
@@ -269,6 +271,11 @@ winterwell/logins/thingy/thingy.properties
 			cb.setDebug(debug);
 			// system props
 			cb.setFromSystemProperties(null);
+			// .env if present
+			File f = new File(".env");
+			if (f.isFile()) {
+				cb.set(f);
+			}
 			// check several config files
 			List<File> propsPath = getPropFileOptions(configClass);
 			for(File pp : propsPath) {		
