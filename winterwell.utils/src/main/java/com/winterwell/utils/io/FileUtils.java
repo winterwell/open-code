@@ -1716,7 +1716,7 @@ public class FileUtils {
 	 * If the file cannot be read: returns an empty-list!
 	 * @param f
 	 */
-	public static Collection<String> readList(File f) {
+	public static List<String> readList(File f) {
 		try {
 			return readList(new FileInputStream(f));
 		} catch (Exception e) {
