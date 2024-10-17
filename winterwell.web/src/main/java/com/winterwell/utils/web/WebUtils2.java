@@ -1486,6 +1486,8 @@ public class WebUtils2 extends WebUtils {
 			return;
 		}
 		
+		String mode = state.getRequest().getHeader("mode");
+		
 		// Note: wildcard '*' cannot be used in the 'Access-Control-Allow-Origin' header 
 		// when the credentials flag is true (ie with cookies).
 		// We rely on the caller to explicitly tell us this (see youagain.js). By default ajax does not!
