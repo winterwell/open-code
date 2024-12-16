@@ -45,6 +45,37 @@ public class MasterServlet extends HttpServlet {
 	public MasterServlet() {
 	}
 	
+	/**
+	 * Switch CORS on
+	 */
+	@Override
+	protected void doOptions(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
+		// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin
+		// "*" will fail if credentials are supplied!
+		String auth = req.getHeader("Authorization");
+		WebRequest state = new WebRequest(req, response);
+		String ref = state.getReferer();
+//		System.out.println(state);
+//		System.out.println(state.getRequestHeaderMap());
+		String origin = state.getOrigin();
+		if (origin==null) origin = "*";
+		response.setHeader("Access-Control-Allow-Origin", origin);
+		if ( ! "*".equals(origin)) response.setHeader("Vary","Origin");
+		// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Allow		
+		response.setHeader("Allow", "GET, POST, PUT, DELETE, OPTIONS");		
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		String reqHeaders = state.getRequestHeader("Access-Control-Request-Headers");
+		String allowHeaders = reqHeaders==null? "Content-Type, Accept, Origin, Authorization" : reqHeaders;
+		response.setHeader("Access-Control-Allow-Headers", allowHeaders);
+	    response.setStatus(HttpServletResponse.SC_OK);
+	}
+
+	@Override
+	protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// Hm... ALlow the IServlet to handle this??
+		super.doHead(req, resp);
+	}
+	
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doPost(req, resp);

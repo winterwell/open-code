@@ -33,13 +33,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>good-loop.com</groupId>
+      <groupId>winterwell.com</groupId>
       <artifactId>winterwell.utils</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>good-loop.com</groupId>
-    	<artifactId>winterwell.web</artifactId>
+    	<groupId>winterwell.com</groupId><artifactId>winterwell.web</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>

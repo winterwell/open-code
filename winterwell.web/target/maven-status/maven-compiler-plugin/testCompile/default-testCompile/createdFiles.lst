@@ -21,6 +21,7 @@ com/winterwell/web/fields/SelectFieldTest.class
 com/winterwell/utils/web/WebUtils2Test.class
 com/winterwell/web/fields/DoubleFieldTest.class
 com/winterwell/web/fields/IntFieldTest.class
+com/winterwell/web/ajax/JSendTest.class
 com/winterwell/web/fields/AFieldTest.class
 com/winterwell/utils/web/JsonPatchTest.class
 com/winterwell/web/fields/ListFieldTest.class

@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.servlet.http.Cookie;
@@ -24,6 +27,7 @@ import com.winterwell.utils.Printer;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.WrappedException;
+import com.winterwell.utils.containers.AbstractMap2;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.ConfigBuilder;
@@ -909,9 +913,11 @@ public class WebRequest implements IProperties, Closeable {
 				Log.w(LOGTAG, pi);
 			}
 		}
-		// remove file type
+		// remove file type, e.g. foo.html -> foo
 		if ( ! keepFileType) {
-			pi = FileUtils.getBasenameCautious(pi);
+			if ( ! WebUtils2.isValidEmail(pi)) { // HACK don't chop bob@example.com to bob@example
+				pi = FileUtils.getBasenameCautious(pi);
+			}
 		}
 		return pi;
 	}
@@ -1429,4 +1435,36 @@ public class WebRequest implements IProperties, Closeable {
 		return getRequired(new SField(parameter));
 	}
 
+	public String getOrigin() {
+		String h = getRequestHeader("Origin");
+		if (h == null || h.isBlank()) {
+			String ref = getReferer();
+			System.out.println(ref);
+		}
+		return h;
+	}
+
+	public String getRequestHeader(String string) {
+		return getRequest().getHeader(string);
+	}
+	
+	public Map<String,String> getRequestHeaderMap() {
+		Enumeration<String> ehnames = getRequest().getHeaderNames();
+		Set<String> hnames = new HashSet<>(Containers.asList(ehnames));
+		return new AbstractMap2<String, String>() {
+			@Override
+			public Set<String> keySet() throws UnsupportedOperationException {			
+				return hnames;
+			}
+			@Override
+			public String get(Object key) {			
+				return getRequestHeader((String) key);
+			}
+			@Override
+			public String put(String key, String value) {
+				throw new UnsupportedOperationException();
+			}
+		};
+	}
+	
 }

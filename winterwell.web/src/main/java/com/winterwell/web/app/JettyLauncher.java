@@ -25,6 +25,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SessionIdManager;
 import org.eclipse.jetty.server.session.DefaultSessionIdManager;
 import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
@@ -38,6 +39,7 @@ import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
+
 
 class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -395,8 +397,7 @@ public class JettyLauncher {
 		ServerConnector connector = new ServerConnector(server, hcf);
 		connector.setPort(port);
 		
-		server.setConnectors(new Connector[] { connector });
-		
+		server.setConnectors(new Connector[] { connector });		
 		if (oneThread) {
 			Log.e(LOGTAG, "TODO oneThread support");
 //			QueuedThreadPool threadPool = new QueuedThreadPool();
@@ -406,8 +407,7 @@ public class JettyLauncher {
 //			Handler handler;
 //			server.setHandler(handler);			
 		}
-		root = new ServletHandler();		
-//		server, "/", ServletContextHandler.SESSIONS);
+		root = new ServletHandler();
 
 		// Specify the Session ID Manager (otherwise you get No SessionManager errors if you try to use a session)
         SessionIdManager idmanager = new DefaultSessionIdManager(server);

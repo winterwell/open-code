@@ -730,6 +730,12 @@ public class WebUtils2 extends WebUtils {
 		if (val.equals("undefined") || val.equals("null")) {
 			return null;
 		}
+		// HACK flexible # handling -- the first # (if any) is a page anchor
+		int hashi = url.indexOf("#");
+		if (hashi != -1 && hashi > m.start() && hashi < m.end()) {
+			int s = m.start(2);
+			val = val.substring(0, hashi - s);
+		}
 		// decode if we can
 		val = WebUtils.urlDecode(val);
 		return val;

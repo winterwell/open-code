@@ -39,6 +39,17 @@ public class WebUtils2Test {
 		System.out.println(s2);
 	}
 
+	@Test 
+	public void testGetQueryParameter() {
+		{
+			String x = WebUtils2.getQueryParameter("https://example.com/foo?x=12&y=17", "x");
+			assert x.equals("12") : x;
+		}
+		{
+			String x = WebUtils2.getQueryParameter("https://example.com/foo?x=12#y=17", "x");
+			assert x.equals("12") : x;
+		}
+	}
 
 	@Test
 	public void testStringify() {

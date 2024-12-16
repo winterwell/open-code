@@ -21,6 +21,7 @@ com/winterwell/web/data/IDoCanonical$2.class
 com/winterwell/json/JSONException.class
 com/winterwell/web/fields/BoolField.class
 com/winterwell/web/ExternalServiceException$Security.class
+com/winterwell/web/email/EmailMailshotMain.class
 com/winterwell/web/fields/XStreamField.class
 com/winterwell/web/fields/FileUploadField.class
 com/winterwell/web/email/SMTPClient.class
@@ -100,7 +101,6 @@ com/winterwell/utils/web/ExpiringMap.class
 com/winterwell/ical/Attendee.class
 com/winterwell/utils/web/ScriptBlock.class
 com/winterwell/web/ExportContants.class
-com/winterwell/web/fields/ListField$1.class
 com/winterwell/web/fields/Checkbox.class
 com/winterwell/json/JSONWriter.class
 com/winterwell/web/fields/Form.class
