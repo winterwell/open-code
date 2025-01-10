@@ -516,7 +516,7 @@ public class FakeBrowser {
 	 * TODO merge with {@link #post(String, Map)} if successful
 	 * 
 	 * @param uri
-	 * @param contentType e.g. FakeBrowser.MIME_TYPE_URLENCODED_FORM
+	 * @param contentType e.g. FakeBrowser.MIME_TYPE_URLENCODED_FORM or "application/json"
 	 * @param encodedPostBody
 	 *            ??
 	 * @return

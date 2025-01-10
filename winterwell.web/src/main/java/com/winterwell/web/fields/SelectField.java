@@ -77,12 +77,12 @@ public class SelectField<X> extends AField<X> {
 		if (id != null) {
 			sb.append("id='" + id + "' ");
 		}
-		if (onChange != null) {
-			sb.append("onChange='" + WebUtils.attributeEncode(onChange) + "' ");
-		}
-		if (cssClass != null) {
-			sb.append("class='" + cssClass + "' ");
-		}
+//		if (onChange != null) {
+//			sb.append("onChange='" + WebUtils.attributeEncode(onChange) + "' ");
+//		}
+//		if (cssClass != null) {
+//			sb.append("class='" + cssClass + "' ");
+//		}
 		if (title != null) {
 			sb.append("title='" + title + "' ");
 		}

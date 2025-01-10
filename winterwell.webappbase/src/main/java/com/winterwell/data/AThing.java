@@ -24,10 +24,6 @@ public class AThing implements IInit {
 	 */
 	transient int _version;
 	
-	/**
-	 * Note: sadly this is not present on data before April 2020
-	 * Old items when loaded into memory may pick up a false date of today.
-	 */
 	Time created = new Time(); 
 	
 

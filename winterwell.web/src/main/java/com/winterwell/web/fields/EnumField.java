@@ -37,9 +37,9 @@ public class EnumField<T extends Enum> extends AField<T> {
 		if (id != null) {
 			sb.append("id='" + id + "' ");
 		}
-		if (onChange != null) {
-			sb.append("onChange='" + WebUtils.attributeEncode(onChange) + "' ");
-		}
+//		if (onChange != null) {
+//			sb.append("onChange='" + WebUtils.attributeEncode(onChange) + "' ");
+//		}
 		if (tooltip != null) {
 			sb.append("title='" + WebUtils.attributeEncode(tooltip) + "' ");
 		}

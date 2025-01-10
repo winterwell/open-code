@@ -83,14 +83,16 @@ public class AField<X> extends Key<X> implements Serializable, IWidget,
 	 */
 	protected String id;
 
-	@Deprecated
-	protected String onChange;
+//	@Deprecated
+//	protected String onChange;
 	protected boolean required;
 	
 	@Deprecated
 	private int size;
 
-	@Deprecated
+	/**
+	 * User help for the field
+	 */
 	protected String tooltip;
 
 	/**
@@ -222,6 +224,7 @@ public class AField<X> extends Key<X> implements Serializable, IWidget,
 	 * @param attributes
 	 *            any once-only HTML options that should be set.
 	 */
+	@Deprecated
 	public void appendHtmlTo(StringBuilder page, X value, Object... attributes) {
 		String v = value == null ? "" : toString(value);
 		// Escape quotes
@@ -240,10 +243,10 @@ public class AField<X> extends Key<X> implements Serializable, IWidget,
 		if (id != null) {
 			page.append("id='" + id + "' ");
 		}
-		if (onChange != null) {
-			page.append("onChange='" + WebUtils.attributeEncode(onChange)
-					+ "' ");
-		}
+//		if (onChange != null) {
+//			page.append("onChange='" + WebUtils.attributeEncode(onChange)
+//					+ "' ");
+//		}
 		if (tooltip != null) {
 			page.append("title='" + WebUtils.attributeEncode(tooltip) + "' ");
 		}
@@ -493,16 +496,16 @@ public class AField<X> extends Key<X> implements Serializable, IWidget,
 		this.type = type;
 	}
 
-	/**
-	 * @deprecated
-	 * Javascript handler. Will be encoded using
-	 * {@link WebUtils#attributeEncode(String)} ad wrapped in quote marks.
-	 * 
-	 * @param onChange
-	 */
-	public final void setOnChange(String onChange) {
-		this.onChange = onChange;
-	}
+//	/**
+//	 * @deprecated
+//	 * Javascript handler. Will be encoded using
+//	 * {@link WebUtils#attributeEncode(String)} ad wrapped in quote marks.
+//	 * 
+//	 * @param onChange
+//	 */
+//	public final void setOnChange(String onChange) {
+//		this.onChange = onChange;
+//	}
 
 	public final AField<X> setRequired(boolean required) {
 		this.required = required;
